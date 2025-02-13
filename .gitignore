@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 analysis_options.yaml
+/android/app
