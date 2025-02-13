@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'dashboard_screen.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
+  'test@gmail.com': 'test'
 };
 
 class LoginScreen extends StatelessWidget {
@@ -49,9 +51,9 @@ class LoginScreen extends StatelessWidget {
       onLogin: _authUser,
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (context) => const DashboardScreen(),
-        // ));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+        ));
       },
       onRecoverPassword: _recoverPassword,
     );
