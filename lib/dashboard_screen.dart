@@ -30,6 +30,7 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: kToolbarHeight + 20), // Space below AppBar
             Center(
               child: WeeklyCalendar(
                 calendarStyle: const CalendarStyle(
@@ -46,13 +47,11 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Add spacing
+            const SizedBox(height: 20), // Space before schedule
             const Text(
               "Today's Schedule:",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            // Placeholder for schedule items
             Expanded(
               child: ListView(
                 children: const [
