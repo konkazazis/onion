@@ -1,8 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:weekly_calendar/weekly_calendar.dart';
+import 'events.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final EventService _eventService = EventService();
+  List<Map<String, dynamic>> events = [];
+  List<Map<String, dynamic>> filteredEvents = [];
+  bool _isLoading = true; // Loading state
+
+  Future<void> loadEvents() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    events = await _eventService.fetchEvents();
+
+    setState(() {
+      filteredEvents = events;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
