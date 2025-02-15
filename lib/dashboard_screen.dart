@@ -45,6 +45,11 @@ class DashboardScreen extends StatelessWidget {
                   footerDateTextColor: Colors.grey,
                   isShowFooterDateText: true,
                 ),
+                onChangedSelectedDate: (date) {
+                  debugPrint("onChangedSelectedDate: $date");
+                  // a function should be called that requests the tasks for
+                  // the selected date
+                },
               ),
             ),
             const SizedBox(height: 20), // Space before schedule
@@ -55,6 +60,8 @@ class DashboardScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: const [
+                  // there, the results of the task fetch should be displayed for
+                  // each day
                   ListTile(
                     leading: Icon(Icons.event),
                     title: Text("Meeting with Team"),
