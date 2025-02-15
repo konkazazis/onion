@@ -45,3 +45,8 @@ app.*.map.json
 /android/app/release
 analysis_options.yaml
 /android/app
+database.rules.json
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
