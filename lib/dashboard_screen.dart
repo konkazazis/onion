@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:weekly_calendar/weekly_calendar.dart';
 import 'events.dart';
+import 'package:intl/intl.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,14 +15,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final EventService _eventService = EventService();
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
+
+  late DateTime now;
+  late String date;
+
   bool _isLoading = true; // Loading state
 
-  Future<void> loadEvents() async {
+  Future<void> loadEvents(String date) async {
     setState(() {
       _isLoading = true;
     });
 
-    events = await _eventService.fetchEvents();
+    events = await _eventService.fetchEvents(date);
 
     setState(() {
       filteredEvents = events;
@@ -30,7 +37,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    loadEvents();
+    now = DateTime.now();
+    date = DateFormat('dd-MM-yyyy').format(now);
+    loadEvents(date);
   }
 
   @override
@@ -38,8 +47,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Fully transparent
-        elevation: 0, // No shadow
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: const Padding(
           padding: EdgeInsets.all(8.0),
           child: CircleAvatar(
@@ -50,16 +59,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         title: const Text(
           'Welcome back, Kostas!',
-          style: TextStyle(color: Colors.black), // Adjust text color
+          style: TextStyle(color: Colors.black),
         ),
-        centerTitle: true, // Centers the title
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: kToolbarHeight + 20), // Space below AppBar
+            const SizedBox(height: kToolbarHeight + 20),
             Center(
               child: WeeklyCalendar(
                 calendarStyle: const CalendarStyle(
@@ -74,40 +83,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   footerDateTextColor: Colors.grey,
                   isShowFooterDateText: true,
                 ),
-                onChangedSelectedDate: (date) {
-                  debugPrint("onChangedSelectedDate: $date");
-                  // a function should be called that requests the tasks for
-                  // the selected date
+                onChangedSelectedDate: (selectedDate) {
+                  String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(selectedDate);
+                  loadEvents(formattedDate); // Fetch events for the new date
                 },
               ),
             ),
-            const SizedBox(height: 20), // Space before schedule
+            const SizedBox(height: 20),
             const Text(
               "Today's Schedule:",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: ListView(
-                children: const [
-                  // there, the results of the task fetch should be displayed for
-                  // each day
-                  ListTile(
-                    leading: Icon(Icons.event),
-                    title: Text("Meeting with Team"),
-                    subtitle: Text("10:00 AM - 11:00 AM"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.work),
-                    title: Text("Project Review"),
-                    subtitle: Text("2:00 PM - 3:30 PM"),
-                  ),
-                ],
-              ),
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator()) // Show loading
+                  : filteredEvents.isEmpty
+                      ? const Center(
+                          child: Text("No events found")) // No events message
+                      : ListView.builder(
+                          itemCount: filteredEvents.length,
+                          itemBuilder: (context, index) {
+                            final event = filteredEvents[index];
+                            return ListTile(
+                              leading: const Icon(Icons.event),
+                              title: Text(event['event']),
+                              subtitle: Text("Date: ${event['date']}"),
+                            );
+                          },
+                        ),
             ),
           ],
         ),
       ),
-      backgroundColor: const Color(0xFFEDE8D0), // Set background color
+      backgroundColor: const Color(0xFFEDE8D0),
     );
   }
 }
