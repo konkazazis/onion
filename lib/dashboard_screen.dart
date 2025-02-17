@@ -46,24 +46,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     loadEvents(date);
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      print(index);
-      switch (_selectedIndex) {
-        case 0:
-          Navigator.pushReplacementNamed(context, '/home');
-          break;
-        case 1:
-          Navigator.pushReplacementNamed(context, '/calendar');
-          break;
-        case 2:
-          Navigator.pushReplacementNamed(context, '/profile');
-          break;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,10 +120,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
       backgroundColor: const Color(0xFFEDE8D0),
     );
