@@ -20,6 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late String date;
 
   bool _isLoading = true; // Loading state
+  int _selectedIndex = 0; // Selected index for navigation
 
   Future<void> loadEvents(String date) async {
     setState(() {
@@ -40,6 +41,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     now = DateTime.now();
     date = DateFormat('dd-MM-yyyy').format(now);
     loadEvents(date);
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -116,6 +123,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueAccent,
+        onTap: _onItemTapped,
       ),
       backgroundColor: const Color(0xFFEDE8D0),
     );
