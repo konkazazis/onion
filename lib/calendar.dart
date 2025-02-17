@@ -43,6 +43,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   void _showAddEventDialog() {
     TextEditingController _eventController = TextEditingController();
+    TextEditingController _dateController = TextEditingController();
     DateTime? _selectedDate;
 
     showDialog(
@@ -62,41 +63,50 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 ),
               ),
               SizedBox(height: 20),
-              // Date picker button
-              ElevatedButton(
-                onPressed: () async {
+              // Date field that triggers the date picker
+              GestureDetector(
+                onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
+                    builder: (BuildContext context, Widget? child) {
+                      return Theme(
+                        data: ThemeData.light().copyWith(
+                          primaryColor: Colors.blueAccent,
+                          //accentColor: Colors.blueAccent,
+                          buttonTheme: ButtonThemeData(
+                            textTheme: ButtonTextTheme.primary,
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                   );
 
                   if (pickedDate != null) {
                     setState(() {
-                      _selectedDate = pickedDate; // Update the selected date
+                      _selectedDate = pickedDate;
+                      _dateController.text = DateFormat('dd-MM-yyyy')
+                          .format(pickedDate); // Set date in text field
                     });
                   }
                 },
-                child: Text(
-                  _selectedDate == null
-                      ? "Select Date"
-                      : DateFormat('dd-MM-yyyy').format(_selectedDate!),
-                ),
-              ),
-              // Show the selected date text styled like the event title
-              if (_selectedDate != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    "Selected Date: ${DateFormat('dd-MM-yyyy').format(_selectedDate!)}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black, // You can adjust color if necessary
+                child: AbsorbPointer(
+                  // Prevent typing and ensure only the date picker triggers
+                  child: TextField(
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      labelText: 'Event Date',
+                      border: OutlineInputBorder(),
+                      hintText: _selectedDate != null
+                          ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
+                          : 'Select a date',
                     ),
                   ),
                 ),
+              ),
             ],
           ),
           actions: <Widget>[
@@ -128,6 +138,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 }
               },
               child: Text('Add Event'),
+              style: ElevatedButton.styleFrom(
+                //primary: Colors.deepOrange, // Action button color
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              ),
             ),
           ],
         );
