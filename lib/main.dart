@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:picnic_search/profile.dart';
 import 'firebase_options.dart';
 import 'dashboard_screen.dart';
 
@@ -20,9 +21,17 @@ class Onion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Onion',
-      theme: ThemeData(scaffoldBackgroundColor: Color(0xFFEDE8D0)),
-      home: const DashboardScreen(),
-    );
+        title: 'Onion',
+        theme: ThemeData(scaffoldBackgroundColor: Color(0xFFEDE8D0)),
+        initialRoute: 'home',
+        routes: {
+          '/home': (context) => DashboardScreen(),
+          '/calendar': (context) => DashboardScreen(),
+          '/profile': (context) => ProfileComponent(
+                name: 'Kostas',
+                email: 'test@gmail.com',
+                profileImageUrl: 'test',
+              )
+        });
   }
 }

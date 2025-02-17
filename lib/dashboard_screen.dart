@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:picnic_search/profile.dart';
 import 'package:weekly_calendar/weekly_calendar.dart';
 import 'events.dart';
 import 'package:intl/intl.dart';
+import 'profile.dart';
+import 'widgets/bottom_nav_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -46,6 +49,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      print(index);
+      switch (_selectedIndex) {
+        case 0:
+          Navigator.pushReplacementNamed(context, '/home');
+          break;
+        case 1:
+          Navigator.pushReplacementNamed(context, '/calendar');
+          break;
+        case 2:
+          Navigator.pushReplacementNamed(context, '/profile');
+          break;
+      }
     });
   }
 
@@ -124,23 +139,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
         onTap: _onItemTapped,
       ),
       backgroundColor: const Color(0xFFEDE8D0),
