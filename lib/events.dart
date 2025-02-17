@@ -23,4 +23,17 @@ class EventService {
       return [];
     }
   }
+
+  void addEvent(String title, String eventDate) async {
+    try {
+      await FirebaseFirestore.instance.collection('events').add({
+        'event': title,
+        'userid': 'test',
+        'date': eventDate,
+      });
+      print("Event added successfully!");
+    } catch (e) {
+      print("Error adding event: $e");
+    }
+  }
 }
