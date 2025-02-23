@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart'; // Import intl package
 import 'events.dart';
+import 'widgets/dropdown.dart';
 
 class CalendarWidget extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // Event Title input
+              DropdownButtonApp(),
               TextField(
                 controller: _eventController,
                 decoration: InputDecoration(
