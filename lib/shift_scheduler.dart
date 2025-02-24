@@ -103,13 +103,13 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.white, // Button background color
-                      foregroundColor: Colors.blueAccent, // Text color
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      elevation: 6.0, // Soft shadow
-                      shadowColor: Colors.black54, // Shadow color
+                      elevation: 6.0,
+                      shadowColor: Colors.black54,
                     ),
                     onPressed: () => _selectDate(context),
                     child: Text(
@@ -128,14 +128,13 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor:
-                          Colors.white, // Customize your preferred color
-                      foregroundColor: Colors.blueAccent, // Text color
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      elevation: 6.0, // Adds a soft shadow
-                      shadowColor: Colors.black54, // Shadow color
+                      elevation: 6.0,
+                      shadowColor: Colors.black54,
                     ),
                     onPressed: () => _selectTime(context, true),
                     child: Text(
@@ -150,14 +149,13 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor:
-                          Colors.white, // Customize your preferred color
-                      foregroundColor: Colors.blueAccent, // Text color
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      elevation: 6.0, // Adds a soft shadow
-                      shadowColor: Colors.black54, // Shadow color
+                      elevation: 6.0,
+                      shadowColor: Colors.black54,
                     ),
                     onPressed: () => _selectTime(context, false),
                     child: Text(
@@ -190,6 +188,31 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
               child: ElevatedButton(
                 onPressed: _saveShift,
                 child: const Text('Save Shift'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // 🚀 Added Cancel Button Below
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 24.0), // Adjust padding as needed
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: const CircleBorder(), // Fully round button
+                    padding: const EdgeInsets.all(
+                        24.0), // Increase for a bigger button
+                    elevation: 6.0,
+                    shadowColor: Colors.black54,
+                  ),
+                  child: const Icon(
+                    Icons.highlight_off,
+                    size: 36.0, // Bigger icon
+                  ),
+                ),
               ),
             ),
           ],
