@@ -24,10 +24,12 @@ class EventService {
     }
   }
 
-  void addEvent(String title, String eventDate) async {
+  void addEvent(String? type, String eventDate, startTime, endTime) async {
     try {
       await FirebaseFirestore.instance.collection('events').add({
-        'event': title,
+        'event': type,
+        'start': startTime,
+        'end': endTime,
         'userid': 'test',
         'date': eventDate,
       });

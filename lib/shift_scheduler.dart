@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'events.dart';
 
 class ShiftScheduler extends StatefulWidget {
   const ShiftScheduler({super.key});
@@ -13,6 +14,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? selectedWorkType;
+  final EventService _eventService = EventService();
 
   final List<String> workTypes = [
     'Morning',
@@ -34,6 +36,10 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
     }
   }
 
+  String formatTimeOfDay(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -51,24 +57,31 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         startTime != null &&
         endTime != null &&
         selectedWorkType != null) {
-      final dateFormatted = DateFormat('yyyy-MM-dd').format(selectedDate!);
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Shift Saved'),
-          content: Text(
-            'Date: $dateFormatted\n'
-            'Start: ${startTime!.format(context)}\n'
-            'End: ${endTime!.format(context)}\n'
-            'Work Type: $selectedWorkType',
+      final dateFormatted = DateFormat('dd-MM-yyyy').format(selectedDate!);
+
+      try {
+        _eventService.addEvent(selectedWorkType, dateFormatted,
+            formatTimeOfDay(startTime!), formatTimeOfDay(endTime!));
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Shift Saved'),
+            content: Text(
+              'Date: $dateFormatted\n'
+              'Start: ${startTime!.format(context)}\n'
+              'End: ${endTime!.format(context)}\n'
+              'Work Type: $selectedWorkType',
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'))
+            ],
           ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'))
-          ],
-        ),
-      );
+        );
+      } catch (e) {
+        print("Error adding event: $e");
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields.')),
@@ -84,19 +97,46 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text(
-                selectedDate != null
-                    ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
-                    : 'Select Date',
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      backgroundColor: Colors.white, // Button background color
+                      foregroundColor: Colors.blueAccent, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      elevation: 6.0, // Soft shadow
+                      shadowColor: Colors.black54, // Shadow color
+                    ),
+                    onPressed: () => _selectDate(context),
+                    child: Text(
+                      selectedDate != null
+                          ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
+                          : 'Select Date',
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      backgroundColor:
+                          Colors.white, // Customize your preferred color
+                      foregroundColor: Colors.blueAccent, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      elevation: 6.0, // Adds a soft shadow
+                      shadowColor: Colors.black54, // Shadow color
+                    ),
                     onPressed: () => _selectTime(context, true),
                     child: Text(
                       startTime != null
@@ -108,6 +148,17 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      backgroundColor:
+                          Colors.white, // Customize your preferred color
+                      foregroundColor: Colors.blueAccent, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      elevation: 6.0, // Adds a soft shadow
+                      shadowColor: Colors.black54, // Shadow color
+                    ),
                     onPressed: () => _selectTime(context, false),
                     child: Text(
                       endTime != null

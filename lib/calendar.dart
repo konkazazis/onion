@@ -35,123 +35,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     });
   }
 
-  void _addEvent(String eventTitle, String eventDate) {
-    if (eventTitle.isNotEmpty) {
-      _eventService.addEvent(eventTitle, eventDate);
-      setState(() {
-        _fetchEventsForSelectedDay(); // Refresh events after adding
-      });
-    }
-  }
-
-  void _showAddEventDialog() {
-    TextEditingController _eventController = TextEditingController();
-    TextEditingController _dateController = TextEditingController();
-    DateTime? _selectedDate;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add Event"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButtonApp(),
-              TextField(
-                controller: _eventController,
-                decoration: InputDecoration(
-                  labelText: 'Event Title',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              // Date field that triggers the date picker
-              GestureDetector(
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                    builder: (BuildContext context, Widget? child) {
-                      return Theme(
-                        data: ThemeData.light().copyWith(
-                          primaryColor: Colors.blueAccent,
-                          //accentColor: Colors.blueAccent,
-                          buttonTheme: ButtonThemeData(
-                            textTheme: ButtonTextTheme.primary,
-                          ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-
-                  if (pickedDate != null) {
-                    setState(() {
-                      _selectedDate = pickedDate;
-                      _dateController.text = DateFormat('dd-MM-yyyy')
-                          .format(pickedDate); // Set date in text field
-                    });
-                  }
-                },
-                child: AbsorbPointer(
-                  // Prevent typing and ensure only the date picker triggers
-                  child: TextField(
-                    controller: _dateController,
-                    decoration: InputDecoration(
-                      labelText: 'Event Date',
-                      border: OutlineInputBorder(),
-                      hintText: _selectedDate != null
-                          ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
-                          : 'Select a date',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            // Cancel button
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            // Add event button
-            ElevatedButton(
-              onPressed: () {
-                String eventTitle = _eventController.text;
-
-                // Ensure the title is not empty and a date is selected
-                if (eventTitle.isNotEmpty && _selectedDate != null) {
-                  String formattedDate =
-                      DateFormat('dd-MM-yyyy').format(_selectedDate!);
-                  _addEvent(eventTitle, formattedDate);
-                  Navigator.of(context).pop(); // Close the dialog
-                } else {
-                  // Show a message if the title or date is not selected
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please enter a title and select a date."),
-                    ),
-                  );
-                }
-              },
-              child: Text('Add Event'),
-              style: ElevatedButton.styleFrom(
-                //primary: Colors.deepOrange, // Action button color
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,7 +107,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         },
         child: Icon(Icons.add),
         tooltip: 'Add Event',
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
     );
   }
