@@ -38,9 +38,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Calendar with Events'),
-      ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(

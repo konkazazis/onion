@@ -53,14 +53,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              'https://via.placeholder.com/150', // Replace with actual image URL
-            ),
-          ),
-        ),
         title: const Text(
           'Welcome back, Kostas!',
           style: TextStyle(color: Colors.black),
