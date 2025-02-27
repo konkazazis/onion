@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:picnic_search/profile.dart';
 import 'package:weekly_calendar/weekly_calendar.dart';

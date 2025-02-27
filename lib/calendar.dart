@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:picnic_search/shift_scheduler.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -13,25 +14,48 @@ class CalendarWidget extends StatefulWidget {
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
+  List<Map<String, dynamic>> _events = [];
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final EventService _eventService = EventService();
-  List<Map<String, dynamic>> _events = [];
+  bool _isLoading = true; // Loading state
 
+  @override
   @override
   void initState() {
     super.initState();
-    _fetchEventsForSelectedDay();
+    _selectedDay = DateTime.now(); // Ensure selected day is today
+    _focusedDay = DateTime.now();
+    _fetchEventsForSelectedDay(); // Fetch today's events immediately
   }
 
   void _fetchEventsForSelectedDay() async {
-    String dateString =
-        _selectedDay.toIso8601String().split('T')[0]; // e.g., "2025-02-17"
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+
+    String formattedDate = DateFormat('dd-MM-yyyy').format(_selectedDay);
     List<Map<String, dynamic>> events =
-        await _eventService.fetchEvents(dateString);
+        await _eventService.fetchEvents(formattedDate);
+
     setState(() {
       _events = events;
+      _isLoading = false; // Hide loading indicator
+    });
+  }
+
+  Future<void> loadEvents(String date) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    List<Map<String, dynamic>> fetchedEvents =
+        await _eventService.fetchEvents(date);
+
+    setState(() {
+      _events = fetchedEvents;
+      _isLoading = false;
     });
   }
 
@@ -56,7 +80,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                 });
-                _fetchEventsForSelectedDay(); // Fetch events for new selected day
+
+                String formattedDate =
+                    DateFormat('dd-MM-yyyy').format(selectedDay);
+                loadEvents(formattedDate);
               },
               onFormatChanged: (format) {
                 setState(() {
@@ -79,18 +106,21 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ),
             ),
             SizedBox(height: 20),
-            // Display events for the selected day
             Expanded(
-              child: ListView.builder(
-                itemCount: _events.length,
-                itemBuilder: (context, index) {
-                  var event = _events[index];
-                  return ListTile(
-                    title: Text(event['event']),
-                    subtitle: Text('User ID: ${event['userid']}'),
-                  );
-                },
-              ),
+              child: _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _events.isEmpty
+                      ? Center(child: Text("No events found for this day"))
+                      : ListView.builder(
+                          itemCount: _events.length,
+                          itemBuilder: (context, index) {
+                            var event = _events[index];
+                            return ListTile(
+                              title: Text(event['event']),
+                              subtitle: Text('User ID: ${event['userid']}'),
+                            );
+                          },
+                        ),
             ),
           ],
         ),
