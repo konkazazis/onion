@@ -117,7 +117,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                             var event = _events[index];
                             return ListTile(
                               title: Text(event['event']),
-                              subtitle: Text('User ID: ${event['userid']}'),
+                              subtitle: Text('Date: ${event['date']}'),
                             );
                           },
                         ),
