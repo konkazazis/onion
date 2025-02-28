@@ -23,7 +23,7 @@ class Onion extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Onion',
-        theme: ThemeData(scaffoldBackgroundColor: Color(0xFFEDE8D0)),
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         home: MainScreen());
   }
 }

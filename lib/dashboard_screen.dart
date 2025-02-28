@@ -112,7 +112,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-      backgroundColor: const Color(0xFFEDE8D0),
     );
   }
 }
