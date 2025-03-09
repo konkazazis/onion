@@ -4,13 +4,14 @@ import 'package:picnic_search/profile.dart';
 import 'package:weekly_calendar/weekly_calendar.dart';
 import 'events.dart';
 import 'package:intl/intl.dart';
-import 'profile.dart';
 import 'widgets/bottom_nav_bar.dart';
+import 'widgets/shift_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
@@ -21,20 +22,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late DateTime now;
   late String date;
 
-  bool _isLoading = true; // Loading state
-  int _selectedIndex = 0; // Selected index for navigation
+  bool _isLoading = true;
 
   Future<void> loadEvents(String date) async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
-    events = await _eventService.fetchEvents(date);
-
-    setState(() {
-      filteredEvents = events;
-      _isLoading = false;
-    });
+    try {
+      final fetchedEvents = await _eventService.fetchEvents(date);
+      setState(() {
+        events = fetchedEvents;
+        filteredEvents = fetchedEvents;
+      });
+    } catch (e) {
+      log("Error fetching events: $e");
+      setState(() {
+        filteredEvents = [];
+      });
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -81,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onChangedSelectedDate: (selectedDate) {
                   String formattedDate =
                       DateFormat('dd-MM-yyyy').format(selectedDate);
-                  loadEvents(formattedDate); // Fetch events for the new date
+                  loadEvents(formattedDate);
                 },
               ),
             ),
@@ -92,11 +98,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             Expanded(
               child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator()) // Show loading
+                  ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
-                      ? const Center(
-                          child: Text("No events found")) // No events message
+                      ? const Center(child: Text("No events found"))
                       : ListView.builder(
                           itemCount: filteredEvents.length,
                           itemBuilder: (context, index) {
@@ -108,6 +112,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                         ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Statistics:",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ShiftCard(
+                  title: "Last Shift",
+                  hours: "8h 30m",
+                  earnings: "\$120",
+                ),
+                ShiftCard(
+                  title: "Average Shift",
+                  hours: "7h 45m",
+                  earnings: "\$110",
+                ),
+              ],
             ),
           ],
         ),
