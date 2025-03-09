@@ -4,28 +4,23 @@ class ProfileComponent extends StatelessWidget {
   final String name;
   final String email;
   final String profileImageUrl;
-  //final VoidCallback onEdit;
 
   const ProfileComponent({
     Key? key,
     required this.name,
     required this.email,
     required this.profileImageUrl,
-    //required this.onEdit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 4,
-      margin: EdgeInsets.all(16),
-      child: Padding(
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
               radius: 50,
@@ -41,17 +36,6 @@ class ProfileComponent extends StatelessWidget {
               email,
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            SizedBox(height: 12),
-            // ElevatedButton.icon(
-            //   onPressed: onEdit,
-            //   icon: Icon(Icons.edit),
-            //   label: Text("Edit Profile"),
-            //   style: ElevatedButton.styleFrom(
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
