@@ -41,6 +41,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } finally {
       setState(() => _isLoading = false);
     }
+
+    var response2 = await _eventService.fetchEventsByMonth("03-2025");
+    print(response2);
   }
 
   @override
@@ -123,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ShiftCard(
-                  title: "Last Shift",
+                  title: "Total hours this month",
                   hours: "8h 30m",
                   earnings: "\$120",
                 ),

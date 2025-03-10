@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'events.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShiftScheduler extends StatefulWidget {
   const ShiftScheduler({super.key});
@@ -14,7 +14,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? selectedWorkType;
-  final EventService _eventService = EventService();
 
   final List<String> workTypes = [
     'Morning',
@@ -23,6 +22,29 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
     'Remote',
     'On-site'
   ];
+
+  // Function to add event (shift) to Firestore
+  Future<void> addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
+      TimeOfDay endTime) async {
+    try {
+      DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
+          eventDate.day, startTime.hour, startTime.minute);
+      DateTime endDateTime = DateTime(eventDate.year, eventDate.month,
+          eventDate.day, endTime.hour, endTime.minute);
+
+      await FirebaseFirestore.instance.collection('shifts').add({
+        'workType': type,
+        'startTime': Timestamp.fromDate(startDateTime),
+        'endTime': Timestamp.fromDate(endDateTime),
+        'userid': 'test', // Replace with actual user ID if needed
+        'date': Timestamp.fromDate(eventDate),
+      });
+
+      print("Shift added successfully!");
+    } catch (e) {
+      print("Error adding shift: $e");
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -52,36 +74,37 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
     }
   }
 
-  void _saveShift() {
+  // Save the shift by calling addEvent
+  Future<void> _saveShift() async {
     if (selectedDate != null &&
         startTime != null &&
         endTime != null &&
         selectedWorkType != null) {
-      final dateFormatted = DateFormat('dd-MM-yyyy').format(selectedDate!);
+      await addEvent(
+        selectedWorkType, // work type
+        selectedDate!, // event date
+        startTime!, // start time
+        endTime!, // end time
+      );
 
-      try {
-        _eventService.addEvent(selectedWorkType, dateFormatted,
-            formatTimeOfDay(startTime!), formatTimeOfDay(endTime!));
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Shift Saved'),
-            content: Text(
-              'Date: $dateFormatted\n'
-              'Start: ${startTime!.format(context)}\n'
-              'End: ${endTime!.format(context)}\n'
-              'Work Type: $selectedWorkType',
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'))
-            ],
+      // Show success dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Shift Saved'),
+          content: Text(
+            'Date: ${DateFormat('dd-MM-yyyy').format(selectedDate!)}\n'
+            'Start: ${startTime!.format(context)}\n'
+            'End: ${endTime!.format(context)}\n'
+            'Work Type: $selectedWorkType',
           ),
-        );
-      } catch (e) {
-        print("Error adding event: $e");
-      }
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK')),
+          ],
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields.')),
@@ -101,16 +124,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      elevation: 6.0,
-                      shadowColor: Colors.black54,
-                    ),
                     onPressed: () => _selectDate(context),
                     child: Text(
                       selectedDate != null
@@ -126,16 +139,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      elevation: 6.0,
-                      shadowColor: Colors.black54,
-                    ),
                     onPressed: () => _selectTime(context, true),
                     child: Text(
                       startTime != null
@@ -147,16 +150,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      elevation: 6.0,
-                      shadowColor: Colors.black54,
-                    ),
                     onPressed: () => _selectTime(context, false),
                     child: Text(
                       endTime != null
