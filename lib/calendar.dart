@@ -114,9 +114,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           itemCount: _events.length,
                           itemBuilder: (context, index) {
                             var event = _events[index];
+
+                            String eventName = event['workType'] ?? 'No Event';
+                            String eventDate =
+                                event['date']?.toString() ?? 'No Date';
+
                             return ListTile(
-                              title: Text(event['event']),
-                              subtitle: Text('Date: ${event['date']}'),
+                              title: Text(eventName),
+                              subtitle: Text('Date: $eventDate'),
                             );
                           },
                         ),
