@@ -19,20 +19,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
 
-  late DateTime now;
-  late String date;
+  DateTime _selectedDay = DateTime.now(); // The currently selected day
+  DateTime _focusedDay = DateTime.now(); // The currently focused day
 
   bool _isLoading = true;
 
-  Future<void> loadEvents(String date) async {
+  // Load events based on the selected day
+  Future<void> loadEvents(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
     try {
-      // Ensure the date passed is valid
-      DateTime selectedDate = DateTime.tryParse(date) ??
-          DateTime.now(); // Fallback to current date if invalid
-
-      // Fetch events for the specific date
+      // Fetch events for the selected date
       final fetchedEvents = await _eventService.fetchEvents(selectedDate);
       setState(() {
         events = fetchedEvents;
@@ -47,10 +44,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() => _isLoading = false);
     }
 
-    // Fetch events for a specific month (you can pass the month and year in 'MM-yyyy' format)
+    // Fetch events for a specific month (optional, based on your requirements)
     try {
       var response2 = await _eventService
-          .fetchEventsByMonth("03-2025"); // Month and year in 'MM-yyyy' format
+          .fetchEventsByMonth("03-2025"); // Example month and year
       print(response2);
     } catch (e) {
       log("Error fetching events by month: $e");
@@ -60,9 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    now = DateTime.now();
-    date = DateFormat('yyyy-MM-dd').format(now); // Adjusted to 'yyyy-MM-dd'
-    loadEvents(date); // Use the formatted date string
+    _selectedDay = DateTime.now(); // Default to today's date
+    _focusedDay =
+        _selectedDay; // Set the focused day to the selected day initially
+    loadEvents(_selectedDay); // Load events for today's date
   }
 
   @override
@@ -84,26 +82,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: kToolbarHeight + 20),
-            // Using TableCalendar instead of WeeklyCalendar
+            // Using TableCalendar for better day selection
             TableCalendar(
               firstDay: DateTime.utc(2000, 1, 1),
               lastDay: DateTime.utc(2100, 12, 31),
-              focusedDay: now, // Focus on the current day
+              focusedDay: _focusedDay, // Focused day
               selectedDayPredicate: (day) {
-                return isSameDay(now, day);
+                return isSameDay(_selectedDay, day);
               },
               onDaySelected: (selectedDay, focusedDay) {
-                // Handle null selectedDay
-                if (selectedDay != null) {
-                  String formattedDate =
-                      DateFormat('yyyy-MM-dd').format(selectedDay);
-                  loadEvents(formattedDate); // Pass the formatted date
-                } else {
-                  log("Selected date is null.");
-                }
+                // Update selected and focused day when the user selects a day
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+
+                // Pass the selected day (DateTime object) to loadEvents
+                loadEvents(selectedDay);
               },
               onFormatChanged: (format) {
-                // Handle format change (Month, Week, Day view)
+                // Handle format change if needed (Month, Week, Day view)
               },
               calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
@@ -135,9 +133,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
                             String eventName = event['event'] ??
-                                'No Event'; // Provide default value if null
+                                'No Event'; // Default value if null
                             String eventDate = event['date'] ??
-                                'No Date'; // Provide default value if null
+                                'No Date'; // Default value if null
                             return ListTile(
                               leading: const Icon(Icons.event),
                               title: Text(eventName),

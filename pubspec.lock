@@ -605,14 +605,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  weekly_calendar:
-    dependency: "direct main"
-    description:
-      name: weekly_calendar
-      sha256: "37f245a3f1c28c67465f761eabd8a19b34bc47c893430a08a223e165d7971ace"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   xml:
     dependency: transitive
     description:
