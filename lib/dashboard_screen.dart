@@ -6,6 +6,7 @@ import 'events.dart';
 import 'package:intl/intl.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
+import 'dart:developer';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,7 +29,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final fetchedEvents = await _eventService.fetchEvents(date);
+      // Parse the string `date` into a DateTime object (assuming it's in the format 'yyyy-MM-dd')
+      DateTime selectedDate = DateTime.parse(date);
+
+      // Fetch events for the specific date
+      final fetchedEvents = await _eventService.fetchEvents(selectedDate);
       setState(() {
         events = fetchedEvents;
         filteredEvents = fetchedEvents;
@@ -42,8 +47,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() => _isLoading = false);
     }
 
-    var response2 = await _eventService.fetchEventsByMonth("03-2025");
-    print(response2);
+    // Fetch events for a specific month (you can pass the month and year in 'MM-yyyy' format)
+    try {
+      var response2 = await _eventService
+          .fetchEventsByMonth("03-2025"); // Month and year in 'MM-yyyy' format
+      print(response2);
+    } catch (e) {
+      log("Error fetching events by month: $e");
+    }
   }
 
   @override

@@ -35,9 +35,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       _isLoading = true; // Show loading indicator
     });
 
-    String formattedDate = DateFormat('dd-MM-yyyy').format(_selectedDay);
+    // Directly pass the DateTime object to fetchEvents instead of formatted string
     List<Map<String, dynamic>> events =
-        await _eventService.fetchEvents(formattedDate);
+        await _eventService.fetchEvents(_selectedDay);
 
     setState(() {
       _events = events;
@@ -45,11 +45,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     });
   }
 
-  Future<void> loadEvents(String date) async {
+  Future<void> loadEvents(DateTime date) async {
     setState(() {
       _isLoading = true;
     });
 
+    // Pass the DateTime object to fetchEvents method
     List<Map<String, dynamic>> fetchedEvents =
         await _eventService.fetchEvents(date);
 
@@ -81,9 +82,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   _focusedDay = focusedDay;
                 });
 
-                String formattedDate =
-                    DateFormat('dd-MM-yyyy').format(selectedDay);
-                loadEvents(formattedDate);
+                loadEvents(selectedDay); // Pass DateTime object directly
               },
               onFormatChanged: (format) {
                 setState(() {

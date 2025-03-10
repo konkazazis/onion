@@ -4,19 +4,33 @@ import 'package:flutter/material.dart';
 class EventService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> fetchEvents(String date) async {
+  Future<List<Map<String, dynamic>>> fetchEvents(DateTime date) async {
     try {
+      // Convert the input DateTime to a start and end range of that day
+      DateTime startOfDay = DateTime(date.year, date.month, date.day);
+      DateTime endOfDay =
+          startOfDay.add(Duration(days: 1)).subtract(Duration(milliseconds: 1));
+
+      // Query the Firestore collection with the range of that day
       QuerySnapshot querySnapshot = await _db
-          .collection("events")
-          .where("date", isEqualTo: date) // Filter by date
+          .collection("shifts")
+          .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where("date", isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
           .get();
 
+      // Map the documents into a list of Maps
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
           'userid': doc.id,
-          'date': data['date']?.toString() ?? '',
-          'event': data['event']?.toString() ?? '',
+          'date': data['date']?.toDate().toString() ??
+              '', // Convert Timestamp to DateTime
+          'workType': data['workType']?.toString() ??
+              '', // Assuming you have a field called 'workType'
+          'startTime': data['startTime']?.toDate().toString() ??
+              '', // Convert Timestamp to DateTime
+          'endTime': data['endTime']?.toDate().toString() ??
+              '', // Convert Timestamp to DateTime
         };
       }).toList();
     } catch (e) {
