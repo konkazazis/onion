@@ -98,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 });
 
                 // Pass the selected day (DateTime object) to loadEvents
-                loadEvents(selectedDay);
+                //loadEvents(selectedDay);
               },
               onFormatChanged: (format) {
                 // Handle format change if needed (Month, Week, Day view)
