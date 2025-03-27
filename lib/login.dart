@@ -153,7 +153,11 @@ class Login extends StatelessWidget {
             password: _passwordController.text,
             context: context);
       },
-      child: const Text("Sign In"),
+      child: const Text(
+        "Sign in",
+        style: TextStyle(
+            color: Color(0xffF7F7F9)), // Correct way to set text color
+      ),
     );
   }
 

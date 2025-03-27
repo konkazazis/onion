@@ -134,7 +134,11 @@ class Signup extends StatelessWidget {
             password: _passwordController.text,
             context: context);
       },
-      child: const Text("Sign Up"),
+      child: const Text(
+        "Sign up",
+        style: TextStyle(
+            color: Color(0xffF7F7F9)), // Correct way to set text color
+      ),
     );
   }
 
