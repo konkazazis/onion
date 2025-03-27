@@ -8,7 +8,9 @@ import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final String username;
+
+  const DashboardScreen({super.key, required this.username});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -170,11 +172,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: DashboardScreen(),
-  ));
 }
