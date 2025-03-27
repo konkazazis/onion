@@ -5,6 +5,11 @@ import 'profile.dart';
 import 'widgets/bottom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {
+  final String username;
+  final String email;
+
+  MainScreen({required this.username, required this.email});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -12,12 +17,17 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    DashboardScreen(),
-    CalendarWidget(),
-    ProfileComponent(
-        name: 'Kostas', email: 'kazazis@gmail.com', profileImageUrl: 'test'),
-  ];
+  late List<Widget> _pages;
+
+  void initState() {
+    super.initState();
+    _pages = [
+      DashboardScreen(),
+      CalendarWidget(),
+      ProfileComponent(
+          name: widget.username, email: widget.email, profileImageUrl: 'test'),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

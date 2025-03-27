@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class Signup extends StatelessWidget {
   Signup({super.key});
 
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -39,6 +40,10 @@ class Signup extends StatelessWidget {
                 const SizedBox(
                   height: 80,
                 ),
+                _userName(),
+                const SizedBox(
+                  height: 20,
+                ),
                 _emailAddress(),
                 const SizedBox(
                   height: 20,
@@ -52,6 +57,40 @@ class Signup extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  Widget _userName() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Username',
+          style: GoogleFonts.raleway(
+              textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16)),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        TextField(
+          controller: _userNameController,
+          decoration: InputDecoration(
+              filled: true,
+              hintText: 'username',
+              hintStyle: const TextStyle(
+                  color: Color(0xff6A6A6A),
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14),
+              fillColor: const Color(0xffF7F7F9),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(14))),
+        )
+      ],
+    );
   }
 
   Widget _emailAddress() {
@@ -74,7 +113,7 @@ class Signup extends StatelessWidget {
           controller: _emailController,
           decoration: InputDecoration(
               filled: true,
-              hintText: 'mahdiforwork@gmail.com',
+              hintText: 'example@gmail.com',
               hintStyle: const TextStyle(
                   color: Color(0xff6A6A6A),
                   fontWeight: FontWeight.normal,
@@ -132,6 +171,7 @@ class Signup extends StatelessWidget {
         await AuthService().signup(
             email: _emailController.text,
             password: _passwordController.text,
+            username: _userNameController.text,
             context: context);
       },
       child: const Text(
