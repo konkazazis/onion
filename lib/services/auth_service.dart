@@ -23,7 +23,8 @@ class AuthService {
             .set({
           'username': username,
           'email': email,
-          'createdAt': DateTime.now()
+          'createdAt': DateTime.now(),
+          'userID': userCredential.user!.uid,
         });
       } catch (e) {
         String message = '';
