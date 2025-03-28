@@ -9,6 +9,9 @@ import 'widgets/dropdown.dart';
 import 'shift_scheduler.dart';
 
 class CalendarWidget extends StatefulWidget {
+  final String userID;
+
+  const CalendarWidget({super.key, required this.userID});
   @override
   _CalendarWidgetState createState() => _CalendarWidgetState();
 }
@@ -21,7 +24,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   final EventService _eventService = EventService();
   bool _isLoading = true; // Loading state
 
-  @override
   @override
   void initState() {
     super.initState();
@@ -133,7 +135,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ShiftScheduler()),
+            MaterialPageRoute(
+                builder: (context) => ShiftScheduler(userID: widget.userID)),
           );
         },
         child: Icon(Icons.add),

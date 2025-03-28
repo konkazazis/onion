@@ -7,8 +7,10 @@ import 'widgets/bottom_nav_bar.dart';
 class MainScreen extends StatefulWidget {
   final String username;
   final String email;
+  final String userID;
 
-  MainScreen({required this.username, required this.email});
+  MainScreen(
+      {required this.username, required this.email, required this.userID});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -23,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _pages = [
       DashboardScreen(username: widget.username),
-      CalendarWidget(),
+      CalendarWidget(userID: widget.userID),
       ProfileComponent(
           name: widget.username, email: widget.email, profileImageUrl: 'test'),
     ];

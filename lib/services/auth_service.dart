@@ -35,8 +35,10 @@ class AuthService {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  MainScreen(username: username, email: email)));
+              builder: (BuildContext context) => MainScreen(
+                  username: username,
+                  email: email,
+                  userID: userCredential.user!.uid)));
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -73,16 +75,22 @@ class AuthService {
 
       if (getUser.docs.isNotEmpty) {
         String username = getUser.docs.first['username']; // Extract username
+        String userID = getUser
+            .docs.first['userID']; // Extract userID from Firestore document
 
         await Future.delayed(const Duration(seconds: 1));
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) =>
-                MainScreen(username: username, email: email),
+            builder: (BuildContext context) => MainScreen(
+              username: username,
+              email: email,
+              userID: userID, // Pass userID correctly
+            ),
           ),
         );
+        print(userID);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("User not found in database.")),
