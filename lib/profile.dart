@@ -16,31 +16,64 @@ class ProfileComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      child: Align(
-        alignment: Alignment.topLeft,
+      body: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Aligns content to the left
           children: [
             SizedBox(height: 30),
-            SizedBox(height: 12),
-            Row(children: [
-              Text(
-                name + " | ",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Padding(
+              padding: EdgeInsets.only(left: 10), // Adjust left padding here
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        name + " | ",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        email,
+                        style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.grey[200], // Color of the line
+                    thickness: 1, // Thickness of the line
+                    indent: 0, // Left spacing
+                    endIndent: 20, // Right spacing
+                  ),
+                  Text('Personal Information',
+                      style: TextStyle(fontSize: 22, color: Colors.grey[600])),
+                  SizedBox(height: 10),
+                  Text(
+                    'Work Details',
+                    style: TextStyle(fontSize: 22, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Notification Settings',
+                    style: TextStyle(fontSize: 22, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Change Password',
+                    style: TextStyle(fontSize: 22, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 20),
+                  _signout(context),
+                ],
               ),
-              Text(
-                email,
-                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-              ),
-            ]),
-            SizedBox(height: 20), // Add some spacing
-            _signout(context),
+            ),
           ],
         ),
       ),
-    ));
+    );
   }
 
   Widget _signout(BuildContext context) {
