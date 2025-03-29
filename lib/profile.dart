@@ -24,10 +24,6 @@ class ProfileComponent extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 30),
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(profileImageUrl),
-            ),
             SizedBox(height: 12),
             Row(children: [
               Text(
@@ -48,23 +44,24 @@ class ProfileComponent extends StatelessWidget {
   }
 
   Widget _signout(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff0D6EFD),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
-        minimumSize: const Size(80, 60),
-        elevation: 0,
-      ),
-      onPressed: () async {
-        await AuthService().signout(context: context);
-      },
-      child: const Text(
-        "Sign out",
-        style: TextStyle(
-            color: Color(0xffF7F7F9)), // Correct way to set text color
-      ),
-    );
+    return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 0,
+          ),
+          onPressed: () async {
+            await AuthService().signout(context: context);
+          },
+          child: const Text(
+            "Sign out",
+            style: TextStyle(
+                color: Color(0xffF7F7F9)), // Correct way to set text color
+          ),
+        ));
   }
 }
