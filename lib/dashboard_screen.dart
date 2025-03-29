@@ -152,11 +152,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             final event = filteredEvents[index];
                             String eventName = event['workType'] ?? 'No Event';
                             String eventDate = event['date'] ?? 'No Date';
+                            String shiftStart = event['startTime'] ?? '';
+                            String shiftEnd = event['endTime'] ?? '';
                             return ListTile(
-                              leading: const Icon(Icons.event),
-                              title: Text(eventName),
-                              subtitle: Text("Date: $eventDate"),
-                            );
+                                leading: const Icon(Icons.event),
+                                title: Text(eventName),
+                                subtitle: Text("Date: $eventDate\n" +
+                                    "Shift Start: $shiftStart\n" +
+                                    "Shift End: $shiftEnd"));
                           },
                         ),
               const SizedBox(height: 20),

@@ -3,139 +3,18 @@ import 'services/auth_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'services/auth_service.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
-
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
-      bottomNavigationBar: _signup(context),
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   toolbarHeight: 100,
-      //   leading: GestureDetector(
-      //     onTap: () {
-      //       Navigator.pop(context);
-      //     },
-      //     child: Container(
-      //       margin: const EdgeInsets.only(left: 10),
-      //       decoration: const BoxDecoration(
-      //           color: Color(0xffF7F7F9), shape: BoxShape.circle),
-      //       child: const Center(
-      //         child: Icon(
-      //           Icons.arrow_back_ios_new_rounded,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  'Welcome to Onion, your personal shift planner',
-                  style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 32)),
-                ),
-              ),
-              const SizedBox(
-                height: 80,
-              ),
-              _emailAddress(),
-              const SizedBox(
-                height: 20,
-              ),
-              _password(),
-              const SizedBox(
-                height: 50,
-              ),
-              _signin(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  _LoginState createState() => _LoginState();
+}
 
-  Widget _emailAddress() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Email Address',
-          style: GoogleFonts.raleway(
-              textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16)),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        TextField(
-          controller: _emailController,
-          decoration: InputDecoration(
-              filled: true,
-              hintText: 'example@gmail.com',
-              hintStyle: const TextStyle(
-                  color: Color(0xff6A6A6A),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14),
-              fillColor: const Color(0xffF7F7F9),
-              border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(14))),
-        )
-      ],
-    );
-  }
-
-  Widget _password() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Password',
-          style: GoogleFonts.raleway(
-              textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16)),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        TextField(
-          obscureText: true,
-          controller: _passwordController,
-          decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color(0xffF7F7F9),
-              border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(14))),
-        )
-      ],
-    );
-  }
+class _LoginState extends State<Login> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   Widget _signin(BuildContext context) {
     return ElevatedButton(
@@ -148,16 +27,28 @@ class Login extends StatelessWidget {
         elevation: 0,
       ),
       onPressed: () async {
+        setState(() {
+          _isLoading = true; // Show loading indicator
+        });
+
         await AuthService().signin(
-            email: _emailController.text,
-            password: _passwordController.text,
-            context: context);
+          email: _emailController.text,
+          password: _passwordController.text,
+          context: context,
+        );
+
+        setState(() {
+          _isLoading = false; // Hide loading indicator after signin
+        });
       },
-      child: const Text(
-        "Sign in",
-        style: TextStyle(
-            color: Color(0xffF7F7F9)), // Correct way to set text color
-      ),
+      child: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          : const Text(
+              "Sign in",
+              style: TextStyle(
+                color: Color(0xffF7F7F9),
+              ),
+            ),
     );
   }
 
@@ -188,6 +79,99 @@ class Login extends StatelessWidget {
                     );
                   }),
           ])),
+    );
+  }
+
+  Widget _emailAddress() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Email Address',
+          style: GoogleFonts.raleway(
+              textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16)),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+            controller: _emailController,
+            decoration: InputDecoration(
+                filled: true,
+                hintText: 'example@gmail.com',
+                hintStyle: const TextStyle(
+                    color: Color(0xff6A6A6A),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14),
+                fillColor: const Color(0xffF7F7F9),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(14)))),
+      ],
+    );
+  }
+
+  Widget _password() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Password',
+          style: GoogleFonts.raleway(
+              textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16)),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+            obscureText: true,
+            controller: _passwordController,
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xffF7F7F9),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(14)))),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
+      bottomNavigationBar: _signup(context),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Welcome to Onion, your personal shift planner',
+                  style: GoogleFonts.raleway(
+                      textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32)),
+                ),
+              ),
+              const SizedBox(height: 80),
+              _emailAddress(),
+              const SizedBox(height: 20),
+              _password(),
+              const SizedBox(height: 50),
+              _signin(context),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
