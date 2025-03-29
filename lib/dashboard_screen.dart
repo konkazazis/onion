@@ -150,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemCount: filteredEvents.length,
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
-                            String eventName = event['event'] ?? 'No Event';
+                            String eventName = event['workType'] ?? 'No Event';
                             String eventDate = event['date'] ?? 'No Date';
                             return ListTile(
                               leading: const Icon(Icons.event),

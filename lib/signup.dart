@@ -17,19 +17,19 @@ class Signup extends StatelessWidget {
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: _signin(context),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          toolbarHeight: 50,
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Colors.transparent,
+        //   elevation: 0,
+        //   toolbarHeight: 50,
+        // ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
             child: Column(
               children: [
                 Center(
                   child: Text(
-                    'Register Account',
+                    'Register with Onion',
                     style: GoogleFonts.raleway(
                         textStyle: const TextStyle(
                             color: Colors.black,
@@ -160,7 +160,7 @@ class Signup extends StatelessWidget {
   Widget _signup(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff0D6EFD),
+        backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),

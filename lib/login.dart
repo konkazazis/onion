@@ -17,36 +17,36 @@ class Login extends StatelessWidget {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: _signup(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 100,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            margin: const EdgeInsets.only(left: 10),
-            decoration: const BoxDecoration(
-                color: Color(0xffF7F7F9), shape: BoxShape.circle),
-            child: const Center(
-              child: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   toolbarHeight: 100,
+      //   leading: GestureDetector(
+      //     onTap: () {
+      //       Navigator.pop(context);
+      //     },
+      //     child: Container(
+      //       margin: const EdgeInsets.only(left: 10),
+      //       decoration: const BoxDecoration(
+      //           color: Color(0xffF7F7F9), shape: BoxShape.circle),
+      //       child: const Center(
+      //         child: Icon(
+      //           Icons.arrow_back_ios_new_rounded,
+      //           color: Colors.black,
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Center(
                 child: Text(
-                  'Hello Again',
+                  'Welcome to Onion, your personal shift planner',
                   style: GoogleFonts.raleway(
                       textStyle: const TextStyle(
                           color: Colors.black,
@@ -140,7 +140,7 @@ class Login extends StatelessWidget {
   Widget _signin(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff0D6EFD),
+        backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
