@@ -145,7 +145,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      bottomNavigationBar: _signup(context),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
@@ -168,6 +167,8 @@ class _LoginState extends State<Login> {
               _password(),
               const SizedBox(height: 50),
               _signin(context),
+              const SizedBox(height: 20),
+              _signup(context),
             ],
           ),
         ),

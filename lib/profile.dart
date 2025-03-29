@@ -16,32 +16,35 @@ class ProfileComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16),
+        body: Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      child: Align(
+        alignment: Alignment.topLeft,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 30),
             CircleAvatar(
-              radius: 50,
+              radius: 20,
               backgroundImage: NetworkImage(profileImageUrl),
             ),
             SizedBox(height: 12),
-            Text(
-              name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 6),
-            Text(
-              email,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
+            Row(children: [
+              Text(
+                name + " | ",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                email,
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              ),
+            ]),
             SizedBox(height: 20), // Add some spacing
             _signout(context),
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _signout(BuildContext context) {
