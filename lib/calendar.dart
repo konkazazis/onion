@@ -4,7 +4,7 @@ import 'package:picnic_search/shift_scheduler.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart'; // Import intl package
-import 'events.dart';
+import 'services/shifts_service.dart';
 import 'widgets/dropdown.dart';
 import 'shift_scheduler.dart';
 
@@ -21,7 +21,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  final EventService _eventService = EventService();
+  final shiftsService _shiftsService = shiftsService();
   bool _isLoading = true; // Loading state
 
   @override
@@ -39,7 +39,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
     // Directly pass the DateTime object to fetchEvents instead of formatted string
     List<Map<String, dynamic>> events =
-        await _eventService.fetchEvents(_selectedDay);
+        await _shiftsService.fetchShifts(_selectedDay);
 
     setState(() {
       _events = events;
@@ -54,7 +54,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
     // Pass the DateTime object to fetchEvents method
     List<Map<String, dynamic>> fetchedEvents =
-        await _eventService.fetchEvents(date);
+        await _shiftsService.fetchShifts(date);
 
     setState(() {
       _events = fetchedEvents;

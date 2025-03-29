@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class EventService {
+class shiftsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> fetchEvents(DateTime date) async {
+  Future<List<Map<String, dynamic>>> fetchShifts(DateTime date) async {
     try {
       // Convert the input DateTime to a start and end range of that day
       DateTime startOfDay = DateTime(date.year, date.month, date.day);
@@ -22,7 +22,7 @@ class EventService {
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
-          'userid': doc.id,
+          'userID': doc.id,
           'date': data['date']?.toDate().toString() ??
               '', // Convert Timestamp to DateTime
           'workType': data['workType']?.toString() ??
@@ -39,7 +39,7 @@ class EventService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchEventsByMonth(String month) async {
+  Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month) async {
     try {
       List<String> parts = month.split('-');
       if (parts.length != 2) {
@@ -79,25 +79,25 @@ class EventService {
     }
   }
 
-  void addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
-      TimeOfDay endTime) async {
-    try {
-      DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
-          eventDate.day, startTime.hour, startTime.minute);
+  // void addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
+  //     TimeOfDay endTime) async {
+  //   try {
+  //     DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
+  //         eventDate.day, startTime.hour, startTime.minute);
 
-      DateTime endDateTime = DateTime(eventDate.year, eventDate.month,
-          eventDate.day, endTime.hour, endTime.minute);
+  //     DateTime endDateTime = DateTime(eventDate.year, eventDate.month,
+  //         eventDate.day, endTime.hour, endTime.minute);
 
-      await FirebaseFirestore.instance.collection('events').add({
-        'event': type,
-        'start': Timestamp.fromDate(startDateTime),
-        'end': Timestamp.fromDate(endDateTime),
-        'userid': 'test',
-        'date': Timestamp.fromDate(eventDate),
-      });
-      print("Event added successfully!");
-    } catch (e) {
-      print("Error adding event: $e");
-    }
-  }
+  //     await FirebaseFirestore.instance.collection('events').add({
+  //       'event': type,
+  //       'start': Timestamp.fromDate(startDateTime),
+  //       'end': Timestamp.fromDate(endDateTime),
+  //       'userid': 'test',
+  //       'date': Timestamp.fromDate(eventDate),
+  //     });
+  //     print("Event added successfully!");
+  //   } catch (e) {
+  //     print("Error adding event: $e");
+  //   }
+  // }
 }

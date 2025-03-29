@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:picnic_search/profile.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'events.dart';
+import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
@@ -17,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final EventService _eventService = EventService();
+  final shiftsService _shiftsService = shiftsService();
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
 
@@ -27,15 +27,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLoading = true;
 
   // Load events based on the selected day
-  Future<void> loadEvents(DateTime selectedDate) async {
+  Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
     try {
       // Fetch events for the selected date
-      final fetchedEvents = await _eventService.fetchEvents(selectedDate);
+      final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
       setState(() {
         events = fetchedEvents;
         filteredEvents = fetchedEvents;
+        print(filteredEvents);
       });
     } catch (e) {
       log("Error fetching events: $e");
@@ -48,8 +49,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // Fetch events for a specific month (optional, based on your requirements)
     try {
-      var response2 = await _eventService
-          .fetchEventsByMonth("03-2025"); // Example month and year
+      var response2 = await _shiftsService
+          .fetchShiftsByMonth("03-2025"); // Example month and year
       print(response2);
     } catch (e) {
       log("Error fetching events by month: $e");
@@ -62,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _selectedDay = DateTime.now(); // Default to today's date
     _focusedDay =
         _selectedDay; // Set the focused day to the selected day initially
-    loadEvents(_selectedDay); // Load events for today's date
+    loadShifts(_selectedDay); // Load events for today's date
   }
 
   @override
@@ -111,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   });
 
                   // Pass the selected day (DateTime object) to loadEvents
-                  //loadEvents(selectedDay);
+                  loadShifts(selectedDay);
                 },
                 onFormatChanged: (format) {
                   // Handle format change if needed (Month, Week, Day view)
