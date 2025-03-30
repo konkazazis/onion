@@ -6,11 +6,14 @@ import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
+import 'shift_scheduler.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String username;
+  final String userID;
 
-  const DashboardScreen({super.key, required this.username});
+  const DashboardScreen(
+      {super.key, required this.username, required this.userID});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -186,6 +189,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ShiftScheduler(userID: widget.userID)),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add Event',
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
     );
   }
