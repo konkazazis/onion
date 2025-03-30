@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShiftScheduler extends StatefulWidget {
   final String userID;
@@ -118,163 +119,174 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
     return Material(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Center horizontally
+              mainAxisSize:
+                  MainAxisSize.min, // Prevent Column from taking full heigh
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style:
-                      ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: BorderSide(color: Colors.black, width: 1), // Optional border
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                Text(
+                  'This is where you plan your next shift',
+                  style: GoogleFonts.raleway(
+                      textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28)),
+                ),
+                const SizedBox(height: 50),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                              color: Colors.black, width: 1), // Optional border
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius
+                                .zero, // Makes it completely rectangular
+                          ),
                         ),
-                      )
-                    ,
-                    onPressed: () => _selectDate(context),
-                    child: Text(
-                      style: TextStyle(
-                        color: Colors.black
+                        onPressed: () => _selectDate(context),
+                        child: Text(
+                          style: TextStyle(color: Colors.black),
+                          selectedDate != null
+                              ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
+                              : 'Select Date',
+                        ),
                       ),
-                      selectedDate != null
-                          ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
-                          : 'Select Date',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                              color: Colors.black, width: 1), // Optional border
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius
+                                .zero, // Makes it completely rectangular
+                          ),
+                        ),
+                        onPressed: () => _selectTime(context, true),
+                        child: Text(
+                          style: TextStyle(color: Colors.black),
+                          startTime != null
+                              ? 'Start: ${startTime!.format(context)}'
+                              : 'Select Start Time',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                              color: Colors.black, width: 1), // Optional border
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius
+                                .zero, // Makes it completely rectangular
+                          ),
+                        ),
+                        onPressed: () => _selectTime(context, false),
+                        child: Text(
+                          style: TextStyle(color: Colors.black),
+                          endTime != null
+                              ? 'End: ${endTime!.format(context)}'
+                              : 'Select End Time',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  dropdownColor: Colors.white,
+                  focusColor: Colors.black,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.zero, // Makes it completely rectangular
+                      borderSide: BorderSide(
+                          color: Colors.black, width: 1), // Black border
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.zero,
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.zero,
+                      borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 2), // Highlighted when focused
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  ),
+                  hint: Text("Select a work type"),
+                  value: selectedWorkType,
+                  items: workTypes
+                      .map((type) => DropdownMenuItem<String>(
+                            value: type,
+                            child: Text(type),
+                          ))
+                      .toList(),
+                  onChanged: (value) =>
+                      setState(() => selectedWorkType = value),
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(
+                          color: Colors.black, width: 1), // Optional border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius
+                            .zero, // Makes it completely rectangular
+                      ),
+                    ),
+                    onPressed: _saveShift,
+                    child: const Text(
+                        style: TextStyle(color: Colors.black), 'Save Shift'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 24.0), // Adjust padding as needed
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        shape: const CircleBorder(), // Fully round button
+                        padding: const EdgeInsets.all(
+                            15.0), // Increase for a bigger button
+                        elevation: 6.0,
+                        shadowColor: Colors.black54,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        size: 25.0, // Bigger icon
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style:
-                    ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.black, width: 1), // Optional border
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero, // Makes it completely rectangular
-                      ),
-                    )
-                    ,
-                    onPressed: () => _selectTime(context, true),
-                    child: Text(
-                      style: TextStyle(
-                          color: Colors.black
-                      ),
-                      startTime != null
-                          ? 'Start: ${startTime!.format(context)}'
-                          : 'Select Start Time',
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    style:
-                    ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.black, width: 1), // Optional border
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero, // Makes it completely rectangular
-                      ),
-                    )
-                    ,
-                    onPressed: () => _selectTime(context, false),
-                    child: Text(
-                      style: TextStyle(
-                          color: Colors.black
-                      ),
-                      endTime != null
-                          ? 'End: ${endTime!.format(context)}'
-                          : 'Select End Time',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              isExpanded: true,
-              dropdownColor: Colors.white,
-              focusColor: Colors.black,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.zero, // Makes it completely rectangular
-                  borderSide: BorderSide(color: Colors.black, width: 1), // Black border
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.zero,
-                  borderSide: BorderSide(color: Colors.black, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.zero,
-                  borderSide: BorderSide(color: Colors.black, width: 2), // Highlighted when focused
-                ),
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              ),
-              hint: Text("Select a work type"),
-              value: selectedWorkType,
-              items: workTypes
-                  .map((type) => DropdownMenuItem<String>(
-                        value: type,
-                        child: Text(type),
-                      ))
-                  .toList(),
-              onChanged: (value) => setState(() => selectedWorkType = value),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: ElevatedButton(
-                style:
-                ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: BorderSide(color: Colors.black, width: 1), // Optional border
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero, // Makes it completely rectangular
-                  ),
-                )
-                ,
-                onPressed: _saveShift,
-                child: const Text(
-                    style: TextStyle(
-                        color: Colors.black
-                    ),
-                    'Save Shift'),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 24.0), // Adjust padding as needed
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: const CircleBorder(), // Fully round button
-                    padding: const EdgeInsets.all(
-                        24.0), // Increase for a bigger button
-                    elevation: 6.0,
-                    shadowColor: Colors.black54,
-                  ),
-                  child: const Icon(
-                    Icons.highlight_off,
-                    size: 36.0, // Bigger icon
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }
