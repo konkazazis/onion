@@ -116,6 +116,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -125,8 +126,20 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
               children: [
                 Expanded(
                   child: ElevatedButton(
+                    style:
+                      ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.black, width: 1), // Optional border
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                        ),
+                      )
+                    ,
                     onPressed: () => _selectDate(context),
                     child: Text(
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
                       selectedDate != null
                           ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
                           : 'Select Date',
@@ -140,8 +153,20 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
               children: [
                 Expanded(
                   child: ElevatedButton(
+                    style:
+                    ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.black, width: 1), // Optional border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                      ),
+                    )
+                    ,
                     onPressed: () => _selectTime(context, true),
                     child: Text(
+                      style: TextStyle(
+                          color: Colors.black
+                      ),
                       startTime != null
                           ? 'Start: ${startTime!.format(context)}'
                           : 'Select Start Time',
@@ -151,8 +176,20 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
+                    style:
+                    ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.black, width: 1), // Optional border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                      ),
+                    )
+                    ,
                     onPressed: () => _selectTime(context, false),
                     child: Text(
+                      style: TextStyle(
+                          color: Colors.black
+                      ),
                       endTime != null
                           ? 'End: ${endTime!.format(context)}'
                           : 'Select End Time',
@@ -164,10 +201,24 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               isExpanded: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Work Type',
+              dropdownColor: Colors.white,
+              focusColor: Colors.black,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                  borderSide: BorderSide(color: Colors.black, width: 1), // Black border
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                  borderSide: BorderSide(color: Colors.black, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                  borderSide: BorderSide(color: Colors.black, width: 2), // Highlighted when focused
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               ),
+              hint: Text("Select a work type"),
               value: selectedWorkType,
               items: workTypes
                   .map((type) => DropdownMenuItem<String>(
@@ -180,8 +231,21 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
+                style:
+                ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Colors.black, width: 1), // Optional border
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero, // Makes it completely rectangular
+                  ),
+                )
+                ,
                 onPressed: _saveShift,
-                child: const Text('Save Shift'),
+                child: const Text(
+                    style: TextStyle(
+                        color: Colors.black
+                    ),
+                    'Save Shift'),
               ),
             ),
             const SizedBox(height: 16),
