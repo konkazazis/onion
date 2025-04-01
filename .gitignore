@@ -51,3 +51,5 @@ firebase.json
 firestore.indexes.json
 firestore.rules
 lib/firebase_options.dart
+/android/app/src/main/res
+/ios
