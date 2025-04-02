@@ -104,21 +104,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 firstDay: DateTime.utc(2000, 1, 1),
                 lastDay: DateTime.utc(2100, 12, 31),
                 focusedDay: _focusedDay, // Focused day
+                calendarFormat: CalendarFormat.week,
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
                 },
                 onDaySelected: (selectedDay, focusedDay) {
-                  // Update selected and focused day when the user selects a day
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
                   });
-
-                  // Pass the selected day (DateTime object) to loadEvents
                   loadShifts(selectedDay);
-                },
-                onFormatChanged: (format) {
-                  // Handle format change if needed (Month, Week, Day view)
                 },
                 calendarStyle: CalendarStyle(
                   todayDecoration: BoxDecoration(
