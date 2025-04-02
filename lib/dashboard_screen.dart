@@ -39,7 +39,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         events = fetchedEvents;
         filteredEvents = fetchedEvents;
-        print(filteredEvents);
       });
     } catch (e) {
       log("Error fetching events: $e");
@@ -51,13 +50,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Fetch events for a specific month (optional, based on your requirements)
-    try {
-      var response2 = await _shiftsService
-          .fetchShiftsByMonth("03-2025"); // Example month and year
-      print(response2);
-    } catch (e) {
-      log("Error fetching events by month: $e");
-    }
+    // try {
+    //   var response2 = await _shiftsService
+    //       .fetchShiftsByMonth("03-2025"); // Example month and year
+    // } catch (e) {
+    //   log("Error fetching events by month: $e");
+    // }
   }
 
   @override
