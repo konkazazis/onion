@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class shiftsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -22,15 +23,20 @@ class shiftsService {
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
-          'userID': doc.id,
-          'date': data['date']?.toDate().toString() ??
-              '', // Convert Timestamp to DateTime
+          'date': data['date'] is Timestamp
+              ? DateFormat('yyyy-MM-dd').format(data['date'].toDate())
+              : '', // Convert Timestamp to "YYYY-MM-DD"
+
           'workType': data['workType']?.toString() ??
               '', // Assuming you have a field called 'workType'
-          'startTime': data['startTime']?.toDate().toString() ??
-              '', // Convert Timestamp to DateTime
-          'endTime': data['endTime']?.toDate().toString() ??
-              '', // Convert Timestamp to DateTime
+
+          'startTime': data['startTime'] is Timestamp
+              ? DateFormat('HH:mm').format(data['startTime'].toDate())
+              : '', // Convert Timestamp to "HH:mm"
+
+          'endTime': data['endTime'] is Timestamp
+              ? DateFormat('HH:mm').format(data['endTime'].toDate())
+              : '', // Convert Timestamp to "HH:mm"
         };
       }).toList();
     } catch (e) {

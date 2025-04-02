@@ -212,7 +212,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   isExpanded: true,
                   dropdownColor: Colors.white,
                   focusColor: Colors.black,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.zero, // Makes it completely rectangular
