@@ -135,30 +135,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 indent: 20, // Left spacing
                 endIndent: 20, // Right spacing
               ),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : filteredEvents.isEmpty
-                      ? const Center(child: Text("No events found"))
-                      : ListView.builder(
-                          shrinkWrap:
-                              true, // This will allow the list to be scrollable without needing Expanded
-                          physics:
-                              NeverScrollableScrollPhysics(), // Disable scroll of ListView as it's inside a scrollable parent
-                          itemCount: filteredEvents.length,
-                          itemBuilder: (context, index) {
-                            final event = filteredEvents[index];
-                            String eventName = event['workType'] ?? 'No Event';
-                            String eventDate = event['date'] ?? 'No Date';
-                            String shiftStart = event['startTime'] ?? '';
-                            String shiftEnd = event['endTime'] ?? '';
-                            return ListTile(
+              SizedBox(
+                height: 200, // Minimum height to avoid shrinking too much
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : filteredEvents.isEmpty
+                        ? const Center(child: Text("No shifts found"))
+                        : ListView.builder(
+                            shrinkWrap:
+                                true, // Allows it to fit within constraints
+                            physics:
+                                NeverScrollableScrollPhysics(), // Prevents internal scrolling
+                            itemCount: filteredEvents.length,
+                            itemBuilder: (context, index) {
+                              final event = filteredEvents[index];
+                              String eventName =
+                                  event['workType'] ?? 'No Event';
+                              String eventDate = event['date'] ?? 'No Date';
+                              String shiftStart = event['startTime'] ?? '';
+                              String shiftEnd = event['endTime'] ?? '';
+                              return ListTile(
                                 leading: const Icon(Icons.event),
                                 title: Text(eventName),
-                                subtitle: Text("Date: $eventDate\n" +
-                                    "Shift Start: $shiftStart\n" +
-                                    "Shift End: $shiftEnd"));
-                          },
-                        ),
+                                subtitle: Text(
+                                  "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd",
+                                ),
+                              );
+                            },
+                          ),
+              ),
+
               const SizedBox(height: 20),
               Divider(
                 color: Colors.grey[200], // Color of the line
