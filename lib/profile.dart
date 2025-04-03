@@ -20,12 +20,12 @@ class ProfileComponent extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Aligns content to the left
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
             Padding(
-              padding: EdgeInsets.only(left: 10), // Adjust left padding here
+              padding: EdgeInsets.only(left: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -41,6 +41,9 @@ class ProfileComponent extends StatelessWidget {
                         style: TextStyle(fontSize: 20, color: Colors.grey[600]),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   Divider(
                     color: Colors.grey[200], // Color of the line
@@ -65,7 +68,7 @@ class ProfileComponent extends StatelessWidget {
                     'Change Password',
                     style: TextStyle(fontSize: 22, color: Colors.grey[600]),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 400),
                   _signout(context),
                 ],
               ),
