@@ -129,11 +129,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Today's Schedule:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Divider(
+                color: Colors.grey[200], // Color of the line
+                thickness: 1, // Thickness of the line
+                indent: 20, // Left spacing
+                endIndent: 20, // Right spacing
               ),
-              // This part is the key fix, wrapped in a scrollable list
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
@@ -159,9 +160,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           },
                         ),
               const SizedBox(height: 20),
-              const Text(
-                "Statistics:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Divider(
+                color: Colors.grey[200], // Color of the line
+                thickness: 1, // Thickness of the line
+                indent: 20, // Left spacing
+                endIndent: 20, // Right spacing
               ),
               const SizedBox(height: 10),
               Row(
