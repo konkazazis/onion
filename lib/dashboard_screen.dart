@@ -24,8 +24,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
 
-  DateTime _selectedDay = DateTime.now(); // The currently selected day
-  DateTime _focusedDay = DateTime.now(); // The currently focused day
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
 
   bool _isLoading = true;
 
@@ -61,10 +61,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = DateTime.now(); // Default to today's date
-    _focusedDay =
-        _selectedDay; // Set the focused day to the selected day initially
-    loadShifts(_selectedDay); // Load events for today's date
+    _selectedDay = DateTime.now();
+    _focusedDay = _selectedDay;
+    loadShifts(_selectedDay);
   }
 
   @override
@@ -90,18 +89,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        // Wrap the body content in a scroll view
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: kToolbarHeight + 20),
-              // Using TableCalendar for better day selection
               TableCalendar(
                 firstDay: DateTime.utc(2000, 1, 1),
                 lastDay: DateTime.utc(2100, 12, 31),
-                focusedDay: _focusedDay, // Focused day
+                focusedDay: _focusedDay,
                 calendarFormat: CalendarFormat.week,
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
@@ -130,47 +127,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 20),
               Divider(
-                color: Colors.grey[200], // Color of the line
-                thickness: 1, // Thickness of the line
-                indent: 20, // Left spacing
-                endIndent: 20, // Right spacing
+                color: Colors.grey[200],
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
               ),
-              SizedBox(
-                height: 200, // Minimum height to avoid shrinking too much
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : filteredEvents.isEmpty
-                        ? const Center(child: Text("No shifts found"))
-                        : ListView.builder(
-                            shrinkWrap:
-                                true, // Allows it to fit within constraints
-                            physics:
-                                NeverScrollableScrollPhysics(), // Prevents internal scrolling
-                            itemCount: filteredEvents.length,
-                            itemBuilder: (context, index) {
-                              final event = filteredEvents[index];
-                              String eventName =
-                                  event['workType'] ?? 'No Event';
-                              String eventDate = event['date'] ?? 'No Date';
-                              String shiftStart = event['startTime'] ?? '';
-                              String shiftEnd = event['endTime'] ?? '';
-                              return ListTile(
-                                leading: const Icon(Icons.event),
-                                title: Text(eventName),
-                                subtitle: Text(
-                                  "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd",
-                                ),
-                              );
-                            },
-                          ),
-              ),
-
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : filteredEvents.isEmpty
+                      ? const Center(child: Text("No shifts found"))
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: filteredEvents.length,
+                          itemBuilder: (context, index) {
+                            final event = filteredEvents[index];
+                            String eventName = event['workType'] ?? 'No Event';
+                            String eventDate = event['date'] ?? 'No Date';
+                            String shiftStart = event['startTime'] ?? '';
+                            String shiftEnd = event['endTime'] ?? '';
+                            return ListTile(
+                              leading: const Icon(Icons.event),
+                              title: Text(eventName),
+                              subtitle: Text(
+                                "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd",
+                              ),
+                            );
+                          },
+                        ),
               const SizedBox(height: 20),
               Divider(
-                color: Colors.grey[200], // Color of the line
-                thickness: 1, // Thickness of the line
-                indent: 20, // Left spacing
-                endIndent: 20, // Right spacing
+                color: Colors.grey[200],
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
               ),
               const SizedBox(height: 10),
               Row(
