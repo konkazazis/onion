@@ -16,6 +16,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? selectedWorkType;
+  String? notes;
 
   final List<String> workTypes = [
     'Morning',
@@ -27,7 +28,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
 
   // Function to add event (shift) to Firestore
   Future<void> addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
-      TimeOfDay endTime, String userID) async {
+      TimeOfDay endTime, String userID, String notes) async {
     try {
       DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
           eventDate.day, startTime.hour, startTime.minute);
@@ -38,8 +39,9 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         'workType': type,
         'startTime': Timestamp.fromDate(startDateTime),
         'endTime': Timestamp.fromDate(endDateTime),
-        'userid': userID, // Replace with actual user ID if needed
+        'userid': userID,
         'date': Timestamp.fromDate(eventDate),
+        'notes': notes
       });
 
       print("Shift added successfully!");
@@ -76,30 +78,24 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
     }
   }
 
-  // Save the shift by calling addEvent
   Future<void> _saveShift() async {
     if (selectedDate != null &&
         startTime != null &&
         endTime != null &&
         selectedWorkType != null) {
-      await addEvent(
-          selectedWorkType, // work type
-          selectedDate!, // event date
-          startTime!, // start time
-          endTime!, // end time
-          widget.userID);
+      await addEvent(selectedWorkType, selectedDate!, startTime!, endTime!,
+          widget.userID, notes!);
 
-      // Show success dialog
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Shift Saved'),
-          content: Text(
-            'Date: ${DateFormat('dd-MM-yyyy').format(selectedDate!)}\n'
-            'Start: ${startTime!.format(context)}\n'
-            'End: ${endTime!.format(context)}\n'
-            'Work Type: $selectedWorkType',
-          ),
+          content:
+              Text('Date: ${DateFormat('dd-MM-yyyy').format(selectedDate!)}\n'
+                  'Start: ${startTime!.format(context)}\n'
+                  'End: ${endTime!.format(context)}\n'
+                  'Work Type: $selectedWorkType\n'
+                  'Notes: $notes'),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -225,9 +221,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 2), // Highlighted when focused
+                      borderSide: BorderSide(color: Colors.black, width: 2),
                     ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -244,15 +238,21 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                       setState(() => selectedWorkType = value),
                 ),
                 const SizedBox(height: 24),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a search term',
+                  ),
+                  onChanged: (value) => setState(() => notes = value),
+                ),
+                const SizedBox(height: 16),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      side: BorderSide(
-                          color: Colors.black, width: 1), // Optional border
+                      side: BorderSide(color: Colors.black, width: 1),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius
-                            .zero, // Makes it completely rectangular
+                        borderRadius: BorderRadius.zero,
                       ),
                     ),
                     onPressed: _saveShift,

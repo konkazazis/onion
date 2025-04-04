@@ -37,6 +37,8 @@ class shiftsService {
           'endTime': data['endTime'] is Timestamp
               ? DateFormat('HH:mm').format(data['endTime'].toDate())
               : '', // Convert Timestamp to "HH:mm"
+
+          'notes': data['notes']
         };
       }).toList();
     } catch (e) {

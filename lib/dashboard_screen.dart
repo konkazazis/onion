@@ -39,6 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         events = fetchedEvents;
         filteredEvents = fetchedEvents;
+        print(filteredEvents);
       });
     } catch (e) {
       log("Error fetching events: $e");
@@ -146,11 +147,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String eventDate = event['date'] ?? 'No Date';
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
+                            String notes = event['notes'] ?? '';
                             return ListTile(
                               leading: const Icon(Icons.event),
                               title: Text(eventName),
                               subtitle: Text(
-                                "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd",
+                                "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd\nNotes : $notes",
                               ),
                             );
                           },
