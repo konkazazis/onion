@@ -122,43 +122,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: kToolbarHeight + 20),
-              TableCalendar(
-                firstDay: DateTime.utc(2000, 1, 1),
-                lastDay: DateTime.utc(2100, 12, 31),
-                focusedDay: _focusedDay,
-                calendarFormat: CalendarFormat.week,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                  loadShifts(selectedDay);
-                },
-                calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.deepOrange,
-                    shape: BoxShape.circle,
+              Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(
+                    color: Colors.grey,
+                    width: 1,
                   ),
                 ),
-                headerStyle: HeaderStyle(
-                  formatButtonVisible: true,
-                  titleCentered: true,
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2000, 1, 1),
+                  lastDay: DateTime.utc(2100, 12, 31),
+                  focusedDay: _focusedDay,
+                  calendarFormat: CalendarFormat.week,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                    loadShifts(selectedDay);
+                  },
+                  calendarStyle: CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      shape: BoxShape.circle,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.deepOrange,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: true,
+                    titleCentered: true,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              Divider(
-                color: Colors.grey[200],
-                thickness: 1,
-                indent: 20,
-                endIndent: 20,
-              ),
+              // Divider(
+              //   color: Colors.grey[200],
+              //   thickness: 1,
+              //   indent: 20,
+              //   endIndent: 20,
+              // ),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
@@ -174,11 +184,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
-                            return ListTile(
-                              leading: const Icon(Icons.event),
-                              title: Text(eventName),
-                              subtitle: Text(
-                                "Date: $eventDate\nShift Start: $shiftStart\nShift End: $shiftEnd\nNotes : $notes",
+                            return Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Colors.grey,
+                                  width: 1,
+                                ),
+                              ),
+                              child: ListTile(
+                                selected: false,
+                                leading: const Icon(Icons.event),
+                                title: Text(eventName),
+                                subtitle: Text(
+                                  "$eventDate\n$shiftStart - $shiftEnd\n$notes",
+                                ),
                               ),
                             );
                           },
