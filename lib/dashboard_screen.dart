@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
 import 'shift_scheduler.dart';
+import 'package:intl/intl.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String username;
@@ -24,6 +25,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final shiftsService _shiftsService = shiftsService();
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
+
+  Duration totalMonthlyDuration = Duration();
 
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
@@ -56,7 +59,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       var responseMonth = await _shiftsService
           .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
-      print("ResponseMOnth: $responseMonth");
+      print("ResponseMonth: $responseMonth");
+
+      Duration calculatedDuration = Duration(); // temporary container
+
+      final dateFormat = DateFormat("HH:mm");
+
+      for (var shift in responseMonth) {
+        String start = shift['startTime'];
+        String end = shift['endTime'];
+
+        DateTime startTime = dateFormat.parse(start);
+        DateTime endTime = dateFormat.parse(end);
+
+        Duration duration = endTime.difference(startTime);
+
+        calculatedDuration += duration;
+      }
+
+      setState(() {
+        totalMonthlyDuration = calculatedDuration;
+      });
     } catch (e) {
       log("Error fetching events by month: $e");
     }
@@ -173,7 +196,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   ShiftCard(
                     title: "Total hours this month",
-                    hours: "8h 30m",
+                    hours:
+                        "${totalMonthlyDuration.inHours}h ${totalMonthlyDuration.inMinutes.remainder(60)}m",
                     earnings: "\$120",
                   ),
                   ShiftCard(

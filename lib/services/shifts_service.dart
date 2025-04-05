@@ -74,11 +74,10 @@ class shiftsService {
         final data = doc.data() as Map<String, dynamic>;
         return {
           'userid': doc.id,
-          'date': (data['date'] as Timestamp)
-              .toDate()
-              .toUtc()
-              .toString(), // Ensure UTC format
-          'event': data['shifts']?.toString() ?? '',
+          'date': (data['date'] as Timestamp).toDate().toUtc().toString(),
+          'workType': data['workType'] ?? '',
+          'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),
+          'endTime': DateFormat('HH:mm').format(data['endTime'].toDate())
         };
       }).toList();
     } catch (e) {

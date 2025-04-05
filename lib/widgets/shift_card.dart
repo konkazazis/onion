@@ -15,6 +15,7 @@ class ShiftCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Card(
+        color: Colors.white,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
