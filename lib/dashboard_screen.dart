@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:picnic_search/profile.dart';
@@ -33,6 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
+    print("Selected month: ${_selectedDay.month}-${_selectedDay.year}");
+
     try {
       // Fetch events for the selected date
       final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
@@ -50,13 +53,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() => _isLoading = false);
     }
 
-    // Fetch events for a specific month (optional, based on your requirements)
-    // try {
-    //   var response2 = await _shiftsService
-    //       .fetchShiftsByMonth("03-2025"); // Example month and year
-    // } catch (e) {
-    //   log("Error fetching events by month: $e");
-    // }
+    try {
+      var responseMonth = await _shiftsService
+          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
+      print("ResponseMOnth: $responseMonth");
+    } catch (e) {
+      log("Error fetching events by month: $e");
+    }
   }
 
   @override
