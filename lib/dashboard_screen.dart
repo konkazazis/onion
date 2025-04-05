@@ -162,13 +162,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              // Divider(
-              //   color: Colors.grey[200],
-              //   thickness: 1,
-              //   indent: 20,
-              //   endIndent: 20,
-              // ),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
@@ -185,6 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
                             return Card(
+                              margin: EdgeInsets.zero,
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
