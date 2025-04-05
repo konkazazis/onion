@@ -120,7 +120,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: kToolbarHeight + 20),
               Card(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -178,7 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
                             return Card(
-                              margin: EdgeInsets.zero,
+                              margin: EdgeInsets.symmetric(horizontal: 5),
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
