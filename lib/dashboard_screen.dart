@@ -96,7 +96,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -109,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text: widget.username, // Bold username
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextSpan(text: '!'), // Exclamation mark
+              TextSpan(text: ' !'), // Exclamation mark
             ],
           ),
         ),
@@ -162,6 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
