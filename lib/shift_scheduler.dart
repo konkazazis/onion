@@ -16,7 +16,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? selectedWorkType;
-  String? notes;
+  String notes = "";
 
   final List<String> workTypes = [
     'Morning',
@@ -35,13 +35,15 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
       DateTime endDateTime = DateTime(eventDate.year, eventDate.month,
           eventDate.day, endTime.hour, endTime.minute);
 
+      print("notes $notes");
+
       await FirebaseFirestore.instance.collection('shifts').add({
         'workType': type,
         'startTime': Timestamp.fromDate(startDateTime),
         'endTime': Timestamp.fromDate(endDateTime),
         'userid': userID,
         'date': Timestamp.fromDate(eventDate),
-        'notes': notes
+        'notes': notes.isEmpty ? "" : notes
       });
 
       print("Shift added successfully!");
@@ -84,7 +86,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         endTime != null &&
         selectedWorkType != null) {
       await addEvent(selectedWorkType, selectedDate!, startTime!, endTime!,
-          widget.userID, notes!);
+          widget.userID, notes);
 
       showDialog(
         context: context,
@@ -241,7 +243,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                 TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter a search term',
+                    hintText: 'Notes',
                   ),
                   onChanged: (value) => setState(() => notes = value),
                 ),

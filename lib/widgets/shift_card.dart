@@ -17,7 +17,13 @@ class ShiftCard extends StatelessWidget {
       child: Card(
         color: Colors.white,
         elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: Colors.grey,
+            width: 1,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -28,7 +34,7 @@ class ShiftCard extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Text("Hours Worked: $hours", style: TextStyle(fontSize: 16)),
+              Text("$hours", style: TextStyle(fontSize: 16)),
               SizedBox(height: 5),
               Text("Earnings: $earnings",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),

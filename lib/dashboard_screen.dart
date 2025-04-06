@@ -191,7 +191,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 leading: const Icon(Icons.event),
                                 title: Text(eventName),
                                 subtitle: Text(
-                                  "$eventDate\n$shiftStart - $shiftEnd\n$notes",
+                                  [
+                                    eventDate,
+                                    "$shiftStart - $shiftEnd",
+                                    if (notes.trim().isNotEmpty)
+                                      notes, // Only include if not empty
+                                  ].join('\n'),
                                 ),
                               ),
                             );
@@ -209,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ShiftCard(
-                    title: "Total hours this month",
+                    title: "Total hours this month :",
                     hours:
                         "${totalMonthlyDuration.inHours}h ${totalMonthlyDuration.inMinutes.remainder(60)}m",
                     earnings: "\$120",
