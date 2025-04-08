@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:picnic_search/personal_details.dart';
 import 'services/auth_service.dart';
 
 class ProfileComponent extends StatelessWidget {
@@ -54,9 +55,20 @@ class ProfileComponent extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     side: const BorderSide(color: Colors.grey, width: 1),
                   ),
-                  child: ListTile(
-                    leading: const Icon(Icons.event),
-                    title: Text(profileOptions[index]),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PersonalDetails()),
+                      );
+                      print("Tapped on ${profileOptions[index]}");
+                    },
+                    child: ListTile(
+                      leading: const Icon(Icons.event),
+                      title: Text(profileOptions[index]),
+                    ),
                   ),
                 );
               },
