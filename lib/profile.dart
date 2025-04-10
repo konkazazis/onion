@@ -123,6 +123,48 @@ class ProfileComponent extends StatelessWidget {
                 ),
               ),
             ),
+            Card(
+              color: Colors.white,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(color: Colors.grey, width: 1),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  );
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.event),
+                  title: Text('Shift History'),
+                ),
+              ),
+            ),
+            Card(
+              color: Colors.white,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(color: Colors.grey, width: 1),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  );
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.event),
+                  title: Text('Time-off Requests'),
+                ),
+              ),
+            ),
             _signout(context),
           ],
         ),
