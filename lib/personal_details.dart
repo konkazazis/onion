@@ -31,7 +31,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'This is where you plan your next shift',
+                'Personal Details',
                 style: GoogleFonts.raleway(
                   textStyle: const TextStyle(
                     color: Colors.black,
@@ -44,7 +44,42 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Notes',
+                  hintText: 'Company',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Position',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Brake Time',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Email',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Location',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Prefered Shift hours',
                 ),
               ),
               const SizedBox(height: 16),
