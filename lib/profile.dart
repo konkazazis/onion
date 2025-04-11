@@ -17,13 +17,12 @@ class ProfileComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Profile Info
+            const SizedBox(height: 60),
             CircleAvatar(
               radius: 50,
               backgroundImage: NetworkImage(profileImageUrl),
@@ -55,7 +54,7 @@ class ProfileComponent extends StatelessWidget {
                   );
                 },
                 child: const ListTile(
-                  leading: Icon(Icons.event),
+                  leading: Icon(Icons.person),
                   title: Text('Personal Details'),
                 ),
               ),
@@ -70,13 +69,13 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  // );
                 },
                 child: const ListTile(
-                  leading: Icon(Icons.event),
+                  leading: Icon(Icons.settings),
                   title: Text('Notification Settings'),
                 ),
               ),
@@ -91,10 +90,10 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  // );
                 },
                 child: const ListTile(
                   leading: Icon(Icons.event),
@@ -112,10 +111,10 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  // );
                 },
                 child: const ListTile(
                   leading: Icon(Icons.event),
@@ -133,10 +132,10 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  // );
                 },
                 child: const ListTile(
                   leading: Icon(Icons.event),
@@ -154,10 +153,10 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
+                  // );
                 },
                 child: const ListTile(
                   leading: Icon(Icons.event),

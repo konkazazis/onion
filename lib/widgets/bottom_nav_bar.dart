@@ -22,7 +22,7 @@ class BottomNavBar extends StatelessWidget {
           label: 'Calendar',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.account_circle),
           label: 'Profile',
         ),
       ],
