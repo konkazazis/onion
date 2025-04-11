@@ -22,6 +22,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  CalendarFormat _calendarFormat = CalendarFormat.week; // Initial format
+
   final shiftsService _shiftsService = shiftsService();
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
@@ -133,7 +135,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   firstDay: DateTime.utc(2000, 1, 1),
                   lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: _focusedDay,
-                  calendarFormat: CalendarFormat.week,
+                  calendarFormat: _calendarFormat,
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },

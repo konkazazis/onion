@@ -17,10 +17,10 @@ class BottomNavBar extends StatelessWidget {
           icon: Icon(Icons.home),
           label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_today),
-          label: 'Calendar',
-        ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(Icons.calendar_today),
+        //   label: 'Calendar',
+        // ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle),
           label: 'Profile',
