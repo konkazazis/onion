@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'services/details_service.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -10,13 +11,25 @@ class PersonalDetails extends StatefulWidget {
   State<PersonalDetails> createState() => _PersonalDetailsState();
 }
 
-_saveShift() {}
-
 class _PersonalDetailsState extends State<PersonalDetails> {
-  void _saveShift() {
-    // your save logic here
-    print("Shift saved!");
+  final detailsService _detailsService = detailsService();
+
+  Future fetchDetails() async {
+    try {
+      final profileDetails =
+          await _detailsService.fetchDetails("ipnhqInBo2YTwghQOuVF5m6AsfB2");
+      print(profileDetails);
+    } catch (e) {
+      print("Error fetching details");
+    }
   }
+
+  @override
+  void initState() {
+    fetchDetails();
+  }
+
+  void _saveDetails() {}
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +105,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  onPressed: _saveShift,
+                  onPressed: _saveDetails,
                   child: const Text(
                     style: TextStyle(color: Colors.black),
                     'Save Shift',
