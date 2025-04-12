@@ -9,6 +9,7 @@ import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
 import 'shift_scheduler.dart';
 import 'package:intl/intl.dart';
+import 'services/details_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String username;
@@ -25,6 +26,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week; // Initial format
 
   final shiftsService _shiftsService = shiftsService();
+  final detailsService _detailsService = detailsService();
+
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
 
@@ -34,6 +37,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime _focusedDay = DateTime.now();
 
   bool _isLoading = true;
+
+  Future fetchDetails() async {
+    try {
+      final profileDetails =
+          await _detailsService.fetchDetails("ipnhqInBo2YTwghQOuVF5m6AsfB2");
+      print(profileDetails);
+    } catch (e) {
+      log("Error fetching details");
+    }
+  }
 
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
@@ -93,6 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _selectedDay = DateTime.now();
     _focusedDay = _selectedDay;
     loadShifts(_selectedDay);
+    fetchDetails();
   }
 
   @override
