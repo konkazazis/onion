@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'services/details_service.dart';
 
 class PersonalDetails extends StatefulWidget {
-  const PersonalDetails({super.key});
+  final String userID;
+  const PersonalDetails({super.key, required this.userID});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
@@ -16,8 +17,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
   Future fetchDetails() async {
     try {
-      final profileDetails =
-          await _detailsService.fetchDetails("ipnhqInBo2YTwghQOuVF5m6AsfB2");
+      final profileDetails = await _detailsService.fetchDetails(widget.userID);
       print(profileDetails);
     } catch (e) {
       print("Error fetching details");

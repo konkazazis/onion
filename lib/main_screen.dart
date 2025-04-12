@@ -27,7 +27,10 @@ class _MainScreenState extends State<MainScreen> {
       DashboardScreen(username: widget.username, userID: widget.userID),
       //CalendarWidget(userID: widget.userID),
       ProfileComponent(
-          name: widget.username, email: widget.email, profileImageUrl: 'test'),
+          name: widget.username,
+          email: widget.email,
+          profileImageUrl: 'test',
+          userID: widget.userID),
     ];
   }
 

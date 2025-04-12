@@ -6,13 +6,15 @@ class ProfileComponent extends StatelessWidget {
   final String name;
   final String email;
   final String profileImageUrl;
+  final String userID;
 
-  const ProfileComponent({
-    Key? key,
-    required this.name,
-    required this.email,
-    required this.profileImageUrl,
-  }) : super(key: key);
+  const ProfileComponent(
+      {Key? key,
+      required this.name,
+      required this.email,
+      required this.profileImageUrl,
+      required this.userID})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,8 @@ class ProfileComponent extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PersonalDetails()),
+                    MaterialPageRoute(
+                        builder: (context) => PersonalDetails(userID: userID)),
                   );
                 },
                 child: const ListTile(
