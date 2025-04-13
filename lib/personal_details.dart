@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +9,8 @@ import 'services/details_service.dart';
 
 class PersonalDetails extends StatefulWidget {
   final String userID;
-  const PersonalDetails({super.key, required this.userID});
+  final String email;
+  const PersonalDetails({super.key, required this.userID, required this.email});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
@@ -14,11 +18,22 @@ class PersonalDetails extends StatefulWidget {
 
 class _PersonalDetailsState extends State<PersonalDetails> {
   final detailsService _detailsService = detailsService();
+  TextEditingController companyController = TextEditingController();
+  TextEditingController positionController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
 
   Future fetchDetails() async {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);
-      print(profileDetails);
+      log('Email ${widget.email}');
+      companyController.text = profileDetails[0]['company'] ?? '';
+      positionController.text = profileDetails[0]['position'] ?? '';
+      timeController.text = profileDetails[0]['brakeTime']?.toString() ?? '';
+      locationController.text = profileDetails[0]['location'] ?? '';
+      emailController.text = widget.email;
     } catch (e) {
       print("Error fetching details");
     }
@@ -55,13 +70,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: companyController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Company',
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: positionController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Position',
@@ -69,13 +85,18 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                // keyboardType: TextInputType.number,
+                // inputFormatters: <TextInputFormatter>[
+                //   FilteringTextInputFormatter.digitsOnly
+                // ],
+                controller: timeController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Brake Time',
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Email',
@@ -83,16 +104,10 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: locationController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Location',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Prefered Shift hours',
                 ),
               ),
               const SizedBox(height: 16),

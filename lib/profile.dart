@@ -53,7 +53,7 @@ class ProfileComponent extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PersonalDetails(userID: userID)),
+                        builder: (context) => PersonalDetails(userID: userID, email: email)),
                   );
                 },
                 child: const ListTile(

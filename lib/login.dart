@@ -153,7 +153,7 @@ class _LoginState extends State<Login> {
             children: [
               Center(
                 child: Text(
-                  'Welcome to Onion, your personal shift planner',
+                  'Welcome to Onion, your personal shift manager',
                   style: GoogleFonts.raleway(
                       textStyle: const TextStyle(
                           color: Colors.black,
