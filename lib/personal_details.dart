@@ -23,6 +23,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   TextEditingController timeController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  var readOnly = true;
 
 
   Future fetchDetails() async {
@@ -68,46 +69,61 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   ),
                 ),
               ),
+              SwitchListTile(
+                value: !readOnly,
+                onChanged: (bool value) {
+                  setState(() {
+                    readOnly = !readOnly;
+                  });
+                },
+              ),
               const SizedBox(height: 16),
               TextField(
+                readOnly: readOnly,
                 controller: companyController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                    labelText: 'Company'
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
+                readOnly: readOnly,
                 controller: positionController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Position',
+                    labelText: 'Position'
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
-                // keyboardType: TextInputType.number,
-                // inputFormatters: <TextInputFormatter>[
-                //   FilteringTextInputFormatter.digitsOnly
-                // ],
+                readOnly: readOnly,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 controller: timeController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                    labelText: 'Brake time (minutes)'
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
+                readOnly: readOnly,
                 controller: emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Email',
+                    labelText: 'Email'
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
+                readOnly: readOnly,
                 controller: locationController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Location',
+                    labelText: 'Location'
                 ),
               ),
               const SizedBox(height: 16),
