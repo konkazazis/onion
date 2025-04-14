@@ -24,28 +24,46 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   TextEditingController locationController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   var readOnly = true;
-
+  var company = '';
+  var position = '';
+  var brakeTime = '';
+  var email = '';
+  var location = '';
 
   Future fetchDetails() async {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);
       log('Email ${widget.email}');
+
       companyController.text = profileDetails[0]['company'] ?? '';
       positionController.text = profileDetails[0]['position'] ?? '';
       timeController.text = profileDetails[0]['brakeTime']?.toString() ?? '';
       locationController.text = profileDetails[0]['location'] ?? '';
       emailController.text = widget.email;
+
+      // Update variables with the fetched values
+      setState(() {
+        company = companyController.text;
+        position = positionController.text;
+        brakeTime = timeController.text;
+        location = locationController.text;
+        email = emailController.text;
+      });
     } catch (e) {
-      print("Error fetching details");
+      print("Error fetching details: $e");
     }
   }
+
 
   @override
   void initState() {
     fetchDetails();
   }
 
-  void _saveDetails() {}
+  void _saveDetails() {
+    _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime));
+    log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +109,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   border: OutlineInputBorder(),
                     labelText: 'Company'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    company = value;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TextField(
@@ -101,6 +124,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   border: OutlineInputBorder(),
                     labelText: 'Position'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    position = value;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TextField(
@@ -115,6 +143,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   border: OutlineInputBorder(),
                     labelText: 'Brake time (minutes)'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    brakeTime = value;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TextField(
@@ -125,6 +158,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   border: OutlineInputBorder(),
                     labelText: 'Email'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    email = value;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TextField(
@@ -135,6 +173,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   border: OutlineInputBorder(),
                     labelText: 'Location'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    location = value;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               Center(
@@ -149,7 +192,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   onPressed: _saveDetails,
                   child: const Text(
                     style: TextStyle(color: Colors.black),
-                    'Save Shift',
+                    'Save',
                   ),
                 ),
               ),
