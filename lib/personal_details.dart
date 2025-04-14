@@ -59,26 +59,32 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Personal Details',
-                style: GoogleFonts.raleway(
-                  textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28,
-                  ),
-                ),
-              ),
-              SwitchListTile(
-                value: !readOnly,
-                onChanged: (bool value) {
-                  setState(() {
-                    readOnly = !readOnly;
-                  });
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(child: Text(
+                    'Personal Details',
+                    style: GoogleFonts.raleway(
+                      textStyle: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
+                      ),
+                    ),
+                  ),),
+                  Expanded(child: SwitchListTile(
+                    value: !readOnly,
+                    onChanged: (bool value) {
+                      setState(() {
+                        readOnly = !readOnly;
+                      });
+                    },
+                  ),)
+                ],
               ),
               const SizedBox(height: 16),
               TextField(
+                enabled: !readOnly,
                 readOnly: readOnly,
                 controller: companyController,
                 decoration: InputDecoration(
@@ -88,6 +94,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                enabled: !readOnly,
                 readOnly: readOnly,
                 controller: positionController,
                 decoration: InputDecoration(
@@ -97,6 +104,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                enabled: !readOnly,
                 readOnly: readOnly,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
@@ -110,6 +118,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                enabled: !readOnly,
                 readOnly: readOnly,
                 controller: emailController,
                 decoration: InputDecoration(
@@ -119,6 +128,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
               const SizedBox(height: 16),
               TextField(
+                enabled: !readOnly,
                 readOnly: readOnly,
                 controller: locationController,
                 decoration: InputDecoration(
