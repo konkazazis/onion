@@ -24,6 +24,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week; // Initial format
+  final detailsService _detailsService = detailsService();
 
   final shiftsService _shiftsService = shiftsService();
 
@@ -36,6 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime _focusedDay = DateTime.now();
 
   bool _isLoading = true;
+  int perHour = 0;
+  int earnings = 0;
 
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
@@ -83,9 +86,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       setState(() {
         totalMonthlyDuration = calculatedDuration;
+        if (totalMonthlyDuration.inHours != 0) {
+          earnings = perHour * totalMonthlyDuration.inHours;
+        }
       });
     } catch (e) {
       log("Error fetching events by month: $e");
+    }
+  }
+  Future <void> loadDetails() async {
+    try {
+      final profileDetails = await _detailsService.fetchDetails(widget.userID);
+      perHour = profileDetails[0]['perHour'] ?? 0;
+    }catch (e) {
+      print("Error fetching details: $e");
     }
   }
 
@@ -95,6 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _selectedDay = DateTime.now();
     _focusedDay = _selectedDay;
     loadShifts(_selectedDay);
+    loadDetails();
   }
 
   @override
@@ -226,12 +241,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     title: "Total hours this month :",
                     hours:
                         "${totalMonthlyDuration.inHours}h ${totalMonthlyDuration.inMinutes.remainder(60)}m",
-                    earnings: "\$120",
-                  ),
-                  ShiftCard(
-                    title: "Average Shift",
-                    hours: "7h 45m",
-                    earnings: "\$110",
+                    earnings: "\€ ${earnings != 0 ? earnings : 0}",
                   ),
                 ],
               ),
