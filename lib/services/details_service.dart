@@ -20,7 +20,7 @@ class detailsService {
     }
   }
 
-  Future<void> submitDetails(String userID, String email, String company, String location, String position, int brakeTime) async {
+  Future<void> submitDetails(String userID, String email, String company, String location, String position, int brakeTime, int perHour) async {
     try {
       final querySnapshot = await _db
           .collection("details")
@@ -35,7 +35,8 @@ class detailsService {
           "brakeTime": brakeTime,
           "email": email,
           "location": location,
-          "userID": userID, // might want to keep this consistent
+          "userID": userID,
+          "perHour": perHour// might want to keep this consistent
         });}
       // } else {
       //   // If no existing doc, create one

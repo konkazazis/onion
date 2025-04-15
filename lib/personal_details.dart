@@ -23,12 +23,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   TextEditingController timeController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController perHourController = TextEditingController();
   var readOnly = true;
   var company = '';
   var position = '';
   var brakeTime = '';
   var email = '';
   var location = '';
+  var perHour = '';
 
   Future fetchDetails() async {
     try {
@@ -40,6 +42,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
       timeController.text = profileDetails[0]['brakeTime']?.toString() ?? '';
       locationController.text = profileDetails[0]['location'] ?? '';
       emailController.text = widget.email;
+      perHourController.text = profileDetails[0]['perHour']?.toString() ?? '';
 
       // Update variables with the fetched values
       setState(() {
@@ -48,6 +51,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
         brakeTime = timeController.text;
         location = locationController.text;
         email = emailController.text;
+        perHour = perHourController.text;
       });
     } catch (e) {
       print("Error fetching details: $e");
@@ -61,8 +65,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   }
 
   void _saveDetails() {
-    _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime));
-    log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}");
+    _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime), int.parse(perHour));
+    readOnly = !readOnly;
+    log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}, ${int.parse(perHour)}");
   }
 
   @override
@@ -153,6 +158,25 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               TextField(
                 enabled: !readOnly,
                 readOnly: readOnly,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                controller: perHourController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Money per hour (nett)'
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    perHour = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                enabled: !readOnly,
+                readOnly: readOnly,
                 controller: emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -186,7 +210,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                     backgroundColor: Colors.white,
                     side: BorderSide(color: Colors.black, width: 1),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                   onPressed: _saveDetails,
