@@ -66,7 +66,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
   void _saveDetails() {
     _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime), int.parse(perHour));
-    readOnly = !readOnly;
+    setState(() {
+      readOnly = true;
+    });
     log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}, ${int.parse(perHour)}");
   }
 
@@ -208,14 +210,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    side: BorderSide(color: Colors.black, width: 1),
+                    side: readOnly ? BorderSide(color: Colors.grey, width: 1) : BorderSide(color: Colors.black, width: 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  onPressed: _saveDetails,
-                  child: const Text(
-                    style: TextStyle(color: Colors.black),
+                  onPressed: readOnly ? null : _saveDetails,
+                  child: Text(
+                    style: readOnly ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
                     'Save',
                   ),
                 ),
