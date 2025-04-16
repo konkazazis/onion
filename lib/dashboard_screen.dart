@@ -23,7 +23,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  CalendarFormat _calendarFormat = CalendarFormat.week; // Initial format
+  CalendarFormat _calendarFormat = CalendarFormat.month; // Initial format
   final detailsService _detailsService = detailsService();
 
   final shiftsService _shiftsService = shiftsService();
@@ -149,6 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 child: TableCalendar(
+                  weekNumbersVisible : true,
                   firstDay: DateTime.utc(2000, 1, 1),
                   lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: _focusedDay,
