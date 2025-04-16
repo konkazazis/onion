@@ -40,6 +40,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int perHour = 0;
   int earnings = 0;
 
+  List<Map<String, dynamic>> getEventsForDay(DateTime day) {
+    return events.where((event) {
+      DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
+      return isSameDay(eventDate, day);
+    }).toList();
+  }
+
+  Future<void> loadAllShiftsForMonth(DateTime selectedDate) async {
+    setState(() => _isLoading = true);
+
+    try {
+      final fetchedEvents =
+      await _shiftsService.fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}");
+
+      setState(() {
+        events = fetchedEvents; // <- this populates the whole month
+        filteredEvents = getEventsForDay(_selectedDay); // populate visible events list
+      });
+
+      Duration calculatedDuration = Duration();
+      final dateFormat = DateFormat("HH:mm");
+
+      for (var shift in fetchedEvents) {
+        String start = shift['startTime'];
+        String end = shift['endTime'];
+        DateTime startTime = dateFormat.parse(start);
+        DateTime endTime = dateFormat.parse(end);
+        Duration duration = endTime.difference(startTime);
+        calculatedDuration += duration;
+      }
+
+      setState(() {
+        totalMonthlyDuration = calculatedDuration;
+        if (totalMonthlyDuration.inHours != 0) {
+          earnings = perHour * totalMonthlyDuration.inHours;
+        }
+      });
+    } catch (e) {
+      log("Error loading all shifts: $e");
+      setState(() {
+        events = [];
+        filteredEvents = [];
+      });
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
@@ -108,7 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _selectedDay = DateTime.now();
     _focusedDay = _selectedDay;
-    loadShifts(_selectedDay);
+    loadAllShiftsForMonth(_selectedDay);
     loadDetails();
   }
 
@@ -149,7 +198,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 child: TableCalendar(
-                  weekNumbersVisible : true,
+                  weekNumbersVisible: true,
                   firstDay: DateTime.utc(2000, 1, 1),
                   lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: _focusedDay,
@@ -166,9 +215,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
+                      filteredEvents = getEventsForDay(selectedDay);
                     });
-                    loadShifts(selectedDay);
                   },
+                  eventLoader: getEventsForDay, // <--- ADD THIS
                   calendarStyle: CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: Colors.blueAccent,
@@ -178,12 +228,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: Colors.deepOrange,
                       shape: BoxShape.circle,
                     ),
+                    markerDecoration: BoxDecoration( // Optional: customize marker
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   headerStyle: HeaderStyle(
                     formatButtonVisible: true,
                     titleCentered: true,
                   ),
                 ),
+
               ),
               const SizedBox(height: 20),
               _isLoading
