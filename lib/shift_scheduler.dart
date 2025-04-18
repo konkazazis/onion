@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,9 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
   TimeOfDay? endTime;
   String? selectedWorkType;
   String notes = "";
+  var selectedHour = 0;
+  var brakeTime = '';
+  var overtime = '';
 
   final List<String> workTypes = [
     'Morning',
@@ -41,6 +45,8 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         'workType': type,
         'startTime': Timestamp.fromDate(startDateTime),
         'endTime': Timestamp.fromDate(endDateTime),
+        'overtime': overtime,
+        'brakeTime': brakeTime,
         'userid': userID,
         'date': Timestamp.fromDate(eventDate),
         'notes': notes.isEmpty ? "" : notes
@@ -206,6 +212,49 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   ],
                 ),
                 const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        //controller: timeController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Overtime (minutes)'
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            overtime = value;
+                            print(overtime);
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child:  TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        //controller: timeController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Brake time (minutes)'
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            brakeTime = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   dropdownColor: Colors.white,
