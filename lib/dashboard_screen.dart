@@ -30,6 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
+  List<Map<String, dynamic>> monthlyEvents = [];
+
 
   Duration totalMonthlyDuration = Duration();
 
@@ -68,6 +70,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
       print("ResponseMonth: $responseMonth");
 
+      setState(() {
+        monthlyEvents = responseMonth;
+      });
+
       Duration calculatedDuration = Duration(); // temporary container
 
       final dateFormat = DateFormat("HH:mm");
@@ -105,7 +111,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<Map<String, dynamic>> getEventsForDay(DateTime day) {
-    return events.where((event) {
+    return monthlyEvents.where((event) {
       DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
       return isSameDay(eventDate, day);
     }).toList();
