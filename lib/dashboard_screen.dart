@@ -30,6 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredEvents = [];
+  List<Map<String, dynamic>> monthlyEvents = [];
+
 
   Duration totalMonthlyDuration = Duration();
 
@@ -39,55 +41,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLoading = true;
   int perHour = 0;
   int earnings = 0;
-
-  List<Map<String, dynamic>> getEventsForDay(DateTime day) {
-    return events.where((event) {
-      DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
-      return isSameDay(eventDate, day);
-    }).toList();
-  }
-
-  Future<void> loadAllShiftsForMonth(DateTime selectedDate) async {
-    setState(() => _isLoading = true);
-
-    try {
-      final fetchedEvents =
-      await _shiftsService.fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}");
-
-      setState(() {
-        events = fetchedEvents; // <- this populates the whole month
-        filteredEvents = getEventsForDay(_selectedDay); // populate visible events list
-      });
-
-      Duration calculatedDuration = Duration();
-      final dateFormat = DateFormat("HH:mm");
-
-      for (var shift in fetchedEvents) {
-        String start = shift['startTime'];
-        String end = shift['endTime'];
-        DateTime startTime = dateFormat.parse(start);
-        DateTime endTime = dateFormat.parse(end);
-        Duration duration = endTime.difference(startTime);
-        calculatedDuration += duration;
-      }
-
-      setState(() {
-        totalMonthlyDuration = calculatedDuration;
-        if (totalMonthlyDuration.inHours != 0) {
-          earnings = perHour * totalMonthlyDuration.inHours;
-        }
-      });
-    } catch (e) {
-      log("Error loading all shifts: $e");
-      setState(() {
-        events = [];
-        filteredEvents = [];
-      });
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
 
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
@@ -117,6 +70,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
       print("ResponseMonth: $responseMonth");
 
+      setState(() {
+        monthlyEvents = responseMonth;
+      });
+
       Duration calculatedDuration = Duration(); // temporary container
 
       final dateFormat = DateFormat("HH:mm");
@@ -143,6 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       log("Error fetching events by month: $e");
     }
   }
+
   Future <void> loadDetails() async {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);
@@ -152,12 +110,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  List<Map<String, dynamic>> getEventsForDay(DateTime day) {
+    return monthlyEvents.where((event) {
+      DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
+      return isSameDay(eventDate, day);
+    }).toList();
+  }
+
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
     _focusedDay = _selectedDay;
-    loadAllShiftsForMonth(_selectedDay);
+    loadShifts(_selectedDay);
     loadDetails();
   }
 
@@ -198,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 child: TableCalendar(
-                  weekNumbersVisible: true,
+                  weekNumbersVisible : true,
                   firstDay: DateTime.utc(2000, 1, 1),
                   lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: _focusedDay,
@@ -215,10 +180,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
-                      filteredEvents = getEventsForDay(selectedDay);
                     });
+                    loadShifts(selectedDay);
                   },
-                  eventLoader: getEventsForDay, // <--- ADD THIS
+                  eventLoader: getEventsForDay,
                   calendarStyle: CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: Colors.blueAccent,
@@ -238,7 +203,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     titleCentered: true,
                   ),
                 ),
-
               ),
               const SizedBox(height: 20),
               _isLoading
@@ -257,7 +221,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
                             return Card(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
