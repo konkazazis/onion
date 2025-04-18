@@ -202,7 +202,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
                             return Card(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
