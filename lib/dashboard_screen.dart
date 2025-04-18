@@ -94,6 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       log("Error fetching events by month: $e");
     }
   }
+
   Future <void> loadDetails() async {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);

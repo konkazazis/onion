@@ -74,7 +74,7 @@ class shiftsService {
         final data = doc.data() as Map<String, dynamic>;
         return {
           'userid': doc.id,
-          'date': (data['date'] as Timestamp).toDate().toUtc().toString(),
+          'date': DateFormat('yyyy-MM-dd').format(data['date'].toDate()),
           'workType': data['workType'] ?? '',
           'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),
           'endTime': DateFormat('HH:mm').format(data['endTime'].toDate())
