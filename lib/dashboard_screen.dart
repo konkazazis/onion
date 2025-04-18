@@ -103,6 +103,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  List<Map<String, dynamic>> getEventsForDay(DateTime day) {
+    return events.where((event) {
+      DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
+      return isSameDay(eventDate, day);
+    }).toList();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -169,6 +176,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     });
                     loadShifts(selectedDay);
                   },
+                  eventLoader: getEventsForDay,
                   calendarStyle: CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: Colors.blueAccent,
@@ -176,6 +184,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     selectedDecoration: BoxDecoration(
                       color: Colors.deepOrange,
+                      shape: BoxShape.circle,
+                    ),
+                    markerDecoration: BoxDecoration( // Optional: customize marker
+                      color: Colors.green,
                       shape: BoxShape.circle,
                     ),
                   ),
