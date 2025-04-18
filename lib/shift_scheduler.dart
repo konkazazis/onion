@@ -144,8 +144,8 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                           side: BorderSide(
                               color: Colors.black, width: 1), // Optional border
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius
-                                .zero, // Makes it completely rectangular
+                            borderRadius: BorderRadius.circular(8),
+                            side: const BorderSide(color: Colors.grey, width: 1),
                           ),
                         ),
                         onPressed: () => _selectDate(context),
@@ -169,8 +169,8 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                           side: BorderSide(
                               color: Colors.black, width: 1), // Optional border
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius
-                                .zero, // Makes it completely rectangular
+                            borderRadius: BorderRadius.circular(8),
+                            side: const BorderSide(color: Colors.grey, width: 1),
                           ),
                         ),
                         onPressed: () => _selectTime(context, true),
@@ -190,8 +190,8 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                           side: BorderSide(
                               color: Colors.black, width: 1), // Optional border
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius
-                                .zero, // Makes it completely rectangular
+                            borderRadius: BorderRadius.circular(8),
+                            side: const BorderSide(color: Colors.grey, width: 1),
                           ),
                         ),
                         onPressed: () => _selectTime(context, false),
@@ -210,20 +210,12 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   isExpanded: true,
                   dropdownColor: Colors.white,
                   focusColor: Colors.black,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.zero, // Makes it completely rectangular
+                          BorderRadius.circular(8),
                       borderSide: BorderSide(
-                          color: Colors.black, width: 1), // Black border
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(color: Colors.black, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(color: Colors.black, width: 2),
+                          color: Colors.black, width: 1),
                     ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -254,7 +246,8 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                       backgroundColor: Colors.white,
                       side: BorderSide(color: Colors.black, width: 1),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
                     onPressed: _saveShift,
