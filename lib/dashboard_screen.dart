@@ -227,7 +227,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
                             String eventName = event['workType'] ?? 'No Event';
-                            String eventDate = event['date'].split("-")[1] + "-" + event['date'].split("-")[2] ?? 'No Date';
+                            String eventDate =
+                                event['date'] != null || event['date'] == ''  ?
+                                event['date'].split("-")[1] + "-" + event['date'].split("-")[2] : 'No Date';
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
