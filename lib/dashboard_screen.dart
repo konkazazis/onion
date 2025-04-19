@@ -25,18 +25,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month; // Initial format
   final detailsService _detailsService = detailsService();
-
   final shiftsService _shiftsService = shiftsService();
-
-  List<Map<String, dynamic>> events = [];
-  List<Map<String, dynamic>> filteredEvents = [];
-  List<Map<String, dynamic>> monthlyEvents = [];
-
-
-  Duration totalMonthlyDuration = Duration();
-
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
 
   bool _isLoading = true;
   int numberOfShifts = 0;
@@ -44,7 +33,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int earnings = 0;
   int brakeTime = 0;
   double totalBrakeTime = 0.0;
+
+  List<Map<String, dynamic>> events = [];
+  List<Map<String, dynamic>> filteredEvents = [];
+  List<Map<String, dynamic>> monthlyEvents = [];
+
+  Duration totalMonthlyDuration = Duration();
   Duration netHours = Duration();
+
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
 
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
@@ -82,7 +80,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Duration calculatedDuration = Duration(); // temporary container
 
       final dateFormat = DateFormat("HH:mm");
-
 
       for (var shift in responseMonth) {
         String start = shift['startTime'];
@@ -230,7 +227,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
                             String eventName = event['workType'] ?? 'No Event';
-                            String eventDate = event['date'] ?? 'No Date';
+                            String eventDate = event['date'].split("-")[1] + "-" + event['date'].split("-")[2] ?? 'No Date';
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
