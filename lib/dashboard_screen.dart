@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         totalMonthlyDuration = calculatedDuration;
         if (totalMonthlyDuration.inHours != 0) {
-          earnings = perHour * totalMonthlyDuration.inHours;
+          earnings = perHour * netHours.inHours;
         }
       });
     } catch (e) {
