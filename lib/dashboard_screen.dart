@@ -39,8 +39,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime _focusedDay = DateTime.now();
 
   bool _isLoading = true;
+  int numberOfShifts = 0;
   int perHour = 0;
   int earnings = 0;
+  int brakeTime = 0;
+  double totalBrakeTime = 0.0;
+  Duration netHours = Duration();
 
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate) async {
@@ -71,12 +75,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print("ResponseMonth: $responseMonth");
 
       setState(() {
+        numberOfShifts = responseMonth.length;
         monthlyEvents = responseMonth;
       });
 
       Duration calculatedDuration = Duration(); // temporary container
 
       final dateFormat = DateFormat("HH:mm");
+
 
       for (var shift in responseMonth) {
         String start = shift['startTime'];
@@ -86,9 +92,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         DateTime endTime = dateFormat.parse(end);
 
         Duration duration = endTime.difference(startTime);
-
         calculatedDuration += duration;
       }
+
+      int totalBreakMinutes = numberOfShifts * brakeTime;
+      Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
+
+      Duration netDuration = calculatedDuration - totalBreakDuration;
+      setState((){
+        netHours = netDuration;
+      });
 
       setState(() {
         totalMonthlyDuration = calculatedDuration;
@@ -105,6 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);
       perHour = profileDetails[0]['perHour'] ?? 0;
+      brakeTime = profileDetails[0]['brakeTime'] ?? 0;
     }catch (e) {
       print("Error fetching details: $e");
     }
@@ -260,7 +274,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ShiftCard(
                     title: "Total hours this month :",
                     hours:
-                        "${totalMonthlyDuration.inHours}h ${totalMonthlyDuration.inMinutes.remainder(60)}m",
+                        "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
                     earnings: "\€ ${earnings != 0 ? earnings : 0}",
                   ),
                 ],
