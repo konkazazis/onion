@@ -23,6 +23,7 @@ class shiftsService {
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
+          'id': doc.id,
           'date': data['date'] is Timestamp
               ? DateFormat('yyyy-MM-dd').format(data['date'].toDate())
               : '', // Convert Timestamp to "YYYY-MM-DD"
@@ -68,8 +69,6 @@ class shiftsService {
           .where("date", isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
           .get();
 
-      print("Querying from: $startOfMonth to $endOfMonth");
-
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
@@ -86,25 +85,11 @@ class shiftsService {
     }
   }
 
-  // void addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
-  //     TimeOfDay endTime) async {
-  //   try {
-  //     DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
-  //         eventDate.day, startTime.hour, startTime.minute);
-
-  //     DateTime endDateTime = DateTime(eventDate.year, eventDate.month,
-  //         eventDate.day, endTime.hour, endTime.minute);
-
-  //     await FirebaseFirestore.instance.collection('events').add({
-  //       'event': type,
-  //       'start': Timestamp.fromDate(startDateTime),
-  //       'end': Timestamp.fromDate(endDateTime),
-  //       'userid': 'test',
-  //       'date': Timestamp.fromDate(eventDate),
-  //     });
-  //     print("Event added successfully!");
-  //   } catch (e) {
-  //     print("Error adding event: $e");
-  //   }
-  // }
+  Future<void> deleteShift(String id) async {
+    try {
+      await FirebaseFirestore.instance.collection('shifts').doc(id).delete();
+    } catch(e) {
+      print("Error deleting shift: $e");
+    }
+  }
 }

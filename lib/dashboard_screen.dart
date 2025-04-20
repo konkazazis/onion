@@ -128,8 +128,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList();
   }
 
-  void deleteShift() {
-    
+  Future<void> deleteShift(String id) async {
+    try {
+      await _shiftsService.deleteShift(id);
+      await loadShifts(_selectedDay);
+    } catch(e) {
+      print("Error deleting shift: $e");
+    }
   }
 
   @override
@@ -231,9 +236,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
                             String eventName = event['workType'] ?? 'No Event';
-                            String eventDate =
-                                event['date'] != null || event['date'] == ''  ?
-                                event['date'].split("-")[1] + "-" + event['date'].split("-")[2] : 'No Date';
+                            String? rawDate = event['date'];
+                            String eventDate = (rawDate != null && rawDate.contains('-'))
+                                ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
+                                : 'No Date';
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
@@ -252,7 +258,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 leading: const Icon(Icons.event),
                                 title: Text(eventName),
                                 trailing:
-                                  IconButton(onPressed: () => {deleteShift()}, icon: Icon(Icons.close)),
+                                  IconButton(onPressed: () async {
+                                    final shiftId = filteredEvents[index]['id'];
+                                    print(filteredEvents);
+                                    await deleteShift(shiftId);
+                                    await loadShifts(_selectedDay); // ✅ Refresh the list AFTER deletion
+                                  },icon: Icon(Icons.close)),
                                 subtitle: Text(
                                   [
                                     eventDate,
