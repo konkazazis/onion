@@ -128,6 +128,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).toList();
   }
 
+  void deleteShift() {
+    
+  }
+
   @override
   void initState() {
     super.initState();
@@ -247,6 +251,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 selected: false,
                                 leading: const Icon(Icons.event),
                                 title: Text(eventName),
+                                trailing:
+                                  IconButton(onPressed: () => {deleteShift()}, icon: Icon(Icons.close)),
                                 subtitle: Text(
                                   [
                                     eventDate,

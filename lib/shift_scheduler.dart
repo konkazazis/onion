@@ -212,10 +212,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
+                TextField(
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.digitsOnly
@@ -232,28 +229,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                           });
                         },
                       ),
-                    ),
                     const SizedBox(width: 16),
-                    Expanded(
-                      child:  TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        //controller: timeController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Brake time (minutes)'
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            brakeTime = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
               const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
