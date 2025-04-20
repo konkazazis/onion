@@ -72,7 +72,7 @@ class shiftsService {
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
-          'userid': doc.id,
+          'id': doc.id,
           'date': DateFormat('yyyy-MM-dd').format(data['date'].toDate()),
           'workType': data['workType'] ?? '',
           'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),

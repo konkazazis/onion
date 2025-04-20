@@ -48,8 +48,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
-    print("Selected month: ${_selectedDay.month}-${_selectedDay.year}");
-
     try {
       // Fetch events for the selected date
       final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
