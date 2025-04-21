@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
-import 'calendar.dart';
 import 'profile.dart';
 import 'widgets/bottom_nav_bar.dart';
 
@@ -25,7 +24,6 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _pages = [
       DashboardScreen(username: widget.username, userID: widget.userID),
-      //CalendarWidget(userID: widget.userID),
       ProfileComponent(
           name: widget.username,
           email: widget.email,

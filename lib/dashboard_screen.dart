@@ -48,23 +48,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
-    // try {
-    //   // Fetch events for the selected date
-    //   final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
-    //   setState(() {
-    //     events = fetchedEvents;
-    //     filteredEvents = fetchedEvents;
-    //     print(filteredEvents);
-    //   });
-    // } catch (e) {
-    //   log("Error fetching events: $e");
-    //   setState(() {
-    //     filteredEvents = [];
-    //   });
-    // } finally {
-    //   setState(() => _isLoading = false);
-    // }
-
     try {
       var responseMonth = await _shiftsService
           .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
