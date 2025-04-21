@@ -5,18 +5,18 @@ import 'package:picnic_search/profile.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
-import 'widgets/bottom_nav_bar.dart';
 import 'widgets/shift_card.dart';
 import 'shift_scheduler.dart';
-import 'package:intl/intl.dart';
 import 'services/details_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String username;
   final String userID;
+  final String email;
 
   const DashboardScreen(
-      {super.key, required this.username, required this.userID});
+      {super.key, required this.username, required this.userID, required
+       this.email});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -135,20 +135,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text.rich(
-          TextSpan(
-            text: 'Welcome back, ',
-            style: TextStyle(color: Colors.black),
-            children: [
-              TextSpan(
-                text: widget.username, // Bold username
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: ' !'), // Exclamation mark
-            ],
-          ),
+        title: Padding(padding: EdgeInsets.only(left: 20.0),
+            child: Text.rich(
+        TextSpan(
+          text: 'Welcome back, ',
+          style: TextStyle(color: Colors.black),
+          children: [
+            TextSpan(
+              text: widget.username, // Bold username
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: ' !'), // Exclamation mark
+          ],
         ),
-        centerTitle: true,
+      )),
+        actions: [
+          Padding(padding: EdgeInsets.only(right: 8),
+            child:
+              Container(
+                height: 23,
+                width: 23,
+                child: Icon(Icons.notifications, color: Color(0xFFBDBDBD),size: 23,
+                ),
+                alignment: Alignment.center,)),
+          const Text(
+            '|',
+            style: TextStyle(
+              fontSize: 32, // You can adjust the size as needed
+              color: Color(0xFFE0E0E0),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 20.0, left: 10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProfileComponent( name: widget.username,
+                            email: widget.email,
+                            profileImageUrl: 'test',
+                            userID: widget.userID))
+                );},
+              child: Container(
+                height: 23,
+                width: 23,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black54,
+                ),
+                alignment: Alignment.center,
+                child: Icon(Icons.person, color: Colors.white, size: 18),
+              ),
+            ),
+          )
+
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

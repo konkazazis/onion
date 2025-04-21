@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      DashboardScreen(username: widget.username, userID: widget.userID),
+      DashboardScreen(username: widget.username, userID: widget.userID, email: widget.email),
       ProfileComponent(
           name: widget.username,
           email: widget.email,
