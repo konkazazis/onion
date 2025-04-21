@@ -48,22 +48,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> loadShifts(DateTime selectedDate) async {
     setState(() => _isLoading = true);
 
-    try {
-      // Fetch events for the selected date
-      final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
-      setState(() {
-        events = fetchedEvents;
-        filteredEvents = fetchedEvents;
-        print(filteredEvents);
-      });
-    } catch (e) {
-      log("Error fetching events: $e");
-      setState(() {
-        filteredEvents = [];
-      });
-    } finally {
-      setState(() => _isLoading = false);
-    }
+    // try {
+    //   // Fetch events for the selected date
+    //   final fetchedEvents = await _shiftsService.fetchShifts(selectedDate);
+    //   setState(() {
+    //     events = fetchedEvents;
+    //     filteredEvents = fetchedEvents;
+    //     print(filteredEvents);
+    //   });
+    // } catch (e) {
+    //   log("Error fetching events: $e");
+    //   setState(() {
+    //     filteredEvents = [];
+    //   });
+    // } finally {
+    //   setState(() => _isLoading = false);
+    // }
 
     try {
       var responseMonth = await _shiftsService
@@ -106,6 +106,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     } catch (e) {
       log("Error fetching events by month: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -198,8 +200,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
+                      filteredEvents = getEventsForDay(selectedDay);
                     });
-                    loadShifts(selectedDay);
                   },
                   eventLoader: getEventsForDay,
                   calendarStyle: CalendarStyle(
@@ -260,7 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     final shiftId = filteredEvents[index]['id'];
                                     print(filteredEvents);
                                     await deleteShift(shiftId);
-                                    await loadShifts(_selectedDay); // ✅ Refresh the list AFTER deletion
+                                    await loadShifts(_selectedDay);
                                   },icon: Icon(Icons.close)),
                                 subtitle: Text(
                                   [
