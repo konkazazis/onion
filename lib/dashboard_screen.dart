@@ -161,7 +161,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const Text(
             '|',
             style: TextStyle(
-              fontSize: 32, // You can adjust the size as needed
+              fontWeight: FontWeight.w200,
+              fontSize: 32,
               color: Color(0xFFE0E0E0),
             ),
           ),
@@ -169,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.only(right: 20.0, left: 10),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ProfileComponent( name: widget.username,
@@ -178,14 +179,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             userID: widget.userID))
                 );},
               child: Container(
-                height: 23,
-                width: 23,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black54,
-                ),
                 alignment: Alignment.center,
-                child: Icon(Icons.person, color: Colors.white, size: 18),
+                child: Icon(Icons.account_circle, size: 28),
               ),
             ),
           )
