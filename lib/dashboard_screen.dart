@@ -259,7 +259,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       shape: BoxShape.circle,
                     ),
                     markerDecoration: BoxDecoration(
-                      // Optional: customize marker
                       color: Colors.green,
                       shape: BoxShape.circle,
                     ),
@@ -281,7 +280,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           itemCount: filteredEvents.length,
                           itemBuilder: (context, index) {
                             final event = filteredEvents[index];
-                            String eventName = event['workType'] ?? 'No Event';
+                            String shiftType = event['workType'] ?? 'No Event';
                             String? rawDate = event['date'];
                             String eventDate = (rawDate != null &&
                                     rawDate.contains('-'))
@@ -304,7 +303,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: ListTile(
                                 selected: false,
                                 leading: const Icon(Icons.event),
-                                title: Text(eventName),
+                                title: Text(shiftType),
                                 trailing: IconButton(
                                     onPressed: () async {
                                       final shiftId =
