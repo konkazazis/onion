@@ -15,8 +15,10 @@ class DashboardScreen extends StatefulWidget {
   final String email;
 
   const DashboardScreen(
-      {super.key, required this.username, required this.userID, required
-       this.email});
+      {super.key,
+      required this.username,
+      required this.userID,
+      required this.email});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -77,7 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
 
       Duration netDuration = calculatedDuration - totalBreakDuration;
-      setState((){
+      setState(() {
         netHours = netDuration;
       });
 
@@ -94,12 +96,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  Future <void> loadDetails() async {
+  Future<void> loadDetails() async {
     try {
       final profileDetails = await _detailsService.fetchDetails(widget.userID);
       perHour = profileDetails[0]['perHour'] ?? 0;
       brakeTime = profileDetails[0]['brakeTime'] ?? 0;
-    }catch (e) {
+    } catch (e) {
       print("Error fetching details: $e");
     }
   }
@@ -115,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       await _shiftsService.deleteShift(id);
       await loadShifts(_selectedDay);
-    } catch(e) {
+    } catch (e) {
       print("Error deleting shift: $e");
     }
   }
@@ -135,56 +137,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Padding(padding: EdgeInsets.only(left: 20.0),
-            child: Text.rich(
-        TextSpan(
-          text: 'Welcome back, ',
-          style: TextStyle(color: Colors.black),
-          children: [
-            TextSpan(
-              text: widget.username, // Bold username
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(text: ' !'), // Exclamation mark
-          ],
-        ),
-      )),
-        actions: [
-          Padding(padding: EdgeInsets.only(right: 8),
-            child:
-              Container(
-                height: 23,
-                width: 23,
-                child: Icon(Icons.notifications, color: Color(0xFFBDBDBD),size: 23,
-                ),
-                alignment: Alignment.center,)),
-          const Text(
-            '|',
-            style: TextStyle(
-              fontWeight: FontWeight.w200,
-              fontSize: 32,
-              color: Color(0xFFE0E0E0),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 20.0, left: 10),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfileComponent( name: widget.username,
-                            email: widget.email,
-                            profileImageUrl: 'test',
-                            userID: widget.userID))
-                );},
-              child: Container(
-                alignment: Alignment.center,
-                child: Icon(Icons.account_circle, size: 28),
+        title: Text.rich(
+          TextSpan(
+            text: 'Welcome back, ',
+            style: TextStyle(color: Colors.black),
+            children: [
+              TextSpan(
+                text: widget.username, // Bold username
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
-          )
-
+              TextSpan(text: ' !'), // Exclamation mark
+            ],
+          ),
+        ),
+        actions: [
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 8), // Added padding
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 23,
+                      width: 23,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.notifications,
+                        color: Color(0xFFBDBDBD),
+                        size: 23,
+                      ),
+                    ),
+                    SizedBox(width: 12), // Space between icon and divider
+                    Text(
+                      '|',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 32,
+                        color: Color(0xFFE0E0E0),
+                      ),
+                    ),
+                    SizedBox(
+                        width: 12), // Space between divider and profile icon
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileComponent(
+                              name: widget.username,
+                              email: widget.email,
+                              profileImageUrl: 'test',
+                              userID: widget.userID,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 28,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ))
         ],
       ),
       body: SingleChildScrollView(
@@ -203,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 child: TableCalendar(
-                  weekNumbersVisible : true,
+                  weekNumbersVisible: true,
                   firstDay: DateTime.utc(2000, 1, 1),
                   lastDay: DateTime.utc(2100, 12, 31),
                   focusedDay: _focusedDay,
@@ -233,7 +258,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: Colors.deepOrange,
                       shape: BoxShape.circle,
                     ),
-                    markerDecoration: BoxDecoration( // Optional: customize marker
+                    markerDecoration: BoxDecoration(
+                      // Optional: customize marker
                       color: Colors.green,
                       shape: BoxShape.circle,
                     ),
@@ -257,14 +283,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             final event = filteredEvents[index];
                             String eventName = event['workType'] ?? 'No Event';
                             String? rawDate = event['date'];
-                            String eventDate = (rawDate != null && rawDate.contains('-'))
+                            String eventDate = (rawDate != null &&
+                                    rawDate.contains('-'))
                                 ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
                                 : 'No Date';
                             String shiftStart = event['startTime'] ?? '';
                             String shiftEnd = event['endTime'] ?? '';
                             String notes = event['notes'] ?? '';
                             return Card(
-                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 5),
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -277,13 +305,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 selected: false,
                                 leading: const Icon(Icons.event),
                                 title: Text(eventName),
-                                trailing:
-                                  IconButton(onPressed: () async {
-                                    final shiftId = filteredEvents[index]['id'];
-                                    print(filteredEvents);
-                                    await deleteShift(shiftId);
-                                    await loadShifts(_selectedDay);
-                                  },icon: Icon(Icons.close)),
+                                trailing: IconButton(
+                                    onPressed: () async {
+                                      final shiftId =
+                                          filteredEvents[index]['id'];
+                                      print(filteredEvents);
+                                      await deleteShift(shiftId);
+                                      await loadShifts(_selectedDay);
+                                    },
+                                    icon: Icon(Icons.close)),
                                 subtitle: Text(
                                   [
                                     eventDate,
