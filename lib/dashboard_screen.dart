@@ -131,6 +131,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     loadDetails();
   }
 
+  final Map<String, Color> shiftColors = {
+    'morning': Colors.yellow,
+    'afternoon': Colors.orange,
+    'night': Colors.indigo,
+    'remote': Colors.black26,
+    'On-site': Colors.blueGrey
+  };
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,10 +267,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: Colors.deepOrange,
                       shape: BoxShape.circle,
                     ),
-                    markerDecoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
+                  ),
+                  calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, date, events) {
+                      if (events.isEmpty) return SizedBox.shrink();
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: events.take(3).map((event) {
+                          final shift = event as Map<String, dynamic>;
+                          final shiftType = shift['workType']?.toLowerCase() ?? '';
+
+                          final color = shiftColors[shiftType] ?? Colors.grey;
+
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 1.0),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
                   headerStyle: HeaderStyle(
                     formatButtonVisible: true,
