@@ -33,7 +33,8 @@ class shiftsService {
           'date': DateFormat('yyyy-MM-dd').format(data['date'].toDate()),
           'workType': data['workType'] ?? '',
           'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),
-          'endTime': DateFormat('HH:mm').format(data['endTime'].toDate())
+          'endTime': DateFormat('HH:mm').format(data['endTime'].toDate()),
+          'notes': data['notes'] ?? ''
         };
       }).toList();
     } catch (e) {
