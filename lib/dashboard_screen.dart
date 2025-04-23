@@ -388,8 +388,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
 
           if (result == 'refresh') {
-            await loadShifts(_selectedDay);
             await loadDetails();
+            await loadShifts(_selectedDay);
+            print(_selectedDay);
+            setState( () {
+            filteredEvents = getEventsForDay(_selectedDay);
+            });
           }
         },
         child: Icon(Icons.add),
