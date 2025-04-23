@@ -379,18 +379,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ShiftScheduler(userID: widget.userID)),
+              builder: (context) => ShiftScheduler(userID: widget.userID),
+            ),
           );
+
+          if (result == 'refresh') {
+            await loadShifts(_selectedDay);
+            await loadDetails();
+          }
         },
         child: Icon(Icons.add),
         tooltip: 'Add Event',
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
+
     );
   }
 }

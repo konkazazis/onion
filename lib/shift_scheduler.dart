@@ -287,7 +287,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                     padding: const EdgeInsets.only(
                         bottom: 24.0), // Adjust padding as needed
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.pop(context, 'refresh'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
