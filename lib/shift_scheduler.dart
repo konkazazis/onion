@@ -94,23 +94,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
       await addEvent(selectedWorkType, selectedDate!, startTime!, endTime!,
           widget.userID, notes);
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Shift Saved'),
-          content:
-              Text('Date: ${DateFormat('dd-MM-yyyy').format(selectedDate!)}\n'
-                  'Start: ${startTime!.format(context)}\n'
-                  'End: ${endTime!.format(context)}\n'
-                  'Work Type: $selectedWorkType\n'
-                  'Notes: $notes'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK')),
-          ],
-        ),
-      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields.')),
@@ -275,7 +258,10 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                         side: const BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
-                    onPressed: _saveShift,
+                    onPressed: () async {
+                      await _saveShift();
+                      Navigator.pop(context, 'refresh');
+                    },
                     child: const Text(
                         style: TextStyle(color: Colors.black), 'Save Shift'),
                   ),
