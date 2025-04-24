@@ -304,57 +304,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
                       ? const Center(child: Text("No shifts found"))
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: filteredEvents.length,
-                          itemBuilder: (context, index) {
-                            final event = filteredEvents[index];
-                            String shiftType = event['workType'] ?? 'No Event';
-                            String? rawDate = event['date'];
-                            String eventDate = (rawDate != null &&
+                      :  Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child:
+                                Text(
+                                  DateFormat("EEEE, d 'of' MMMM").format(_selectedDay),
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(fontSize: 18), // optional style
+                                ),
+                            ),
+                            Divider(
+                              color: Colors.grey[200],
+                              thickness: 1,
+                              indent: 20,
+                              endIndent: 20,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: filteredEvents.length,
+                              itemBuilder: (context, index) {
+                                final event = filteredEvents[index];
+                                String shiftType = event['workType'] ?? 'No Event';
+                                String? rawDate = event['date'];
+                                String eventDate = (rawDate != null &&
                                     rawDate.contains('-'))
-                                ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
-                                : 'No Date';
-                            String shiftStart = event['startTime'] ?? '';
-                            String shiftEnd = event['endTime'] ?? '';
-                            String notes = event['notes'] ?? '';
-                            return Card(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                side: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1,
-                                ),
-                              ),
-                              child: ListTile(
-                                selected: false,
-                                leading: const Icon(Icons.event),
-                                title: Text(shiftType),
-                                trailing: IconButton(
-                                    onPressed: () async {
-                                      final shiftId =
-                                          filteredEvents[index]['id'];
-                                      print(filteredEvents);
-                                      await deleteShift(shiftId);
-                                      await loadShifts(_selectedDay);
-                                    },
-                                    icon: Icon(Icons.close)),
-                                subtitle: Text(
-                                  [
-                                    eventDate,
-                                    "$shiftStart - $shiftEnd",
-                                    if (notes.trim().isNotEmpty)
-                                      notes, // Only include if not empty
-                                  ].join('\n'),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                                    ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
+                                    : 'No Date';
+                                String shiftStart = event['startTime'] ?? '';
+                                String shiftEnd = event['endTime'] ?? '';
+                                String notes = event['notes'] ?? '';
+                                return
+                                  Card(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      side: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      selected: false,
+                                      leading: const Icon(Icons.event),
+                                      title: Text(shiftType),
+                                      trailing: IconButton(
+                                          onPressed: () async {
+                                            final shiftId =
+                                            filteredEvents[index]['id'];
+                                            print(filteredEvents);
+                                            await deleteShift(shiftId);
+                                            await loadShifts(_selectedDay);
+                                          },
+                                          icon: Icon(Icons.close)),
+                                      subtitle: Text(
+                                        [
+                                          eventDate,
+                                          "$shiftStart - $shiftEnd",
+                                          if (notes.trim().isNotEmpty)
+                                            notes, // Only include if not empty
+                                        ].join('\n'),
+                                      ),
+                                    ),
+                                  );
+                              },
+                            ),
+                          ],
+              ),
               const SizedBox(height: 20),
               Divider(
                 color: Colors.grey[200],
