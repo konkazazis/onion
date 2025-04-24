@@ -146,7 +146,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text.rich(
+        title:
+        Padding(padding: EdgeInsets.only(left: 8), child: Text.rich(
           TextSpan(
             text: 'Welcome back, ',
             style: TextStyle(color: Colors.black),
@@ -158,7 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               TextSpan(text: ' !'), // Exclamation mark
             ],
           ),
-        ),
+        )),
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -223,7 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+          padding: const EdgeInsets.symmetric(vertical: 32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -306,15 +307,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ? const Center(child: Text("No shifts found"))
                       :  Column(
                           children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child:
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child:  Align(
+                                alignment: Alignment.centerLeft,
+                                child:
                                 Text(
                                   DateFormat("EEEE, d 'of' MMMM").format(_selectedDay),
                                   textAlign: TextAlign.start,
                                   style: TextStyle(fontSize: 18), // optional style
                                 ),
-                            ),
+                              )),
                             Divider(
                               color: Colors.grey[200],
                               thickness: 1,

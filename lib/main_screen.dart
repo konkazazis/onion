@@ -41,7 +41,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // Only one active screen
+      body:
+      Padding(padding: EdgeInsets.all(10),
+        child: _pages[_selectedIndex],
+      )
       // bottomNavigationBar: BottomNavBar(
       //   currentIndex: _selectedIndex,
       //   onTap: _onItemTapped,
