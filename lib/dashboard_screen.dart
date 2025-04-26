@@ -388,6 +388,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => ShiftEdit(
+                                                    shift: shift,
                                                     userID: widget.userID,
                                                     email: widget.email,
                                                   ),

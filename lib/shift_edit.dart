@@ -8,16 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'services/details_service.dart';
 
 class ShiftEdit extends StatefulWidget {
+  final Map<String, dynamic> shift;
   final String userID;
   final String email;
-  const ShiftEdit({super.key, required this.userID, required this.email});
+  const ShiftEdit({super.key, required this.userID, required this.email, required this.shift});
 
   @override
   State<ShiftEdit> createState() => _ShiftEditState();
 }
 
 class _ShiftEditState extends State<ShiftEdit> {
-  final detailsService _detailsService = detailsService();
+
   TextEditingController companyController = TextEditingController();
   TextEditingController positionController = TextEditingController();
   TextEditingController timeController = TextEditingController();
@@ -31,46 +32,6 @@ class _ShiftEditState extends State<ShiftEdit> {
   var email = '';
   var location = '';
   var perHour = '';
-
-  Future fetchDetails() async {
-    try {
-      final profileDetails = await _detailsService.fetchDetails(widget.userID);
-      log('Email ${widget.email}');
-
-      companyController.text = profileDetails[0]['company'] ?? '';
-      positionController.text = profileDetails[0]['position'] ?? '';
-      timeController.text = profileDetails[0]['brakeTime']?.toString() ?? '';
-      locationController.text = profileDetails[0]['location'] ?? '';
-      emailController.text = widget.email;
-      perHourController.text = profileDetails[0]['perHour']?.toString() ?? '';
-
-      // Update variables with the fetched values
-      setState(() {
-        company = companyController.text;
-        position = positionController.text;
-        brakeTime = timeController.text;
-        location = locationController.text;
-        email = emailController.text;
-        perHour = perHourController.text;
-      });
-    } catch (e) {
-      print("Error fetching details: $e");
-    }
-  }
-
-
-  @override
-  void initState() {
-    fetchDetails();
-  }
-
-  void _saveDetails() {
-    _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime), int.parse(perHour));
-    setState(() {
-      readOnly = true;
-    });
-    log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}, ${int.parse(perHour)}");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +176,7 @@ class _ShiftEditState extends State<ShiftEdit> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  onPressed: readOnly ? null : _saveDetails,
+                  onPressed: readOnly ? null : null,
                   child: Text(
                     style: readOnly ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
                     'Save',
