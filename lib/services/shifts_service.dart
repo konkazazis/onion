@@ -50,4 +50,42 @@ class shiftsService {
       print("Error deleting shift: $e");
     }
   }
+
+  Future<void> editShift({
+    required String id,
+    DateTime? date,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? workType,
+    String? notes,
+  }) async {
+    try {
+      Map<String, dynamic> updatedData = {};
+
+      if (date != null) {
+        updatedData['date'] = Timestamp.fromDate(date);
+      }
+      if (startTime != null) {
+        updatedData['startTime'] = Timestamp.fromDate(startTime);
+      }
+      if (endTime != null) {
+        updatedData['endTime'] = Timestamp.fromDate(endTime);
+      }
+      if (workType != null) {
+        updatedData['workType'] = workType;
+      }
+      if (notes != null) {
+        updatedData['notes'] = notes;
+      }
+
+      if (updatedData.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('shifts').doc(id).update(updatedData);
+      } else {
+        print("No data provided to update.");
+      }
+    } catch (e) {
+      print("Error editing shift: $e");
+    }
+  }
+
 }

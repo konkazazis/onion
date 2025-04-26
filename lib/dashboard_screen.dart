@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:picnic_search/profile.dart';
+import 'package:picnic_search/shift_edit.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
@@ -117,10 +118,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       await _shiftsService.deleteShift(id);
       await loadShifts(_selectedDay);
+      await getEventsForDay(_selectedDay);
     } catch (e) {
       print("Error deleting shift: $e");
     }
   }
+
+  Future<void> editShift(String id, Map<String, dynamic> updatedData) async {
+    try {
+      await _shiftsService.editShift(
+        id: id,
+        date: updatedData['date'],
+        startTime: updatedData['startTime'],
+        endTime: updatedData['endTime'],
+        workType: updatedData['workType'],
+        notes: updatedData['notes'],
+      );
+      await loadShifts(_selectedDay);
+      setState(() {
+        filteredEvents = getEventsForDay(_selectedDay);
+      });
+    } catch (e) {
+      print("Error editing shift: $e");
+    }
+  }
+
 
   @override
   void initState() {
@@ -355,15 +377,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       selected: false,
                                       leading: const Icon(Icons.event),
                                       title: Text(shiftType),
-                                      trailing: IconButton(
-                                          onPressed: () async {
-                                            final shiftId =
-                                            filteredEvents[index]['id'];
-                                            print(filteredEvents);
-                                            await deleteShift(shiftId);
-                                            await loadShifts(_selectedDay);
-                                          },
-                                          icon: Icon(Icons.close)),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.edit),
+                                            onPressed: () async {
+                                              final shift = filteredEvents[index];
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => ShiftEdit(
+                                                    userID: widget.userID,
+                                                    email: widget.email,
+                                                  ),
+                                                ),
+                                              );
+
+                                              if (result == 'refresh') {
+                                                await loadShifts(_selectedDay);
+                                                setState(() {
+                                                  filteredEvents = getEventsForDay(_selectedDay);
+                                                });
+                                              }
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.close),
+                                            onPressed: () async {
+                                              final shiftId = filteredEvents[index]['id'];
+                                              await deleteShift(shiftId);
+                                              await loadShifts(_selectedDay);
+                                              setState(() {
+                                                filteredEvents = getEventsForDay(_selectedDay);
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                       subtitle: Text(
                                         [
                                           eventDate,
