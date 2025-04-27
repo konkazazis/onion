@@ -420,7 +420,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       subtitle: Text(
                                         [
                                           eventDate,
-                                          "$shiftStart - $shiftEnd +$overtime",
+                                          "$shiftStart - $shiftEnd ${overtime != '' ? "+" + overtime : ''}",
                                           if (notes.trim().isNotEmpty)
                                             notes
                                         ].join('\n'),
