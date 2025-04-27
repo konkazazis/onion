@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'services/shifts_service.dart';
 
 class ShiftEdit extends StatefulWidget {
   final String userID;
@@ -16,7 +17,9 @@ class ShiftEdit extends StatefulWidget {
 class _ShiftEditState extends State<ShiftEdit> {
   late TextEditingController overtimeController;
   late TextEditingController notesController;
+  final shiftsService _shiftsService = shiftsService();
 
+  String shiftID = '';
   DateTime? selectedDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -49,6 +52,7 @@ class _ShiftEditState extends State<ShiftEdit> {
       );
     }
 
+    shiftID = widget.shift['id'];
     selectedWorkType = widget.shift['workType'];
     overtimeController = TextEditingController(text: widget.shift['overtime'] ?? '3');
     notesController = TextEditingController(text: widget.shift['notes'] ?? '');
@@ -91,11 +95,27 @@ class _ShiftEditState extends State<ShiftEdit> {
     }
   }
 
+  Future shiftEdit() async{
+    DateTime finalstartTime = DateTime(selectedDate!.year, selectedDate!.month,
+        selectedDate!.day, startTime!.hour, startTime!.minute);
+    DateTime finalendTime = DateTime(selectedDate!.year, selectedDate!.month,
+        selectedDate!.day, endTime!.hour, endTime!.minute);
+    await _shiftsService.editShift(id: shiftID, date: selectedDate, startTime: finalstartTime, endTime: finalendTime, overtime: overtime, notes: notes, workType: selectedWorkType);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left),
+          onPressed: () {
+            Navigator.pop(context,'refresh');
+          },
+        ),
+      ),
+      body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Column(
@@ -251,33 +271,10 @@ class _ShiftEditState extends State<ShiftEdit> {
                     ),
                     onPressed: () async {
                       Navigator.pop(context, 'refresh');
+                      shiftEdit();
                     },
                     child: const Text(
                         style: TextStyle(color: Colors.black), 'Save Shift'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 24.0), // Adjust padding as needed
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, 'refresh'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        shape: const CircleBorder(), // Fully round button
-                        padding: const EdgeInsets.all(
-                            15.0), // Increase for a bigger button
-                        elevation: 6.0,
-                        shadowColor: Colors.black54,
-                      ),
-                      child: const Icon(
-                        Icons.close,
-                        size: 25.0, // Bigger icon
-                      ),
-                    ),
                   ),
                 ),
               ],

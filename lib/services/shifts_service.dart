@@ -58,6 +58,7 @@ class shiftsService {
     DateTime? startTime,
     DateTime? endTime,
     String? workType,
+    String? overtime,
     String? notes,
   }) async {
     try {
@@ -77,6 +78,9 @@ class shiftsService {
       }
       if (notes != null) {
         updatedData['notes'] = notes;
+      }
+      if (overtime != null) {
+        updatedData['overtime'] = overtime;
       }
 
       if (updatedData.isNotEmpty) {
