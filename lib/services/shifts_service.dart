@@ -34,7 +34,8 @@ class shiftsService {
           'workType': data['workType'] ?? '',
           'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),
           'endTime': DateFormat('HH:mm').format(data['endTime'].toDate()),
-          'notes': data['notes'] ?? ''
+          'notes': data['notes'] ?? '',
+          'overtime': data['overtime'] ?? ''
         };
       }).toList();
     } catch (e) {

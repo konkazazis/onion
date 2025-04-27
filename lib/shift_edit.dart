@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShiftEdit extends StatefulWidget {
@@ -15,6 +14,9 @@ class ShiftEdit extends StatefulWidget {
 }
 
 class _ShiftEditState extends State<ShiftEdit> {
+  late TextEditingController overtimeController;
+  late TextEditingController notesController;
+
   DateTime? selectedDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -27,8 +29,31 @@ class _ShiftEditState extends State<ShiftEdit> {
   @override
   void initState() {
     super.initState();
-    selectedDate = DateTime.parse(widget.shift['date']);
+    print(widget.shift);
+
+    selectedDate = widget.shift['date'] != null ? DateTime.parse(widget.shift['date']) : null;
+
+    if (widget.shift['startTime'] != null) {
+      final startParts = widget.shift['startTime'].split(":");
+      startTime = TimeOfDay(
+        hour: int.parse(startParts[0]),
+        minute: int.parse(startParts[1]),
+      );
+    }
+
+    if (widget.shift['endTime'] != null) {
+      final endParts = widget.shift['endTime'].split(":");
+      endTime = TimeOfDay(
+        hour: int.parse(endParts[0]),
+        minute: int.parse(endParts[1]),
+      );
+    }
+
+    selectedWorkType = widget.shift['workType'];
+    overtimeController = TextEditingController(text: widget.shift['overtime'] ?? '3');
+    notesController = TextEditingController(text: widget.shift['notes'] ?? '');
   }
+
 
   final List<String> workTypes = [
     'Morning',
@@ -81,7 +106,7 @@ class _ShiftEditState extends State<ShiftEdit> {
               MainAxisSize.min, // Prevent Column from taking full heigh
               children: [
                 Text(
-                  'This is where you plan your next shift',
+                  'Shift Edit',
                   style: GoogleFonts.raleway(
                       textStyle: const TextStyle(
                           color: Colors.black,
@@ -161,6 +186,7 @@ class _ShiftEditState extends State<ShiftEdit> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
+                  controller: overtimeController,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -173,7 +199,6 @@ class _ShiftEditState extends State<ShiftEdit> {
                   onChanged: (value) {
                     setState(() {
                       overtime = value;
-                      print(overtime);
                     });
                   },
                 ),
@@ -206,6 +231,7 @@ class _ShiftEditState extends State<ShiftEdit> {
                 ),
                 const SizedBox(height: 24),
                 TextField(
+                  controller: notesController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Notes',

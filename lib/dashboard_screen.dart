@@ -361,6 +361,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 String shiftStart = event['startTime'] ?? '';
                                 String shiftEnd = event['endTime'] ?? '';
                                 String notes = event['notes'] ?? '';
+                                String overtime = event['overtime'] ?? '';
                                 return
                                   Card(
                                     margin: EdgeInsets.symmetric(
@@ -419,9 +420,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       subtitle: Text(
                                         [
                                           eventDate,
-                                          "$shiftStart - $shiftEnd",
+                                          "$shiftStart - $shiftEnd +$overtime",
                                           if (notes.trim().isNotEmpty)
-                                            notes, // Only include if not empty
+                                            notes
                                         ].join('\n'),
                                       ),
                                     ),
