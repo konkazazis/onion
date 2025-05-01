@@ -103,196 +103,162 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: Text("Plan Your Shift",
+            style: GoogleFonts.raleway(
+                textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22))),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Center horizontally
-              mainAxisSize:
-                  MainAxisSize.min, // Prevent Column from taking full heigh
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'This is where you plan your next shift',
-                  style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28)),
+                _buildLabeledButton(
+                  label: "Select Date",
+                  value: selectedDate != null
+                      ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                      : "No date selected",
+                  icon: Icons.calendar_today,
+                  onTap: () => _selectDate(context),
                 ),
-                const SizedBox(height: 50),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectDate(context),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          selectedDate != null
-                              ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
-                              : 'Select Date',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 16),
+
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectTime(context, true),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          startTime != null
-                              ? 'Start: ${startTime!.format(context)}'
-                              : 'Select Start Time',
-                        ),
+                      child: _buildLabeledButton(
+                        label: "Start Time",
+                        value: startTime?.format(context) ?? "Select",
+                        icon: Icons.access_time,
+                        onTap: () => _selectTime(context, true),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectTime(context, false),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          endTime != null
-                              ? 'End: ${endTime!.format(context)}'
-                              : 'Select End Time',
-                        ),
+                      child: _buildLabeledButton(
+                        label: "End Time",
+                        value: endTime?.format(context) ?? "Select",
+                        icon: Icons.access_time_outlined,
+                        onTap: () => _selectTime(context, false),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 16),
-                TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        //controller: timeController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Overtime (minutes)'
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            overtime = value;
-                            print(overtime);
-                          });
-                        },
-                      ),
-                    const SizedBox(width: 16),
-              const SizedBox(height: 16),
+                Text("Work Type", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
-                  dropdownColor: Colors.white,
-                  focusColor: Colors.black,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                          color: Colors.black, width: 1),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
                   ),
-                  hint: Text("Select a work type"),
+                  hint: const Text("Choose work type"),
                   value: selectedWorkType,
                   items: workTypes
                       .map((type) => DropdownMenuItem<String>(
-                            value: type,
-                            child: Text(type),
-                          ))
+                    value: type,
+                    child: Text(type),
+                  ))
                       .toList(),
-                  onChanged: (value) =>
-                      setState(() => selectedWorkType = value),
+                  onChanged: (value) => setState(() => selectedWorkType = value),
                 ),
-                const SizedBox(height: 24),
+
+                const SizedBox(height: 16),
+                Text("Overtime (minutes)", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Notes',
-                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Enter overtime"),
+                  onChanged: (value) => setState(() => overtime = value),
+                ),
+
+                const SizedBox(height: 16),
+
+                Text("Notes", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Additional notes"),
                   onChanged: (value) => setState(() => notes = value),
                 ),
-                const SizedBox(height: 16),
-                Center(
-                  child: ElevatedButton(
+
+                const SizedBox(height: 24),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.save, color: Colors.white),
+                    label: const Text("Save Shift",
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.black, width: 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: Colors.grey, width: 1),
-                      ),
-                    ),
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
                     onPressed: () async {
                       await _saveShift();
                       Navigator.pop(context, 'refresh');
                     },
-                    child: const Text(
-                        style: TextStyle(color: Colors.black), 'Save Shift'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 24.0), // Adjust padding as needed
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, 'refresh'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        shape: const CircleBorder(), // Fully round button
-                        padding: const EdgeInsets.all(
-                            15.0), // Increase for a bigger button
-                        elevation: 6.0,
-                        shadowColor: Colors.black54,
-                      ),
-                      child: const Icon(
-                        Icons.close,
-                        size: 25.0, // Bigger icon
-                      ),
-                    ),
                   ),
                 ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
+
+  Widget _buildLabeledButton({
+    required String label,
+    required String value,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.grey[700]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "$label: $value",
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }
