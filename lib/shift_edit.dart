@@ -7,34 +7,47 @@ import 'services/shifts_service.dart';
 class ShiftEdit extends StatefulWidget {
   final String userID;
   final String email;
-  final Map<String,dynamic> shift;
-  const ShiftEdit({super.key, required this.userID, required this.email, required this.shift});
+  final Map<String, dynamic> shift;
+
+  const ShiftEdit({
+    super.key,
+    required this.userID,
+    required this.email,
+    required this.shift,
+  });
 
   @override
   State<ShiftEdit> createState() => _ShiftEditState();
 }
 
 class _ShiftEditState extends State<ShiftEdit> {
-  late TextEditingController overtimeController;
-  late TextEditingController notesController;
   final shiftsService _shiftsService = shiftsService();
 
-  String shiftID = '';
+  late TextEditingController overtimeController;
+  late TextEditingController notesController;
+
   DateTime? selectedDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? selectedWorkType;
-  String notes = "";
-  var selectedHour = 0;
-  var brakeTime = '';
-  var overtime = '';
+  String shiftID = '';
+  String overtime = '';
+  String notes = '';
+
+  final List<String> workTypes = [
+    'Morning',
+    'Afternoon',
+    'Night',
+    'Remote',
+    'On-site'
+  ];
 
   @override
   void initState() {
     super.initState();
-    print(widget.shift);
-
-    selectedDate = widget.shift['date'] != null ? DateTime.parse(widget.shift['date']) : null;
+    selectedDate = widget.shift['date'] != null
+        ? DateTime.parse(widget.shift['date'])
+        : null;
 
     if (widget.shift['startTime'] != null) {
       final startParts = widget.shift['startTime'].split(":");
@@ -54,18 +67,12 @@ class _ShiftEditState extends State<ShiftEdit> {
 
     shiftID = widget.shift['id'];
     selectedWorkType = widget.shift['workType'];
-    overtimeController = TextEditingController(text: widget.shift['overtime'] ?? '3');
-    notesController = TextEditingController(text: widget.shift['notes'] ?? '');
+    overtime = widget.shift['overtime'] ?? '';
+    notes = widget.shift['notes'] ?? '';
+
+    overtimeController = TextEditingController(text: overtime);
+    notesController = TextEditingController(text: notes);
   }
-
-
-  final List<String> workTypes = [
-    'Morning',
-    'Afternoon',
-    'Night',
-    'Remote',
-    'On-site'
-  ];
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -77,10 +84,6 @@ class _ShiftEditState extends State<ShiftEdit> {
     if (picked != null) {
       setState(() => selectedDate = picked);
     }
-  }
-
-  String formatTimeOfDay(TimeOfDay time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
@@ -95,150 +98,106 @@ class _ShiftEditState extends State<ShiftEdit> {
     }
   }
 
-  Future shiftEdit() async{
-    DateTime finalstartTime = DateTime(selectedDate!.year, selectedDate!.month,
-        selectedDate!.day, startTime!.hour, startTime!.minute);
-    DateTime finalendTime = DateTime(selectedDate!.year, selectedDate!.month,
-        selectedDate!.day, endTime!.hour, endTime!.minute);
-    await _shiftsService.editShift(id: shiftID, date: selectedDate, startTime: finalstartTime, endTime: finalendTime, overtime: overtime, notes: notes, workType: selectedWorkType);
+  Future<void> _saveEditedShift() async {
+    if (selectedDate != null &&
+        startTime != null &&
+        endTime != null &&
+        selectedWorkType != null) {
+      DateTime finalStartTime = DateTime(selectedDate!.year, selectedDate!.month,
+          selectedDate!.day, startTime!.hour, startTime!.minute);
+      DateTime finalEndTime = DateTime(selectedDate!.year, selectedDate!.month,
+          selectedDate!.day, endTime!.hour, endTime!.minute);
+
+      await _shiftsService.editShift(
+        id: shiftID,
+        date: selectedDate,
+        startTime: finalStartTime,
+        endTime: finalEndTime,
+        overtime: overtime,
+        notes: notes,
+        workType: selectedWorkType,
+      );
+
+      Navigator.pop(context, 'refresh');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields.')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            Navigator.pop(context,'refresh');
-          },
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: Center(
+          child: Text(
+            "Edit Your Shift",
+            style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22),
+          ),
         ),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-              crossAxisAlignment:
-              CrossAxisAlignment.center, // Center horizontally
-              mainAxisSize:
-              MainAxisSize.min, // Prevent Column from taking full heigh
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Shift Edit',
-                  style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28)),
+                _buildLabeledButton(
+                  label: "Select Date",
+                  value: selectedDate != null
+                      ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                      : "No date selected",
+                  icon: Icons.calendar_today,
+                  onTap: () => _selectDate(context),
                 ),
-                const SizedBox(height: 50),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectDate(context),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          selectedDate != null
-                              ? 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'
-                              : 'Select Date',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 16),
+
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectTime(context, true),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          startTime != null
-                              ? 'Start: ${startTime!.format(context)}'
-                              : 'Select Start Time',
-                        ),
+                      child: _buildLabeledButton(
+                        label: "Start Time",
+                        value: startTime?.format(context) ?? "Select",
+                        icon: Icons.access_time,
+                        onTap: () => _selectTime(context, true),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(
-                              color: Colors.black, width: 1), // Optional border
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                        onPressed: () => _selectTime(context, false),
-                        child: Text(
-                          style: TextStyle(color: Colors.black),
-                          endTime != null
-                              ? 'End: ${endTime!.format(context)}'
-                              : 'Select End Time',
-                        ),
+                      child: _buildLabeledButton(
+                        label: "End Time",
+                        value: endTime?.format(context) ?? "Select",
+                        icon: Icons.access_time_outlined,
+                        onTap: () => _selectTime(context, false),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 16),
-                TextField(
-                  controller: overtimeController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  //controller: timeController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Overtime (minutes)'
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      overtime = value;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16),
-                const SizedBox(height: 16),
+                Text("Work Type", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
-                  dropdownColor: Colors.white,
-                  focusColor: Colors.black,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                          color: Colors.black, width: 1),
-                    ),
-                    contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
                   ),
-                  hint: Text("Select a work type"),
+                  hint: const Text("Choose work type"),
                   value: selectedWorkType,
                   items: workTypes
                       .map((type) => DropdownMenuItem<String>(
@@ -246,40 +205,83 @@ class _ShiftEditState extends State<ShiftEdit> {
                     child: Text(type),
                   ))
                       .toList(),
-                  onChanged: (value) =>
-                      setState(() => selectedWorkType = value),
+                  onChanged: (value) => setState(() => selectedWorkType = value),
                 ),
-                const SizedBox(height: 24),
+
+                const SizedBox(height: 16),
+                Text("Overtime (minutes)", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: overtimeController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Enter overtime"),
+                  onChanged: (value) => setState(() => overtime = value),
+                ),
+
+                const SizedBox(height: 16),
+                Text("Notes", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 TextField(
                   controller: notesController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Notes',
-                  ),
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Additional notes"),
                   onChanged: (value) => setState(() => notes = value),
                 ),
-                const SizedBox(height: 16),
-                Center(
-                  child: ElevatedButton(
+
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.save, color: Colors.white),
+                    label: const Text("Save Shift", style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.black, width: 1),
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: Colors.grey, width: 1),
-                      ),
+                          borderRadius: BorderRadius.circular(8)),
                     ),
-                    onPressed: () async {
-                      Navigator.pop(context, 'refresh');
-                      shiftEdit();
-                    },
-                    child: const Text(
-                        style: TextStyle(color: Colors.black), 'Save Shift'),
+                    onPressed: _saveEditedShift,
                   ),
                 ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabeledButton({
+    required String label,
+    required String value,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.grey[700]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "$label: $value",
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
