@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:picnic_search/personal_details.dart';
 import 'services/auth_service.dart';
+import 'shift_history.dart';
 
 class ProfileComponent extends StatelessWidget {
   final String name;
@@ -143,10 +144,10 @@ class ProfileComponent extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ShiftHistory(userID : userID)),
+                  );
                 },
                 child: const ListTile(
                   leading: Icon(Icons.event),
