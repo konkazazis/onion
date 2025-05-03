@@ -41,7 +41,6 @@ class _ShiftHistoryState extends State<ShiftHistory> {
   Duration netHours = Duration();
 
   DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
 
   Future<void> loadShifts(DateTime selectedDate, String userid) async {
     setState(() => _isLoading = true);
@@ -52,7 +51,7 @@ class _ShiftHistoryState extends State<ShiftHistory> {
       print("ResponseMonth: $responseMonth");
 
       setState(() {
-        monthlyEvents = responseMonth;
+        filteredEvents = responseMonth;
       });
 
     } catch (e) {
@@ -60,6 +59,11 @@ class _ShiftHistoryState extends State<ShiftHistory> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  void initState() {
+    loadShifts(_selectedDay, widget.userid);
+    print(filteredEvents);
   }
 
   Future<void> deleteShift(String id) async {
