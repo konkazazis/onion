@@ -48,7 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime _focusedDay = DateTime.now();
 
   // Load events based on the selected day
-  Future<void> loadShifts(DateTime selectedDate) async {
+  Future<void> loadShifts(DateTime selectedDate, String userID) async {
     setState(() => _isLoading = true);
 
     try {
@@ -117,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> deleteShift(String id) async {
     try {
       await _shiftsService.deleteShift(id);
-      await loadShifts(_selectedDay);
+      await loadShifts(_selectedDay, widget.userID);
       await getEventsForDay(_selectedDay);
     } catch (e) {
       print("Error deleting shift: $e");
@@ -134,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         workType: updatedData['workType'],
         notes: updatedData['notes'],
       );
-      await loadShifts(_selectedDay);
+      await loadShifts(_selectedDay, widget.userID);
       setState(() {
         filteredEvents = getEventsForDay(_selectedDay);
       });
@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _selectedDay = DateTime.now();
     _focusedDay = _selectedDay;
-    loadShifts(_selectedDay);
+    loadShifts(_selectedDay, widget.userID);
     loadDetails();
   }
 
@@ -397,7 +397,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               );
 
                                               if (result == 'refresh') {
-                                                await loadShifts(_selectedDay);
+                                                await loadShifts(_selectedDay, widget.userID);
                                                 setState(() {
                                                   filteredEvents = getEventsForDay(_selectedDay);
                                                 });
@@ -409,7 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             onPressed: () async {
                                               final shiftId = filteredEvents[index]['id'];
                                               await deleteShift(shiftId);
-                                              await loadShifts(_selectedDay);
+                                              await loadShifts(_selectedDay, widget.userID);
                                               setState(() {
                                                 filteredEvents = getEventsForDay(_selectedDay);
                                               });
@@ -465,7 +465,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           if (result == 'refresh') {
             await loadDetails();
-            await loadShifts(_selectedDay);
+            await loadShifts(_selectedDay, widget.userID);
             print(_selectedDay);
             setState( () {
             filteredEvents = getEventsForDay(_selectedDay);

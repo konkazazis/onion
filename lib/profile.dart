@@ -25,7 +25,7 @@ class ProfileComponent extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, 'refresh');
           },
         ),
       ),

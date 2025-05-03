@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class shiftsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month, String userId) async {
+  Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month, String userid) async {
     try {
       List<String> parts = month.split('-');
       if (parts.length != 2) {
@@ -15,12 +15,16 @@ class shiftsService {
       int monthNum = int.parse(parts[0]);
       int year = int.parse(parts[1]);
 
-      DateTime startOfMonth = DateTime.utc(year, monthNum, 1, 0, 0, 0);
-      DateTime endOfMonth = DateTime.utc(year, monthNum + 1, 0, 23, 59, 59);
+      DateTime startOfMonth = DateTime.utc(year, monthNum, 1);
+      DateTime endOfMonth = (monthNum == 12)
+          ? DateTime.utc(year + 1, 1, 1).subtract(Duration(seconds: 1))
+          : DateTime.utc(year, monthNum + 1, 1).subtract(Duration(seconds: 1));
+
+      print('Querying from $startOfMonth to $endOfMonth');
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("shifts")
-          .where("userId", isEqualTo: userId)
+          .where("userid", isEqualTo: userid)
           .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
           .where("date", isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
           .get();
@@ -42,6 +46,7 @@ class shiftsService {
       return [];
     }
   }
+
 
   Future<void> deleteShift(String id) async {
     try {
