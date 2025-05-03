@@ -146,7 +146,7 @@ class ProfileComponent extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ShiftHistory(userID : userID)),
+                    MaterialPageRoute(builder: (context) => ShiftHistory(userID : userID, email: email)),
                   );
                 },
                 child: const ListTile(

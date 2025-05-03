@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:picnic_search/profile.dart';
-import 'package:picnic_search/shift_edit.dart';
+import 'profile.dart';
+import 'shift_edit.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     try {
       var responseMonth = await _shiftsService
-          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}");
+          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}", widget.userID);
       print("ResponseMonth: $responseMonth");
 
       setState(() {

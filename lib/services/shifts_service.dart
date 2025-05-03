@@ -5,24 +5,23 @@ import 'package:intl/intl.dart';
 class shiftsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month) async {
+  Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month, String userId) async {
     try {
       List<String> parts = month.split('-');
       if (parts.length != 2) {
         throw FormatException("Invalid month format. Expected MM-YYYY");
       }
 
-      int monthNum = int.parse(parts[0]); // "03" → 3
-      int year = int.parse(parts[1]); // "2025"
+      int monthNum = int.parse(parts[0]);
+      int year = int.parse(parts[1]);
 
-      // Ensure we use UTC dates to match Firestore storage
       DateTime startOfMonth = DateTime.utc(year, monthNum, 1, 0, 0, 0);
       DateTime endOfMonth = DateTime.utc(year, monthNum + 1, 0, 23, 59, 59);
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("shifts")
-          .where("date",
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+          .where("userId", isEqualTo: userId)
+          .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
           .where("date", isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
           .get();
 
