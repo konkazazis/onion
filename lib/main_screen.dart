@@ -6,10 +6,10 @@ import 'widgets/bottom_nav_bar.dart';
 class MainScreen extends StatefulWidget {
   final String username;
   final String email;
-  final String userID;
+  final String userid;
 
   MainScreen(
-      {required this.username, required this.email, required this.userID});
+      {required this.username, required this.email, required this.userid});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -23,12 +23,12 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      DashboardScreen(username: widget.username, userID: widget.userID, email: widget.email),
+      DashboardScreen(username: widget.username, userid: widget.userid, email: widget.email),
       ProfileComponent(
           name: widget.username,
           email: widget.email,
           profileImageUrl: 'test',
-          userID: widget.userID),
+          userid: widget.userid),
     ];
   }
 

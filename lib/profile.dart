@@ -7,14 +7,14 @@ class ProfileComponent extends StatelessWidget {
   final String name;
   final String email;
   final String profileImageUrl;
-  final String userID;
+  final String userid;
 
   const ProfileComponent(
       {Key? key,
       required this.name,
       required this.email,
       required this.profileImageUrl,
-      required this.userID})
+      required this.userid})
       : super(key: key);
 
   @override
@@ -62,7 +62,7 @@ class ProfileComponent extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PersonalDetails(userID: userID, email: email)),
+                        builder: (context) => PersonalDetails(userid: userid, email: email)),
                   );
                 },
                 child: const ListTile(
@@ -146,7 +146,7 @@ class ProfileComponent extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ShiftHistory(userID : userID, email: email)),
+                    MaterialPageRoute(builder: (context) => ShiftHistory(userid : userid, email: email)),
                   );
                 },
                 child: const ListTile(

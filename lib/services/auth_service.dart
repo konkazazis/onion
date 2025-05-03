@@ -38,7 +38,7 @@ class AuthService {
               builder: (BuildContext context) => MainScreen(
                   username: username,
                   email: email,
-                  userID: userCredential.user!.uid)));
+                  userid: userCredential.user!.uid)));
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -86,7 +86,7 @@ class AuthService {
             builder: (BuildContext context) => MainScreen(
               username: username,
               email: email,
-              userID: userID, // Pass userID correctly
+              userid: userID, // Pass userID correctly
             ),
           ),
         );

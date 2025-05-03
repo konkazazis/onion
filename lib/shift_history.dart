@@ -13,9 +13,9 @@ import 'shift_edit.dart';
 
 
 class ShiftHistory extends StatefulWidget {
-  final String userID;
+  final String userid;
   final String email;
-  const ShiftHistory({super.key, required this.userID, required this.email});
+  const ShiftHistory({super.key, required this.userid, required this.email});
 
   @override
   State<ShiftHistory> createState() => _ShiftHistoryState();
@@ -43,48 +43,18 @@ class _ShiftHistoryState extends State<ShiftHistory> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
-  Future<void> loadShifts(DateTime selectedDate) async {
+  Future<void> loadShifts(DateTime selectedDate, String userid) async {
     setState(() => _isLoading = true);
 
     try {
       var responseMonth = await _shiftsService
-          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}", widget.userID);
+          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}", widget.userid);
       print("ResponseMonth: $responseMonth");
 
       setState(() {
-        numberOfShifts = responseMonth.length;
         monthlyEvents = responseMonth;
       });
 
-      Duration calculatedDuration = Duration(); // temporary container
-
-      final dateFormat = DateFormat("HH:mm");
-
-      for (var shift in responseMonth) {
-        String start = shift['startTime'];
-        String end = shift['endTime'];
-
-        DateTime startTime = dateFormat.parse(start);
-        DateTime endTime = dateFormat.parse(end);
-
-        Duration duration = endTime.difference(startTime);
-        calculatedDuration += duration;
-      }
-
-      int totalBreakMinutes = numberOfShifts * brakeTime;
-      Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
-
-      Duration netDuration = calculatedDuration - totalBreakDuration;
-      setState(() {
-        netHours = netDuration;
-      });
-
-      setState(() {
-        totalMonthlyDuration = calculatedDuration;
-        if (totalMonthlyDuration.inHours != 0) {
-          earnings = perHour * netHours.inHours;
-        }
-      });
     } catch (e) {
       log("Error fetching events by month: $e");
     } finally {
@@ -95,7 +65,7 @@ class _ShiftHistoryState extends State<ShiftHistory> {
   Future<void> deleteShift(String id) async {
     try {
       await _shiftsService.deleteShift(id);
-      await loadShifts(_selectedDay);
+      await loadShifts(_selectedDay, widget.userid);
       //await getEventsForDay(_selectedDay);
     } catch (e) {
       print("Error deleting shift: $e");
@@ -191,7 +161,7 @@ class _ShiftHistoryState extends State<ShiftHistory> {
                                 MaterialPageRoute(
                                   builder: (context) => ShiftEdit(
                                     shift: shift,
-                                    userID: widget.userID,
+                                    userID: widget.userid,
                                     email: widget.email,
                                   ),
                                 ),
@@ -210,7 +180,7 @@ class _ShiftHistoryState extends State<ShiftHistory> {
                             onPressed: () async {
                               final shiftId = filteredEvents[index]['id'];
                               await deleteShift(shiftId);
-                              await loadShifts(_selectedDay);
+                              await loadShifts(_selectedDay, widget.userid);
                               setState(() {
                                 //filteredEvents = getEventsForDay(_selectedDay);
                               });

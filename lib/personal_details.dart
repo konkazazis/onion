@@ -8,9 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'services/details_service.dart';
 
 class PersonalDetails extends StatefulWidget {
-  final String userID;
+  final String userid;
   final String email;
-  const PersonalDetails({super.key, required this.userID, required this.email});
+  const PersonalDetails({super.key, required this.userid, required this.email});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
@@ -34,7 +34,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
   Future fetchDetails() async {
     try {
-      final profileDetails = await _detailsService.fetchDetails(widget.userID);
+      final profileDetails = await _detailsService.fetchDetails(widget.userid);
       log('Email ${widget.email}');
 
       companyController.text = profileDetails[0]['company'] ?? '';
@@ -65,11 +65,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   }
 
   void _saveDetails() {
-    _detailsService.submitDetails(widget.userID, email, company, location, position, int.parse(brakeTime), int.parse(perHour));
+    _detailsService.submitDetails(widget.userid, email, company, location, position, int.parse(brakeTime), int.parse(perHour));
     setState(() {
       readOnly = true;
     });
-    log("${widget.userID}, $email, $company, $location, $position, ${int.parse(brakeTime)}, ${int.parse(perHour)}");
+    log("${widget.userid}, $email, $company, $location, $position, ${int.parse(brakeTime)}, ${int.parse(perHour)}");
   }
 
   @override
