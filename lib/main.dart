@@ -29,6 +29,7 @@ class Onion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Onion',
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       home: Login(),

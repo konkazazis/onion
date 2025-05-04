@@ -108,28 +108,7 @@ class ProfileComponent extends StatelessWidget {
                   // );
                 },
                 child: const ListTile(
-                  leading: Icon(Icons.event),
-                  title: Text('Work Details'),
-                ),
-              ),
-            ),
-            Card(
-              color: Colors.white,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: const BorderSide(color: Colors.grey, width: 1),
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => PersonalDetails()),
-                  // );
-                },
-                child: const ListTile(
-                  leading: Icon(Icons.event),
+                  leading: Icon(Icons.password),
                   title: Text('Change Password'),
                 ),
               ),
@@ -150,7 +129,7 @@ class ProfileComponent extends StatelessWidget {
                   );
                 },
                 child: const ListTile(
-                  leading: Icon(Icons.event),
+                  leading: Icon(Icons.history),
                   title: Text('Shift History'),
                 ),
               ),
@@ -171,7 +150,7 @@ class ProfileComponent extends StatelessWidget {
                   // );
                 },
                 child: const ListTile(
-                  leading: Icon(Icons.event),
+                  leading: Icon(Icons.timer_off),
                   title: Text('Time-off Requests'),
                 ),
               ),
