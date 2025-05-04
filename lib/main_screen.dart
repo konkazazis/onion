@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
 import 'profile.dart';
-import 'widgets/bottom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {
   final String username;

@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'shift_scheduler.dart';
 import 'services/details_service.dart';
 import 'services/shifts_service.dart';
 import 'shift_edit.dart';

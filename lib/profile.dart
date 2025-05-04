@@ -25,7 +25,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
   late String _selectedImage;
 
   final List<String> stockImages = [
-    'https://i.pravatar.cc/150?img=1',
+    'https://i.pravatar.cc/150?img=13',
     'https://i.pravatar.cc/150?img=2',
     'https://i.pravatar.cc/150?img=3',
     'https://i.pravatar.cc/150?img=4',
@@ -119,7 +119,6 @@ class _ProfileComponentState extends State<ProfileComponent> {
                 ],
               ),
             ),
-
             const SizedBox(height: 12),
             Text(
               widget.name,
@@ -138,7 +137,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PersonalDetails(userid: widget.userid, email: widget.email),
+                    builder: (context) => PersonalDetails(
+                        userid: widget.userid, email: widget.email),
                   ),
                 );
               },
@@ -164,7 +164,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ShiftHistory(userid: widget.userid, email: widget.email),
+                    builder: (context) => ShiftHistory(
+                        userid: widget.userid, email: widget.email),
                   ),
                 );
               },
@@ -183,7 +184,10 @@ class _ProfileComponentState extends State<ProfileComponent> {
     );
   }
 
-  Widget _menuCard({required IconData icon, required String text, required VoidCallback onTap}) {
+  Widget _menuCard(
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap}) {
     return Card(
       color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 8),
