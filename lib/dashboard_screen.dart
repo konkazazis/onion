@@ -284,6 +284,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     setState(() {
                       _focusedDay = monthStart;
                       _selectedDay = monthStart;
+                      filteredEvents = getEventsForDay(_selectedDay);
                     });
                     loadShifts(monthStart, widget.userid);
                   },
