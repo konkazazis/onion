@@ -58,7 +58,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}", userID);
       print("ResponseMonth: $responseMonth");
 
-      Duration calculatedDuration = Duration(); // temporary container
+      Duration calculatedDuration = Duration();
+      //num overtime = 0;
 
       final dateFormat = DateFormat("HH:mm");
 
@@ -71,7 +72,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         Duration duration = endTime.difference(startTime);
         calculatedDuration += duration;
+
+        // if (shift['overtime']) {
+        //   overtime = overtime + shift['overtime'];
+        // }
       }
+
+      //print("overtime $overtime");
 
       int totalBreakMinutes = numberOfShifts * brakeTime;
       Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
@@ -207,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         size: 23,
                       ),
                     ),
-                    SizedBox(width: 12), // Space between icon and divider
+                    SizedBox(width: 12),
                     Text(
                       '|',
                       style: TextStyle(
@@ -217,7 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     SizedBox(
-                        width: 12), // Space between divider and profile icon
+                        width: 12),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -478,6 +485,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     title: "Total hours this month :",
                     hours:
                         "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
+                    earnings: "\€ ${earnings != 0 ? earnings : 0}",
+                  ),
+                  ShiftCard(
+                    title: "Total overtime this month :",
+                    hours:
+                    "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
                     earnings: "\€ ${earnings != 0 ? earnings : 0}",
                   ),
                 ],

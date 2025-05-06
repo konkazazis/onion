@@ -92,7 +92,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         selectedWorkType != null) {
       await addEvent(selectedWorkType, selectedDate!, startTime!, endTime!,
           widget.userID, notes);
-
+      Navigator.pop(context, 'refresh');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields.')),
@@ -216,7 +216,6 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
                             borderRadius: BorderRadius.circular(8))),
                     onPressed: () async {
                       await _saveShift();
-                      Navigator.pop(context, 'refresh');
                     },
                   ),
                 ),
