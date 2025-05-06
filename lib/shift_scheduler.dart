@@ -108,15 +108,13 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         backgroundColor: Colors.white,
         elevation: 1,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: Center(
-          child: Text("Plan Your Shift",
+        title: Text("Plan Your Shift",
             style: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 22)
           ),
-        )
-      ),
+        ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Card(
