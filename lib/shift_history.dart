@@ -85,14 +85,12 @@ class _ShiftHistoryState extends State<ShiftHistory> {
         backgroundColor: Colors.white,
         elevation: 1,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: Center(
-          child: Text(
-            "Edit Your Shift",
-            style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 22),
-          ),
+        title: Text(
+          "Shift History",
+          style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 22),
         ),
       ),
       body: SingleChildScrollView(
@@ -103,23 +101,6 @@ class _ShiftHistoryState extends State<ShiftHistory> {
             ? const Center(child: Text("No shifts found"))
             :  Column(
           children: [
-            Padding(
-                padding: EdgeInsets.only(left: 10),
-                child:  Align(
-                  alignment: Alignment.centerLeft,
-                  child:
-                  Text(
-                    DateFormat("EEEE, d 'of' MMMM").format(_selectedDay),
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 18), // optional style
-                  ),
-                )),
-            Divider(
-              color: Colors.grey[200],
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
-            ),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
