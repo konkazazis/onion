@@ -72,9 +72,42 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          "Personal Details",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        actions: [
+            Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Row(
+              children: [
+                const Text(
+                  'Edit',
+                  style: TextStyle(color: Colors.black),
+                ),
+                Switch(
+                  value: !readOnly,
+                  onChanged: (bool value) {
+                    setState(() {
+                      readOnly = !readOnly;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+    ),
+      body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
           child: Column(
@@ -82,30 +115,6 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: Text(
-                    'Personal Details',
-                    style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28,
-                      ),
-                    ),
-                  ),),
-                  Expanded(child: SwitchListTile(
-                    value: !readOnly,
-                    onChanged: (bool value) {
-                      setState(() {
-                        readOnly = !readOnly;
-                      });
-                    },
-                  ),)
-                ],
-              ),
-              const SizedBox(height: 16),
               TextField(
                 enabled: !readOnly,
                 readOnly: readOnly,
@@ -217,28 +226,6 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   child: Text(
                     style: readOnly ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
                     'Save',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(15.0),
-                      elevation: 6.0,
-                      shadowColor: Colors.black54,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      size: 25.0,
-                    ),
                   ),
                 ),
               ),
