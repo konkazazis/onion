@@ -53,13 +53,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     try {
       var responseMonth = await _shiftsService
-          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}", widget.userid);
+          .fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}", userID);
       print("ResponseMonth: $responseMonth");
-
-      setState(() {
-        numberOfShifts = responseMonth.length;
-        monthlyEvents = responseMonth;
-      });
 
       Duration calculatedDuration = Duration(); // temporary container
 
@@ -85,11 +80,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
 
       setState(() {
+        numberOfShifts = responseMonth.length;
+        monthlyEvents = responseMonth;
         totalMonthlyDuration = calculatedDuration;
+        netHours = netDuration;
         if (totalMonthlyDuration.inHours != 0) {
           earnings = perHour * netHours.inHours;
         }
       });
+
     } catch (e) {
       log("Error fetching events by month: $e");
     } finally {
@@ -279,6 +278,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       _focusedDay = focusedDay;
                       filteredEvents = getEventsForDay(selectedDay);
                     });
+                  },
+                  onPageChanged: (focusedDay) {
+                    final monthStart = DateTime(focusedDay.year, focusedDay.month, 1);
+                    setState(() {
+                      _focusedDay = monthStart;
+                      _selectedDay = monthStart;
+                    });
+                    loadShifts(monthStart, widget.userid);
                   },
                   eventLoader: getEventsForDay,
                   calendarStyle: CalendarStyle(
