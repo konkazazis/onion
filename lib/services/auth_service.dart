@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import '../main_screen.dart';
 import '../login.dart';
@@ -38,7 +39,9 @@ class AuthService {
               builder: (BuildContext context) => MainScreen(
                   username: username,
                   email: email,
-                  userid: userCredential.user!.uid)));
+                  userid: userCredential.user!.uid,
+                  created: ''
+              )));
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -74,9 +77,10 @@ class AuthService {
           .get();
 
       if (getUser.docs.isNotEmpty) {
-        String username = getUser.docs.first['username']; // Extract username
+        String username = getUser.docs.first['username'];
         String userID = getUser
-            .docs.first['userID']; // Extract userID from Firestore document
+            .docs.first['userID'];
+        String created = DateFormat('yyyy-MM-dd').format(getUser.docs.first['createdAt'].toDate());
 
         await Future.delayed(const Duration(seconds: 1));
 
@@ -86,7 +90,8 @@ class AuthService {
             builder: (BuildContext context) => MainScreen(
               username: username,
               email: email,
-              userid: userID, // Pass userID correctly
+              userid: userID,
+              created: created
             ),
           ),
         );

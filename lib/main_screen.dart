@@ -3,12 +3,13 @@ import 'dashboard_screen.dart';
 import 'profile.dart';
 
 class MainScreen extends StatefulWidget {
+  final String created;
   final String username;
   final String email;
   final String userid;
 
   MainScreen(
-      {required this.username, required this.email, required this.userid});
+      {required this.username, required this.email, required this.userid, required this.created});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -22,12 +23,14 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      DashboardScreen(username: widget.username, userid: widget.userid, email: widget.email),
+      DashboardScreen(username: widget.username, userid: widget.userid, email: widget.email, created: widget.created),
       ProfileComponent(
           name: widget.username,
           email: widget.email,
           profileImageUrl: 'test',
-          userid: widget.userid),
+          userid: widget.userid,
+          created: widget.created
+      ),
     ];
   }
 

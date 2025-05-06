@@ -46,6 +46,34 @@ class shiftsService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchAllShifts(String date, String userid) async {
+    try {
+      DateTime frmdate = DateTime.parse(date);
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("shifts")
+          .where("userid", isEqualTo: userid)
+          .where("date", isGreaterThanOrEqualTo: Timestamp.fromDate(frmdate))
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return {
+          'id': doc.id,
+          'date': DateFormat('yyyy-MM-dd').format(data['date'].toDate()),
+          'workType': data['workType'] ?? '',
+          'startTime': DateFormat('HH:mm').format(data['startTime'].toDate()),
+          'endTime': DateFormat('HH:mm').format(data['endTime'].toDate()),
+          'notes': data['notes'] ?? '',
+          'overtime': data['overtime'] ?? ''
+        };
+      }).toList();
+    } catch (e) {
+      print("Error fetching events: $e");
+      return [];
+    }
+  }
+
 
   Future<void> deleteShift(String id) async {
     try {

@@ -5,6 +5,7 @@ import 'shift_history.dart';
 
 class ProfileComponent extends StatefulWidget {
   final String name;
+  final String created;
   final String email;
   final String profileImageUrl;
   final String userid;
@@ -15,6 +16,7 @@ class ProfileComponent extends StatefulWidget {
     required this.email,
     required this.profileImageUrl,
     required this.userid,
+    required this.created
   }) : super(key: key);
 
   @override
@@ -165,7 +167,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShiftHistory(
-                        userid: widget.userid, email: widget.email),
+                        userid: widget.userid, email: widget.email, created: widget.created),
                   ),
                 );
               },

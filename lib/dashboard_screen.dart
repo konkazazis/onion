@@ -11,6 +11,7 @@ import 'shift_scheduler.dart';
 import 'services/details_service.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final String created;
   final String username;
   final String userid;
   final String email;
@@ -18,6 +19,7 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen(
       {super.key,
       required this.username,
+        required this.created,
       required this.userid,
       required this.email});
 
@@ -226,6 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               email: widget.email,
                               profileImageUrl: 'test',
                               userid: widget.userid,
+                              created: widget.created
                             ),
                           ),
                         );

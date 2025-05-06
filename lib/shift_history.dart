@@ -10,9 +10,10 @@ import 'shift_edit.dart';
 
 
 class ShiftHistory extends StatefulWidget {
+  final String created;
   final String userid;
   final String email;
-  const ShiftHistory({super.key, required this.userid, required this.email});
+  const ShiftHistory({super.key, required this.userid, required this.email, required this.created});
 
   @override
   State<ShiftHistory> createState() => _ShiftHistoryState();
@@ -42,10 +43,11 @@ class _ShiftHistoryState extends State<ShiftHistory> {
   Future<void> loadShifts(DateTime selectedDate, String userid) async {
     setState(() => _isLoading = true);
 
+    DateTime created = DateTime.parse(widget.created);
+
     try {
       var responseMonth = await _shiftsService
-          .fetchShiftsByMonth("${_selectedDay.month}-${_selectedDay.year}", widget.userid);
-      print("ResponseMonth: $responseMonth");
+          .fetchAllShifts(widget.created, widget.userid);
 
       setState(() {
         filteredEvents = responseMonth;
