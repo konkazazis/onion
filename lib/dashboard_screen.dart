@@ -419,10 +419,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             icon: Icon(Icons.close),
                                             onPressed: () async {
                                               final shiftId = filteredEvents[index]['id'];
-                                              await deleteShift(shiftId);
-                                              await loadShifts(_selectedDay, widget.userid);
-                                              setState(() {
-                                                filteredEvents = getEventsForDay(_selectedDay);
+                                              await showDialog(context: context, builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Are you sure you want to delete this shift?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
+                                                      child: const Text('Cancel'),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
+                                                      child: const Text('Comfirm'),
+                                                      onPressed: () async {
+                                                        await deleteShift(shiftId);
+                                                        await loadShifts(_selectedDay, widget.userid);
+                                                        setState(() {
+                                                          filteredEvents = getEventsForDay(_selectedDay);
+                                                        });
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
                                               });
                                             },
                                           ),
