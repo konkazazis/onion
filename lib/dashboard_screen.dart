@@ -363,110 +363,132 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               thickness: 1,
                               indent: 20,
                               endIndent: 20,
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: filteredEvents.length,
-                              itemBuilder: (context, index) {
-                                final event = filteredEvents[index];
-                                String shiftType = event['workType'] ?? 'No Event';
-                                String? rawDate = event['date'];
-                                String eventDate = (rawDate != null &&
-                                    rawDate.contains('-'))
-                                    ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
-                                    : 'No Date';
-                                String shiftStart = event['startTime'] ?? '';
-                                String shiftEnd = event['endTime'] ?? '';
-                                String notes = event['notes'] ?? '';
-                                String overtime = event['overtime'] ?? '';
-                                return
-                                  Card(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      side: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: ListTile(
-                                      selected: false,
-                                      leading: const Icon(Icons.event),
-                                      title: Text(shiftType),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () async {
-                                              final shift = filteredEvents[index];
-                                              final result = await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => ShiftEdit(
-                                                    shift: shift,
-                                                    userID: widget.userid,
-                                                    email: widget.email,
-                                                  ),
-                                                ),
-                                              );
+                            ),DefaultTabController(
+                              length: 3,
+                              child: Column(
+                                children: [
+                                  const TabBar(
+                                    tabs: [
+                                      Tab(icon: Icon(Icons.work)),
+                                      Tab(icon: Icon(Icons.assignment)),
+                                      Tab(icon: Icon(Icons.directions_bike)),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: 200, // Adjust this to suit your layout
+                                    child:  TabBarView(
+                                      children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: filteredEvents.length,
+                                      itemBuilder: (context, index) {
+                                        final event = filteredEvents[index];
+                                        String shiftType = event['workType'] ?? 'No Event';
+                                        String? rawDate = event['date'];
+                                        String eventDate = (rawDate != null &&
+                                            rawDate.contains('-'))
+                                            ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
+                                            : 'No Date';
+                                        String shiftStart = event['startTime'] ?? '';
+                                        String shiftEnd = event['endTime'] ?? '';
+                                        String notes = event['notes'] ?? '';
+                                        String overtime = event['overtime'] ?? '';
+                                        return
+                                          Card(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 5),
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                              side: BorderSide(
+                                                color: Colors.grey,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: ListTile(
+                                              selected: false,
+                                              leading: const Icon(Icons.event),
+                                              title: Text(shiftType),
+                                              trailing: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(Icons.edit),
+                                                    onPressed: () async {
+                                                      final shift = filteredEvents[index];
+                                                      final result = await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => ShiftEdit(
+                                                            shift: shift,
+                                                            userID: widget.userid,
+                                                            email: widget.email,
+                                                          ),
+                                                        ),
+                                                      );
 
-                                              if (result == 'refresh') {
-                                                await loadShifts(_selectedDay, widget.userid);
-                                                setState(() {
-                                                  filteredEvents = getEventsForDay(_selectedDay);
-                                                });
-                                              }
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.close),
-                                            onPressed: () async {
-                                              final shiftId = filteredEvents[index]['id'];
-                                              await showDialog(context: context, builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: const Text('Are you sure you want to delete this shift?'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
-                                                      child: const Text('Cancel'),
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
-                                                      child: const Text('Comfirm'),
-                                                      onPressed: () async {
-                                                        await deleteShift(shiftId);
+                                                      if (result == 'refresh') {
                                                         await loadShifts(_selectedDay, widget.userid);
                                                         setState(() {
                                                           filteredEvents = getEventsForDay(_selectedDay);
                                                         });
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      subtitle: Text(
-                                        [
-                                          eventDate,
-                                          "$shiftStart - $shiftEnd ${overtime != '' ? "+" + overtime : ''}",
-                                          if (notes.trim().isNotEmpty)
-                                            notes
-                                        ].join('\n'),
-                                      ),
+                                                      }
+                                                    },
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(Icons.close),
+                                                    onPressed: () async {
+                                                      final shiftId = filteredEvents[index]['id'];
+                                                      await showDialog(context: context, builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: const Text('Are you sure you want to delete this shift?'),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
+                                                              child: const Text('Cancel'),
+                                                              onPressed: () {
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              style: TextButton.styleFrom(textStyle: Theme.of(context).textTheme.labelLarge),
+                                                              child: const Text('Comfirm'),
+                                                              onPressed: () async {
+                                                                await deleteShift(shiftId);
+                                                                await loadShifts(_selectedDay, widget.userid);
+                                                                setState(() {
+                                                                  filteredEvents = getEventsForDay(_selectedDay);
+                                                                });
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              subtitle: Text(
+                                                [
+                                                  eventDate,
+                                                  "$shiftStart - $shiftEnd ${overtime != '' ? "+" + overtime : ''}",
+                                                  if (notes.trim().isNotEmpty)
+                                                    notes
+                                                ].join('\n'),
+                                              ),
+                                            ),
+                                          );
+                                      },
                                     ),
-                                  );
-                              },
+                                        Icon(Icons.directions_transit),
+                                        Icon(Icons.directions_bike),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
               ),
