@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picnic_search/personal_details.dart';
+import 'personal_details.dart';
 import 'services/auth_service.dart';
 import 'shift_history.dart';
 
