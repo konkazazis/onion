@@ -196,10 +196,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: 12, vertical: 8), // Added padding
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -363,13 +359,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               thickness: 1,
                               indent: 20,
                               endIndent: 20,
-                            ),DefaultTabController(
+                            ),
+                            DefaultTabController(
                               length: 3,
                               child: Column(
                                 children: [
-                                  const TabBar(
+                                  TabBar(
+                                    dividerColor: Colors.white,
                                     tabs: [
-                                      Tab(icon: Icon(Icons.work)),
+                                      Tab(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.work),
+                                            SizedBox(width: 6),
+                                            Text("(${filteredEvents.length})"),
+                                          ],
+                                        ),
+                                      ),
                                       Tab(icon: Icon(Icons.assignment)),
                                       Tab(icon: Icon(Icons.directions_bike)),
                                     ],
