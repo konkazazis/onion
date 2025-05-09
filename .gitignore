@@ -54,3 +54,5 @@ lib/firebase_options.dart
 /android/app/src/main/res
 /ios
 .vscode/settings.json
+
+Dockerfile

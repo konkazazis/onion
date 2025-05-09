@@ -365,18 +365,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Column(
                                 children: [
                                   TabBar(
+                                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    labelColor: Colors.black,
+                                    unselectedLabelColor: Colors.grey,
+                                    indicatorColor: Colors.white,
                                     dividerColor: Colors.white,
                                     tabs: [
-                                      Tab(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.work),
-                                            SizedBox(width: 6),
-                                            Text("(${filteredEvents.length})"),
-                                          ],
+                                        Tab(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.work),
+                                              SizedBox(width: 6),
+                                              Text("(${filteredEvents.length})"),
+                                            ],
+                                          ),
                                         ),
-                                      ),
                                       Tab(icon: Icon(Icons.assignment)),
                                       Tab(icon: Icon(Icons.directions_bike)),
                                     ],
