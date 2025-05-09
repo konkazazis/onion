@@ -50,9 +50,13 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         'date': Timestamp.fromDate(eventDate),
         'notes': notes.isEmpty ? "" : notes
       });
-
-      print("Shift added successfully!");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Shift added successfully!')),
+      );
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to add shift...')),
+      );
       print("Error adding shift: $e");
     }
   }
