@@ -84,9 +84,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
 
       Duration netDuration = calculatedDuration - totalBreakDuration;
-      setState(() {
-        netHours = netDuration;
-      });
 
       setState(() {
         numberOfShifts = responseMonth.length;
@@ -97,8 +94,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           earnings = perHour * netHours.inHours;
         }
       });
-
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('There was an error with loading your shift')),
+      );
       log("Error fetching events by month: $e");
     } finally {
       setState(() => _isLoading = false);
@@ -111,6 +110,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       perHour = profileDetails[0]['perHour'] ?? 0;
       brakeTime = profileDetails[0]['brakeTime'] ?? 0;
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('There was an error with loading your profile details')),
+      );
       print("Error fetching details: $e");
     }
   }
@@ -127,7 +129,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       await _shiftsService.deleteShift(id);
       await loadShifts(_selectedDay, widget.userid);
       await getEventsForDay(_selectedDay);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Shift was deleted successfully')),
+      );
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('There was an error with deleting your shift')),
+      );
       print("Error deleting shift: $e");
     }
   }
@@ -146,7 +154,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         filteredEvents = getEventsForDay(_selectedDay);
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Shift was edited successfully')),
+      );
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('There was an error with editing your shift')),
+      );
       print("Error editing shift: $e");
     }
   }
