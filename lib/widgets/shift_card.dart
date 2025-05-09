@@ -8,7 +8,7 @@ class ShiftCard extends StatelessWidget {
   const ShiftCard({
     required this.title,
     required this.hours,
-    required this.earnings,
+    this.earnings = '',
   });
 
   @override
@@ -36,7 +36,7 @@ class ShiftCard extends StatelessWidget {
               SizedBox(height: 10),
               Text("$hours", style: TextStyle(fontSize: 16)),
               SizedBox(height: 5),
-              Text("Earnings: $earnings",
+              Text(earnings != '' ? "Earnings: $earnings" : '',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             ],
           ),

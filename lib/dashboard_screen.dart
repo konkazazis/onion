@@ -49,6 +49,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
+  int overHours = 0;
+  int overMinutes = 0;
+
   // Load events based on the selected day
   Future<void> loadShifts(DateTime selectedDate, String userID) async {
     setState(() => _isLoading = true);
@@ -59,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print("ResponseMonth: $responseMonth");
 
       Duration calculatedDuration = Duration();
-      //num overtime = 0;
+      var overtime = 0;
 
       final dateFormat = DateFormat("HH:mm");
 
@@ -73,19 +76,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Duration duration = endTime.difference(startTime);
         calculatedDuration += duration;
 
-        // if (shift['overtime']) {
-        //   overtime = overtime + shift['overtime'];
-        // }
-      }
+        final parsedOvertime = int.tryParse(shift['overtime'] ?? '0');
+        if (parsedOvertime != null) {
+          overtime = overtime + parsedOvertime;
+        }
 
-      //print("overtime $overtime");
+      }
 
       int totalBreakMinutes = numberOfShifts * brakeTime;
       Duration totalBreakDuration = Duration(minutes: totalBreakMinutes);
-
       Duration netDuration = calculatedDuration - totalBreakDuration;
 
+      int hours = overtime ~/ 60;
+      int minutes = overtime % 60;
+
       setState(() {
+        overHours = hours;
+        overMinutes = minutes;
         numberOfShifts = responseMonth.length;
         monthlyEvents = responseMonth;
         totalMonthlyDuration = calculatedDuration;
@@ -538,8 +545,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ShiftCard(
                     title: "Total overtime this month :",
                     hours:
-                    "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
-                    earnings: "\€ ${earnings != 0 ? earnings : 0}",
+                    "${overHours}h ${overMinutes}m",
+                    //earnings: "\€ ${earnings != 0 ? earnings : 0}",
                   ),
                 ],
               ),
