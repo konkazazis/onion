@@ -7,6 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
 import 'widgets/shift_card.dart';
+import 'widgets/calendar_widget.dart';
 import 'shift_scheduler.dart';
 import 'services/details_service.dart';
 
@@ -285,19 +286,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 1,
                   ),
                 ),
-                child: TableCalendar(
-                  weekNumbersVisible: true,
-                  firstDay: DateTime.utc(2000, 1, 1),
-                  lastDay: DateTime.utc(2100, 12, 31),
-                  focusedDay: _focusedDay,
+                child: CalendarWidget(
                   calendarFormat: _calendarFormat,
+                  selectedDay: _selectedDay,
+                  focusedDay: _focusedDay,
                   onFormatChanged: (format) {
                     setState(() {
                       _calendarFormat = format;
                     });
-                  },
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
                   },
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
@@ -316,46 +312,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     loadShifts(monthStart, widget.userid);
                   },
                   eventLoader: getEventsForDay,
-                  calendarStyle: CalendarStyle(
-                    todayDecoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      shape: BoxShape.circle,
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  calendarBuilders: CalendarBuilders(
-                    markerBuilder: (context, date, events) {
-                      if (events.isEmpty) return SizedBox.shrink();
+                  shiftColors: shiftColors,
+                )
 
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: events.take(3).map((event) {
-                          final shift = event as Map<String, dynamic>;
-                          final shiftType = shift['workType']?.toLowerCase() ?? '';
-
-                          final color = shiftColors[shiftType] ?? Colors.grey;
-
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 1.0),
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                  headerStyle: HeaderStyle(
-                    formatButtonVisible: true,
-                    titleCentered: true,
-                  ),
-                ),
               ),
               const SizedBox(height: 20),
               _isLoading
