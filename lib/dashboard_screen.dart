@@ -306,7 +306,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 300, // or use MediaQuery to calculate available space dynamically
+                                    height: 200,
                                     child: TabBarView(
                                       children: [
                                         // Scrollable list of shifts
@@ -448,7 +448,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("New Shift"),
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -466,7 +467,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             });
           }
         },
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
         tooltip: 'Add Event',
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
