@@ -44,23 +44,35 @@ class CalendarWidget extends StatelessWidget {
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, date, events) {
           if (events.isEmpty) return const SizedBox.shrink();
+
+          final shiftDots = events.take(3).map((event) {
+            final shift = event as Map<String, dynamic>;
+            final shiftType = shift['workType']?.toLowerCase() ?? '';
+            final color = shiftColors[shiftType] ?? Colors.grey;
+
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 1.0),
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            );
+          }).toList();
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: events.take(3).map((event) {
-              final shift = event as Map<String, dynamic>;
-              final shiftType = shift['workType']?.toLowerCase() ?? '';
-              final color = shiftColors[shiftType] ?? Colors.grey;
-
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 1.0),
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-              );
-            }).toList(),
+            children: [
+              ...shiftDots,
+              if (events.length > 3)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text('+${events.length - 3}',
+                      style: const TextStyle(fontSize: 10)),
+                ),
+            ],
           );
         },
       ),
+
       headerStyle: const HeaderStyle(
         formatButtonVisible: true,
         titleCentered: true,
