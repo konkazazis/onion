@@ -284,25 +284,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Column(
                                 children: [
                                   TabBar(
-                                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                     labelColor: Colors.black,
                                     unselectedLabelColor: Colors.grey,
-                                    indicatorColor: Colors.white,
-                                    dividerColor: Colors.white,
+                                    indicatorColor: Theme.of(context).primaryColor,
+                                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                     tabs: [
-                                        Tab(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.work),
-                                              SizedBox(width: 6),
-                                              Text("(${filteredEvents.length})"),
-                                            ],
-                                          ),
-                                        ),
-                                      Tab(icon: Icon(Icons.assignment)),
-                                      Tab(icon: Icon(Icons.directions_bike)),
+                                      Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
+                                      Tab(text: "Summary", icon: Icon(Icons.assignment)),
+                                      Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
                                     ],
                                   ),
                                   SizedBox(
