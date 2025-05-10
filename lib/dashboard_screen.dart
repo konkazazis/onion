@@ -60,7 +60,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       var responseMonth = await _shiftsService
           .fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}", userID);
-      print("ResponseMonth: $responseMonth");
 
       Duration calculatedDuration = Duration();
       var overtime = 0;
@@ -92,10 +91,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       int minutes = overtime % 60;
 
       setState(() {
+        monthlyEvents = responseMonth;
+        filteredEvents = getEventsForDay(_selectedDay);
         overHours = hours;
         overMinutes = minutes;
         numberOfShifts = responseMonth.length;
-        monthlyEvents = responseMonth;
         totalMonthlyDuration = calculatedDuration;
         netHours = netDuration;
         if (totalMonthlyDuration.inHours != 0) {
