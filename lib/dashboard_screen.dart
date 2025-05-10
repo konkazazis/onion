@@ -195,26 +195,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text("Welcome back, ${widget.username}!", style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileComponent(name: widget.username,
-                  email: widget.email,
-                  profileImageUrl: 'test',
-                  userid: widget.userid,
-                  created: widget.created)));
-            },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.grey.shade200, // Customize the color
+                width: 1.0, // Customize the thickness
+              ),
+            ),
           ),
-        ],
+          child: AppBar(
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.transparent,
+            elevation: 0, // Ensure shadow doesn't interfere
+            title: Text(
+              "Welcome back, ${widget.username}!",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
+              IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProfileComponent(
+                        name: widget.username,
+                        email: widget.email,
+                        profileImageUrl: 'test',
+                        userid: widget.userid,
+                        created: widget.created,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
         body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -223,36 +248,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Text("Your Shifts Calendar", style: Theme.of(context).textTheme.titleLarge),
-                  SizedBox(height: 8),
-                  CalendarWidget(
-                  calendarFormat: _calendarFormat,
-                  selectedDay: _selectedDay,
-                  focusedDay: _focusedDay,
-                  onFormatChanged: (format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                      filteredEvents = getEventsForDay(selectedDay);
-                    });
-                  },
-                  onPageChanged: (focusedDay) {
-                    final monthStart = DateTime(focusedDay.year, focusedDay.month, 1);
-                    setState(() {
-                      _focusedDay = monthStart;
-                      _selectedDay = monthStart;
-                      filteredEvents = getEventsForDay(_selectedDay);
-                    });
-                    loadShifts(monthStart, widget.userid);
-                  },
-                  eventLoader: getEventsForDay,
-                  shiftColors: shiftColors,
-                )
+                        CalendarWidget(
+                    calendarFormat: _calendarFormat,
+                    selectedDay: _selectedDay,
+                    focusedDay: _focusedDay,
+                    onFormatChanged: (format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                        filteredEvents = getEventsForDay(selectedDay);
+                      });
+                    },
+                    onPageChanged: (focusedDay) {
+                      final monthStart = DateTime(focusedDay.year, focusedDay.month, 1);
+                      setState(() {
+                        _focusedDay = monthStart;
+                        _selectedDay = monthStart;
+                        filteredEvents = getEventsForDay(_selectedDay);
+                      });
+                      loadShifts(monthStart, widget.userid);
+                    },
+                    eventLoader: getEventsForDay,
+                    shiftColors: shiftColors,
+                  )
                 ],)
               ),
               const SizedBox(height: 20),
@@ -262,17 +285,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ? const Center(child: Text("No shifts found"))
                       :  Column(
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child:  Align(
-                                alignment: Alignment.centerLeft,
-                                child:
-                                Text(
-                                  DateFormat("EEEE, d 'of' MMMM").format(_selectedDay),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18), // optional style
-                                ),
-                              )),
                             Divider(
                               color: Colors.grey[200],
                               thickness: 1,
