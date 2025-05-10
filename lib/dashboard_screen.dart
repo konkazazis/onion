@@ -218,16 +218,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(
-                    color: Colors.grey,
-                    width: 1,
-                  ),
-                ),
-                child: CalendarWidget(
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Text("Your Shifts Calendar", style: Theme.of(context).textTheme.titleLarge),
+                  SizedBox(height: 8),
+                  CalendarWidget(
                   calendarFormat: _calendarFormat,
                   selectedDay: _selectedDay,
                   focusedDay: _focusedDay,
@@ -255,7 +253,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   eventLoader: getEventsForDay,
                   shiftColors: shiftColors,
                 )
-
+                ],)
               ),
               const SizedBox(height: 20),
               _isLoading
