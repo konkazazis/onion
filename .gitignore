@@ -56,3 +56,5 @@ lib/firebase_options.dart
 .vscode/settings.json
 
 Dockerfile
+
+android/build/reports/problems/

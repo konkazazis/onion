@@ -197,81 +197,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        title:
-        Padding(padding: EdgeInsets.only(left: 8), child: Text.rich(
-          TextSpan(
-            text: 'Welcome back, ',
-            style: TextStyle(color: Colors.black),
-            children: [
-              TextSpan(
-                text: widget.username, // Bold username
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: ' !'), // Exclamation mark
-            ],
-          ),
-        )),
+        title: Text("Welcome back, ${widget.username}!", style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 8), // Added padding
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 23,
-                      width: 23,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.notifications,
-                        color: Color(0xFFBDBDBD),
-                        size: 23,
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      '|',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 32,
-                        color: Color(0xFFE0E0E0),
-                      ),
-                    ),
-                    SizedBox(
-                        width: 12),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfileComponent(
-                              name: widget.username,
-                              email: widget.email,
-                              profileImageUrl: 'test',
-                              userid: widget.userid,
-                              created: widget.created
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.account_circle,
-                          size: 28,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ))
+          IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileComponent(name: widget.username,
+                  email: widget.email,
+                  profileImageUrl: 'test',
+                  userid: widget.userid,
+                  created: widget.created)));
+            },
+          ),
         ],
       ),
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 32.0),
           child: Column(
