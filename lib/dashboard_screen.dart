@@ -304,9 +304,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Column(
                                 children: [
                                   TabBar(
+                                    overlayColor: MaterialStateProperty.all(Colors.transparent),
                                     labelColor: Colors.black,
                                     unselectedLabelColor: Colors.grey,
-                                    indicatorColor: Theme.of(context).primaryColor,
+                                    indicatorColor: Colors.black,
                                     labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                     tabs: [
                                       Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
