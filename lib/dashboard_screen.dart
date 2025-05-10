@@ -279,18 +279,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],)
               ),
               const SizedBox(height: 20),
+              Divider(
+                color: Colors.grey[200],
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
+              ),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : filteredEvents.isEmpty
-                      ? const Center(child: Text("No shifts found"))
-                      :  Column(
-                          children: [
-                            Divider(
-                              color: Colors.grey[200],
-                              thickness: 1,
-                              indent: 20,
-                              endIndent: 20,
+                      ? const Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                SizedBox(height: 20),
+                                Text("No shifts found"),
+                              ],
                             ),
+                          )
+                  :  Column(
+                          children: [
                             DefaultTabController(
                               length: 3,
                               child: Column(
