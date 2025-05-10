@@ -427,22 +427,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 endIndent: 20,
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ShiftCard(
-                    title: "Total hours this month :",
-                    hours:
-                        "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
-                    earnings: "\€ ${earnings != 0 ? earnings : 0}",
-                  ),
-                  ShiftCard(
-                    title: "Total overtime this month :",
-                    hours:
-                    "${overHours}h ${overMinutes}m",
-                    //earnings: "\€ ${earnings != 0 ? earnings : 0}",
-                  ),
-                ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                child: Row(
+                  children: [
+                    ShiftCard(
+                      icon: Icons.access_time,
+                      title: "Monthly Hours",
+                      value: "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
+                      subtitle: "Total worked time",
+                      color: Colors.blueAccent,
+                    ),
+                    SizedBox(width: 12),
+                    ShiftCard(
+                      icon: Icons.trending_up,
+                      title: "Earnings",
+                      value: "€ ${earnings != 0 ? earnings : 0}",
+                      subtitle: "Based on hourly rate",
+                      color: Colors.green,
+                    ),
+                    SizedBox(width: 12),
+                    ShiftCard(
+                      icon: Icons.timer,
+                      title: "Overtime",
+                      value: "${overHours}h ${overMinutes}m",
+                      subtitle: "This month",
+                      color: Colors.deepOrange,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
