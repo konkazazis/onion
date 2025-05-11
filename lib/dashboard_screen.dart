@@ -344,42 +344,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   DefaultTabController(
                     length: 3,
                     child: Column(
-                      children: [
-                        DefaultTabController(
-                          length: 6,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: TabBar(
-                              isScrollable: true,
-                              overlayColor: MaterialStateProperty.all(
-                                  Colors.transparent),
-                              labelColor: Colors.black,
-                              unselectedLabelColor: Colors.grey,
-                              indicatorColor: Colors.black,
-                              labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold),
-                              tabs: [
-                                Tab(text: "Shifts (${filteredEvents.length})",
-                                    icon: Icon(Icons.work)),
-                                Tab(text: "Summary",
-                                    icon: Icon(Icons.assignment)),
-                                Tab(text: "Activities",
-                                    icon: Icon(Icons.directions_bike)),
-                                Tab(text: "Activities",
-                                    icon: Icon(Icons.directions_bike)),
-                                Tab(text: "Activities",
-                                    icon: Icon(Icons.directions_bike)),
-                                Tab(text: "Activities",
-                                    icon: Icon(Icons.directions_bike)),
-                              ],
-                            ),
-                          ),
-                        ),
+                      children: [TabBar(
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.grey,
+                        indicatorColor: Colors.black,
+                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                        tabs: [
+                          Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
+                          Tab(text: "Summary", icon: Icon(Icons.assignment)),
+                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                        ]),
                         SizedBox(
-                          height: 200,
+                          height: 300,
                           child: TabBarView(
                             children: [
-                              // Scrollable list of shifts
                               SingleChildScrollView(
                                 child: Column(
                                   children: List.generate(
