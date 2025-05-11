@@ -303,17 +303,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               length: 3,
                               child: Column(
                                 children: [
-                                  TabBar(
-                                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                    labelColor: Colors.black,
-                                    unselectedLabelColor: Colors.grey,
-                                    indicatorColor: Colors.black,
-                                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    tabs: [
-                                      Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
-                                      Tab(text: "Summary", icon: Icon(Icons.assignment)),
-                                      Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
-                                    ],
+                                  DefaultTabController(
+                                    length: 6,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: TabBar(
+                                        isScrollable: true,
+                                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                        labelColor: Colors.black,
+                                        unselectedLabelColor: Colors.grey,
+                                        indicatorColor: Colors.black,
+                                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                                        tabs: [
+                                          Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
+                                          Tab(text: "Summary", icon: Icon(Icons.assignment)),
+                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 200,
