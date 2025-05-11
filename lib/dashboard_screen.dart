@@ -59,7 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     try {
       var responseMonth = await _shiftsService
-          .fetchShiftsByMonth("${selectedDate.month}-${selectedDate.year}", userID);
+          .fetchShiftsByMonth(
+          "${selectedDate.month}-${selectedDate.year}", userID);
 
       Duration calculatedDuration = Duration();
       var overtime = 0;
@@ -80,7 +81,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (parsedOvertime != null) {
           overtime = overtime + parsedOvertime;
         }
-
       }
 
       int totalBreakMinutes = numberOfShifts * brakeTime;
@@ -104,7 +104,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('There was an error with loading your shift')),
+        const SnackBar(
+            content: Text('There was an error with loading your shift')),
       );
       log("Error fetching events by month: $e");
     } finally {
@@ -119,7 +120,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       brakeTime = profileDetails[0]['brakeTime'] ?? 0;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('There was an error with loading your profile details')),
+        const SnackBar(content: Text(
+            'There was an error with loading your profile details')),
       );
       print("Error fetching details: $e");
     }
@@ -142,7 +144,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('There was an error with deleting your shift')),
+        const SnackBar(
+            content: Text('There was an error with deleting your shift')),
       );
       print("Error deleting shift: $e");
     }
@@ -167,7 +170,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('There was an error with editing your shift')),
+        const SnackBar(
+            content: Text('There was an error with editing your shift')),
       );
       print("Error editing shift: $e");
     }
@@ -201,34 +205,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.grey.shade200, // Customize the color
-                width: 1.0, // Customize the thickness
+                color: Colors.grey.shade200,
+                width: 1.0,
               ),
             ),
           ),
           child: AppBar(
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.transparent,
-            elevation: 0, // Ensure shadow doesn't interfere
+            elevation: 0,
             title: Text(
               "Welcome back, ${widget.username}!",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             actions: [
               IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
+              Text("|", style: TextStyle(fontSize: 30),),
               IconButton(
                 icon: Icon(Icons.account_circle),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ProfileComponent(
-                        name: widget.username,
-                        email: widget.email,
-                        profileImageUrl: 'test',
-                        userid: widget.userid,
-                        created: widget.created,
-                      ),
+                      builder: (_) =>
+                          ProfileComponent(
+                            name: widget.username,
+                            email: widget.email,
+                            profileImageUrl: 'test',
+                            userid: widget.userid,
+                            created: widget.created,
+                          ),
                     ),
                   );
                 },
@@ -237,216 +243,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-        body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CalendarWidget(
-                    calendarFormat: _calendarFormat,
-                    selectedDay: _selectedDay,
-                    focusedDay: _focusedDay,
-                    onFormatChanged: (format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                        filteredEvents = getEventsForDay(selectedDay);
-                      });
-                    },
-                    onPageChanged: (focusedDay) {
-                      final monthStart = DateTime(focusedDay.year, focusedDay.month, 1);
-                      setState(() {
-                        _focusedDay = monthStart;
-                        _selectedDay = monthStart;
-                        filteredEvents = getEventsForDay(_selectedDay);
-                      });
-                      loadShifts(monthStart, widget.userid);
-                    },
-                    eventLoader: getEventsForDay,
-                    shiftColors: shiftColors,
-                  )
-                ],)
-              ),
-              const SizedBox(height: 20),
-              Divider(
-                color: Colors.grey[200],
-                thickness: 1,
-                indent: 20,
-                endIndent: 20,
-              ),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : filteredEvents.isEmpty
-                      ? const Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                SizedBox(height: 20),
-                                Text("No shifts found"),
-                              ],
-                            ),
-                          )
-                  :  Column(
-                          children: [
-                            DefaultTabController(
-                              length: 3,
-                              child: Column(
-                                children: [
-                                  DefaultTabController(
-                                    length: 6,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: TabBar(
-                                        isScrollable: true,
-                                        overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                        labelColor: Colors.black,
-                                        unselectedLabelColor: Colors.grey,
-                                        indicatorColor: Colors.black,
-                                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                                        tabs: [
-                                          Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
-                                          Tab(text: "Summary", icon: Icon(Icons.assignment)),
-                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
-                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
-                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
-                                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 200,
-                                    child: TabBarView(
-                                      children: [
-                                        // Scrollable list of shifts
-                                        SingleChildScrollView(
-                                          child: Column(
-                                            children: List.generate(filteredEvents.length, (index) {
-                                              final event = filteredEvents[index];
-                                              String shiftType = event['workType'] ?? 'No Event';
-                                              String? rawDate = event['date'];
-                                              String eventDate = (rawDate != null &&
-                                                  rawDate.contains('-'))
-                                                  ? "${rawDate.split("-")[1]}-${rawDate.split("-")[2]}"
-                                                  : 'No Date';
-                                              String shiftStart = event['startTime'] ?? '';
-                                              String shiftEnd = event['endTime'] ?? '';
-                                              String notes = event['notes'] ?? '';
-                                              String overtime = event['overtime'] ?? '';
-                                              return Card(
-                                                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                                                color: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(8),
-                                                  side: BorderSide(color: Colors.grey, width: 1),
-                                                ),
-                                                child: ListTile(
-                                                  selected: false,
-                                                  leading: const Icon(Icons.event),
-                                                  title: Text(shiftType),
-                                                  trailing: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: () async {
-                                                          final shift = filteredEvents[index];
-                                                          final result = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => ShiftEdit(
-                                                                shift: shift,
-                                                                userID: widget.userid,
-                                                                email: widget.email,
-                                                              ),
-                                                            ),
-                                                          );
-
-                                                          if (result == 'refresh') {
-                                                            await loadShifts(_selectedDay, widget.userid);
-                                                            setState(() {
-                                                              filteredEvents = getEventsForDay(_selectedDay);
-                                                            });
-                                                          }
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.close),
-                                                        onPressed: () async {
-                                                          final shiftId = filteredEvents[index]['id'];
-                                                          await showDialog(context: context, builder: (BuildContext context) {
-                                                            return AlertDialog(
-                                                              title: const Text('Are you sure you want to delete this shift?'),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  style: TextButton.styleFrom(
-                                                                      textStyle: Theme.of(context).textTheme.labelLarge),
-                                                                  child: const Text('Cancel'),
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                ),
-                                                                TextButton(
-                                                                  style: TextButton.styleFrom(
-                                                                      textStyle: Theme.of(context).textTheme.labelLarge),
-                                                                  child: const Text('Confirm'),
-                                                                  onPressed: () async {
-                                                                    await deleteShift(shiftId);
-                                                                    await loadShifts(_selectedDay, widget.userid);
-                                                                    setState(() {
-                                                                      filteredEvents = getEventsForDay(_selectedDay);
-                                                                    });
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                ),
-                                                              ],
-                                                            );
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  subtitle: Text(
-                                                    [
-                                                      eventDate,
-                                                      "$shiftStart - $shiftEnd ${overtime != '' ? "+" + overtime : ''}",
-                                                      if (notes.trim().isNotEmpty) notes
-                                                    ].join('\n'),
-                                                  ),
-                                                ),
-                                              );
-                                            }),
-                                          ),
-                                        ),
-                                        Center(child: Icon(Icons.directions_transit)),
-                                        Center(child: Icon(Icons.directions_bike)),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-              ),
-              const SizedBox(height: 20),
-              Divider(
-                color: Colors.grey[200],
-                thickness: 1,
-                indent: 20,
-                endIndent: 20,
-              ),
-              const SizedBox(height: 10),
+              // SHIFT CARDS MOVED HERE
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -455,7 +258,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ShiftCard(
                       icon: Icons.access_time,
                       title: "Monthly Hours",
-                      value: "${netHours.inHours}h ${netHours.inMinutes.remainder(60)}m",
+                      value: "${netHours.inHours}h ${netHours.inMinutes
+                          .remainder(60)}m",
                       subtitle: "Total worked time",
                       color: Colors.blueAccent,
                     ),
@@ -478,6 +282,261 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
+              // CALENDAR
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CalendarWidget(
+                      calendarFormat: _calendarFormat,
+                      selectedDay: _selectedDay,
+                      focusedDay: _focusedDay,
+                      onFormatChanged: (format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                          filteredEvents = getEventsForDay(selectedDay);
+                        });
+                      },
+                      onPageChanged: (focusedDay) {
+                        final monthStart = DateTime(
+                            focusedDay.year, focusedDay.month, 1);
+                        setState(() {
+                          _focusedDay = monthStart;
+                          _selectedDay = monthStart;
+                          filteredEvents = getEventsForDay(_selectedDay);
+                        });
+                        loadShifts(monthStart, widget.userid);
+                      },
+                      eventLoader: getEventsForDay,
+                      shiftColors: shiftColors,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Divider(
+                color: Colors.grey[200],
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
+              ),
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : filteredEvents.isEmpty
+                  ? const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    SizedBox(height: 20),
+                    Text("No shifts found"),
+                  ],
+                ),
+              )
+                  : Column(
+                children: [
+                  DefaultTabController(
+                    length: 3,
+                    child: Column(
+                      children: [
+                        DefaultTabController(
+                          length: 6,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: TabBar(
+                              isScrollable: true,
+                              overlayColor: MaterialStateProperty.all(
+                                  Colors.transparent),
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.grey,
+                              indicatorColor: Colors.black,
+                              labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold),
+                              tabs: [
+                                Tab(text: "Shifts (${filteredEvents.length})",
+                                    icon: Icon(Icons.work)),
+                                Tab(text: "Summary",
+                                    icon: Icon(Icons.assignment)),
+                                Tab(text: "Activities",
+                                    icon: Icon(Icons.directions_bike)),
+                                Tab(text: "Activities",
+                                    icon: Icon(Icons.directions_bike)),
+                                Tab(text: "Activities",
+                                    icon: Icon(Icons.directions_bike)),
+                                Tab(text: "Activities",
+                                    icon: Icon(Icons.directions_bike)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: TabBarView(
+                            children: [
+                              // Scrollable list of shifts
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: List.generate(
+                                      filteredEvents.length, (index) {
+                                    final event = filteredEvents[index];
+                                    String shiftType = event['workType'] ??
+                                        'No Event';
+                                    String? rawDate = event['date'];
+                                    String eventDate = (rawDate != null &&
+                                        rawDate.contains('-'))
+                                        ? "${rawDate.split("-")[1]}-${rawDate
+                                        .split("-")[2]}"
+                                        : 'No Date';
+                                    String shiftStart = event['startTime'] ??
+                                        '';
+                                    String shiftEnd = event['endTime'] ?? '';
+                                    String notes = event['notes'] ?? '';
+                                    String overtime = event['overtime'] ?? '';
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: BorderSide(
+                                            color: Colors.grey, width: 1),
+                                      ),
+                                      child: ListTile(
+                                        selected: false,
+                                        leading: const Icon(Icons.event),
+                                        title: Text(shiftType),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () async {
+                                                final shift = filteredEvents[index];
+                                                final result = await Navigator
+                                                    .push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ShiftEdit(
+                                                          shift: shift,
+                                                          userID: widget.userid,
+                                                          email: widget.email,
+                                                        ),
+                                                  ),
+                                                );
+
+                                                if (result == 'refresh') {
+                                                  await loadShifts(_selectedDay,
+                                                      widget.userid);
+                                                  setState(() {
+                                                    filteredEvents =
+                                                        getEventsForDay(
+                                                            _selectedDay);
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () async {
+                                                final shiftId = filteredEvents[index]['id'];
+                                                await showDialog(
+                                                    context: context,
+                                                    builder: (
+                                                        BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Are you sure you want to delete this shift?'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                                textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .labelLarge),
+                                                            child: const Text(
+                                                                'Cancel'),
+                                                            onPressed: () {
+                                                              Navigator
+                                                                  .of(
+                                                                  context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                                textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .labelLarge),
+                                                            child: const Text(
+                                                                'Confirm'),
+                                                            onPressed: () async {
+                                                              await deleteShift(
+                                                                  shiftId);
+                                                              await loadShifts(
+                                                                  _selectedDay,
+                                                                  widget
+                                                                      .userid);
+                                                              setState(() {
+                                                                filteredEvents =
+                                                                    getEventsForDay(
+                                                                        _selectedDay);
+                                                              });
+                                                              Navigator
+                                                                  .of(
+                                                                  context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Text(
+                                          [
+                                            eventDate,
+                                            "$shiftStart - $shiftEnd ${overtime !=
+                                                '' ? "+" + overtime : ''}",
+                                            if (notes
+                                                .trim()
+                                                .isNotEmpty) notes
+                                          ].join('\n'),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                              Center(child: Icon(Icons.directions_transit)),
+                              Center(child: Icon(Icons.directions_bike)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Divider(
+                color: Colors.grey[200],
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -495,9 +554,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (result == 'refresh') {
             await loadDetails();
             await loadShifts(_selectedDay, widget.userid);
-            print(_selectedDay);
-            setState( () {
-            filteredEvents = getEventsForDay(_selectedDay);
+            setState(() {
+              filteredEvents = getEventsForDay(_selectedDay);
             });
           }
         },
@@ -506,7 +564,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-
     );
   }
 }
