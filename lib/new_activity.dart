@@ -16,51 +16,49 @@ class NewActivity extends StatelessWidget {
       {'label': 'Personal', 'icon': Icons.assignment, 'route': ShiftScheduler(userid: userid)},
       {'label': 'Physical', 'icon': Icons.directions_bike, 'route': ShiftScheduler(userid: userid)},
       {'label': 'Social', 'icon': Icons.people, 'route': ShiftScheduler(userid: userid)},
-      {'label': 'Household', 'icon': Icons.home, 'route': ShiftScheduler(userid: userid)}
+      {'label': 'Household', 'icon': Icons.home, 'route': ShiftScheduler(userid: userid)},
     ];
+
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 1,
-          iconTheme: const IconThemeData(color: Colors.black),
-          title: Text("Choose your activity",
-              style: const TextStyle(
-                  color: Colors.black,
-
-                  fontSize: 22)
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          "Choose your activity",
+          style: TextStyle(color: Colors.black, fontSize: 22),
         ),
-        body: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: activityTypes.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: const EdgeInsets.all(8.0),
-                height: 150,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),  // Set border radius
-                ),
-                child:
-                  ListTile(
-                    leading: Icon(activityTypes[index]['icon']),
-                    title: Text(activityTypes[index]['label']),
-                    trailing: IconButton(
-                        icon: Icon(Icons.chevron_right),
-                        onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => activityTypes[index]['route'])
-                        );})
-
-                  )
-              );
-            }
-        )
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: activityTypes.length,
+        itemBuilder: (BuildContext context, int index) {
+          return SizedBox(
+              height: 180,
+              child:
+              Card(
+            color: Colors.white,
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              leading: Icon(activityTypes[index]['icon'], size: 32),
+              title: Text(
+                activityTypes[index]['label'],
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => activityTypes[index]['route']),
+                );
+              },
+            ),
+          ));
+        },
+      ),
     );
   }
-
 }

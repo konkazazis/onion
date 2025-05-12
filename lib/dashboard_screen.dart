@@ -217,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             elevation: 0,
             title: Text(
               "Welcome back, ${widget.username}!",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.w400),
             ),
             actions: [
               IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
