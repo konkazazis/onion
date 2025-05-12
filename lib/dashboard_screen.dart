@@ -292,11 +292,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       calendarFormat: _calendarFormat,
                       selectedDay: _selectedDay,
                       focusedDay: _focusedDay,
-                      onFormatChanged: (format) {
-                        setState(() {
-                          _calendarFormat = format;
-                        });
-                      },
+                      // onFormatChanged: (format) {
+                      //   setState(() {
+                      //     _calendarFormat = format;
+                      //   });
+                      // },
                       onDaySelected: (selectedDay, focusedDay) {
                         setState(() {
                           _selectedDay = selectedDay;
@@ -335,14 +335,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: const [
                     SizedBox(height: 20),
-                    Text("No shifts found"),
+                    Text("No activities found"),
                   ],
                 ),
               )
                   : Column(
                 children: [
                   DefaultTabController(
-                    length: 3,
+                    length: 5,
                     child: Column(
                       children: [TabBar(
                         overlayColor: MaterialStateProperty.all(Colors.transparent),
@@ -351,9 +351,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         indicatorColor: Colors.black,
                         labelStyle: TextStyle(fontWeight: FontWeight.bold),
                         tabs: [
-                          Tab(text: "Shifts (${filteredEvents.length})", icon: Icon(Icons.work)),
-                          Tab(text: "Summary", icon: Icon(Icons.assignment)),
-                          Tab(text: "Activities", icon: Icon(Icons.directions_bike)),
+                          Tab(text: "Work (${filteredEvents.length})", icon: Icon(Icons.work)),
+                          Tab(text: "Personal", icon: Icon(Icons.assignment)),
+                          Tab(text: "Physical", icon: Icon(Icons.directions_bike)),
+                          Tab(text: "Social", icon: Icon(Icons.directions_bike)),
+                          Tab(text: "Household", icon: Icon(Icons.directions_bike)),
                         ]),
                         SizedBox(
                           height: 300,
@@ -500,6 +502,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                               Center(child: Icon(Icons.directions_transit)),
                               Center(child: Icon(Icons.directions_bike)),
+                              Center(child: Icon(Icons.directions_bike)),
+                              Center(child: Icon(Icons.directions_bike)),
                             ],
                           ),
                         ),
@@ -521,7 +525,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text("New Shift"),
+        label: Text("New Activity"),
         onPressed: () async {
           final result = await Navigator.push(
             context,

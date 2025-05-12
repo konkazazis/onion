@@ -8,7 +8,7 @@ class CalendarWidget extends StatelessWidget {
   final DateTime focusedDay;
   final Function(DateTime, DateTime) onDaySelected;
   final Function(DateTime) onPageChanged;
-  final Function(CalendarFormat) onFormatChanged;
+  //final Function(CalendarFormat) onFormatChanged;
   final List<Map<String, dynamic>> Function(DateTime) eventLoader;
   final Map<String, Color> shiftColors;
 
@@ -19,7 +19,7 @@ class CalendarWidget extends StatelessWidget {
     required this.focusedDay,
     required this.onDaySelected,
     required this.onPageChanged,
-    required this.onFormatChanged,
+    //required this.onFormatChanged,
     required this.eventLoader,
     required this.shiftColors,
   });
@@ -31,8 +31,11 @@ class CalendarWidget extends StatelessWidget {
       firstDay: DateTime.utc(2000, 1, 1),
       lastDay: DateTime.utc(2100, 12, 31),
       focusedDay: focusedDay,
-      calendarFormat: calendarFormat,
-      onFormatChanged: onFormatChanged,
+      calendarFormat: CalendarFormat.month,
+      availableCalendarFormats: const {
+        CalendarFormat.month: 'Month', // Only allow month view
+      },
+      //onFormatChanged: onFormatChanged,
       selectedDayPredicate: (day) => isSameDay(selectedDay, day),
       onDaySelected: onDaySelected,
       onPageChanged: onPageChanged,
@@ -74,7 +77,7 @@ class CalendarWidget extends StatelessWidget {
       ),
 
       headerStyle: const HeaderStyle(
-        formatButtonVisible: true,
+        formatButtonVisible: false,
         titleCentered: true,
       ),
     );
