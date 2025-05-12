@@ -44,8 +44,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double totalBrakeTime = 0.0;
 
   List<Map<String, dynamic>> events = [];
-  List<Map<String, dynamic>> filteredEvents = [];
-  List<Map<String, dynamic>> monthlyEvents = [];
+  List<Map<String, dynamic>> filteredWork = [];
+  List<Map<String, dynamic>> filteredPersonal = [];
+  List<Map<String, dynamic>> monthlyPersonal = [];
+  List<Map<String, dynamic>> monthlyWork = [];
 
   Duration totalMonthlyDuration = Duration();
   Duration netHours = Duration();
@@ -67,11 +69,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       var resPersonal= await _personalSerivce
           .fetchPersonalByMonth(
           "${selectedDate.month}-${selectedDate.year}", userID);
-      print(resPersonal);
 
+
+      // total work time calculation
       Duration calculatedDuration = Duration();
       var overtime = 0;
-
       final dateFormat = DateFormat("HH:mm");
 
       for (var shift in resWork) {
@@ -96,10 +98,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       int hours = overtime ~/ 60;
       int minutes = overtime % 60;
+      //------------------------------------
 
       setState(() {
-        monthlyEvents = resWork;
-        filteredEvents = getEventsForDay(_selectedDay);
+        monthlyPersonal = resPersonal;
+        monthlyWork = resWork;
+        filteredWork = getActivitiesForDay(monthlyWork, _selectedDay);
+        filteredPersonal = getActivitiesForDay(monthlyPersonal, _selectedDay);
+
+
         overHours = hours;
         overMinutes = minutes;
         numberOfShifts = resWork.length;
@@ -134,18 +141,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  List<Map<String, dynamic>> getEventsForDay(DateTime day) {
-    return monthlyEvents.where((event) {
+  List<Map<String, dynamic>> getActivitiesForDay(List<Map<String, dynamic>> monthlyActivities, DateTime day) {
+    return monthlyActivities.where((event) {
       DateTime eventDate = DateFormat('yyyy-MM-dd').parse(event['date']);
       return isSameDay(eventDate, day);
     }).toList();
   }
 
-  Future<void> deleteShift(String id) async {
+  Future<void> deleteActivity(List<Map<String, dynamic>> monthlyActivities, String id) async {
     try {
       await _shiftsService.deleteShift(id);
       await loadActivities(_selectedDay, widget.userid);
-      await getEventsForDay(_selectedDay);
+      await getActivitiesForDay(monthlyWork, _selectedDay);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Shift was deleted successfully')),
       );
@@ -170,7 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
       await loadActivities(_selectedDay, widget.userid);
       setState(() {
-        filteredEvents = getEventsForDay(_selectedDay);
+        //filteredEvents = getActivitiesForDay(monthlyWork, _selectedDay);
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Shift was edited successfully')),
@@ -299,16 +306,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       calendarFormat: _calendarFormat,
                       selectedDay: _selectedDay,
                       focusedDay: _focusedDay,
-                      // onFormatChanged: (format) {
-                      //   setState(() {
-                      //     _calendarFormat = format;
-                      //   });
-                      // },
                       onDaySelected: (selectedDay, focusedDay) {
                         setState(() {
                           _selectedDay = selectedDay;
                           _focusedDay = focusedDay;
-                          filteredEvents = getEventsForDay(selectedDay);
+                          filteredWork = getActivitiesForDay(monthlyWork,selectedDay);
+                          filteredPersonal = getActivitiesForDay(monthlyPersonal, selectedDay);
                         });
                       },
                       onPageChanged: (focusedDay) {
@@ -317,11 +320,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         setState(() {
                           _focusedDay = monthStart;
                           _selectedDay = monthStart;
-                          filteredEvents = getEventsForDay(_selectedDay);
+                          filteredWork = getActivitiesForDay(monthlyWork, _selectedDay);
+                          filteredPersonal = getActivitiesForDay(monthlyPersonal, _selectedDay);
                         });
                         loadActivities(monthStart, widget.userid);
                       },
-                      eventLoader: getEventsForDay,
+                      eventLoader: (day) => getActivitiesForDay(monthlyWork, day),
                       shiftColors: shiftColors,
                     ),
                   ],
@@ -336,7 +340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : filteredEvents.isEmpty
+                  : filteredWork.isEmpty
                   ? const Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -358,8 +362,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         indicatorColor: Colors.black,
                         labelStyle: TextStyle(fontWeight: FontWeight.bold),
                         tabs: [
-                          Tab(text: "Work (${filteredEvents.length})", icon: Icon(Icons.work)),
-                          Tab(text: "Personal", icon: Icon(Icons.assignment)),
+                          Tab(text: "Work (${filteredWork.length})", icon: Icon(Icons.work)),
+                          Tab(text: "Personal (${filteredPersonal.length})", icon: Icon(Icons.assignment)),
                           Tab(text: "Physical", icon: Icon(Icons.directions_bike)),
                           Tab(text: "Social", icon: Icon(Icons.directions_bike)),
                           Tab(text: "Household", icon: Icon(Icons.directions_bike)),
@@ -371,8 +375,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               SingleChildScrollView(
                                 child: Column(
                                   children: List.generate(
-                                      filteredEvents.length, (index) {
-                                    final event = filteredEvents[index];
+                                      filteredWork.length, (index) {
+                                    final event = filteredWork[index];
                                     String shiftType = event['workType'] ??
                                         'No Event';
                                     String? rawDate = event['date'];
@@ -405,7 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             IconButton(
                                               icon: Icon(Icons.edit),
                                               onPressed: () async {
-                                                final shift = filteredEvents[index];
+                                                final shift = filteredWork[index];
                                                 final result = await Navigator
                                                     .push(
                                                   context,
@@ -423,8 +427,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   await loadActivities(_selectedDay,
                                                       widget.userid);
                                                   setState(() {
-                                                    filteredEvents =
-                                                        getEventsForDay(
+                                                    filteredWork =
+                                                        getActivitiesForDay(
+                                                            monthlyWork,
                                                             _selectedDay);
                                                   });
                                                 }
@@ -433,7 +438,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             IconButton(
                                               icon: Icon(Icons.close),
                                               onPressed: () async {
-                                                final shiftId = filteredEvents[index]['id'];
+                                                final shiftId = filteredWork[index]['id'];
                                                 await showDialog(
                                                     context: context,
                                                     builder: (
@@ -468,15 +473,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             child: const Text(
                                                                 'Confirm'),
                                                             onPressed: () async {
-                                                              await deleteShift(
+                                                              await deleteActivity(
+                                                                monthlyWork,
                                                                   shiftId);
                                                               await loadActivities(
                                                                   _selectedDay,
                                                                   widget
                                                                       .userid);
                                                               setState(() {
-                                                                filteredEvents =
-                                                                    getEventsForDay(
+                                                                filteredWork =
+                                                                    getActivitiesForDay(
+                                                                        monthlyWork,
                                                                         _selectedDay);
                                                               });
                                                               Navigator
@@ -507,7 +514,140 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   }),
                                 ),
                               ),
-                              Center(child: Icon(Icons.directions_transit)),
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: List.generate(
+                                      filteredPersonal.length, (index) {
+                                    final event = filteredPersonal[index];
+                                    String? rawDate = event['date'];
+                                    String eventDate = (rawDate != null &&
+                                        rawDate.contains('-'))
+                                        ? "${rawDate.split("-")[1]}-${rawDate
+                                        .split("-")[2]}"
+                                        : 'No Date';
+                                    String notes = event['notes'] ?? '';
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: BorderSide(
+                                            color: Colors.grey, width: 1),
+                                      ),
+                                      child: ListTile(
+                                        selected: false,
+                                        leading: const Icon(Icons.assignment),
+                                        title: Text("Personal"),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () async {
+                                                final shift = filteredWork[index];
+                                                final result = await Navigator
+                                                    .push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ShiftEdit(
+                                                          shift: shift,
+                                                          userID: widget.userid,
+                                                          email: widget.email,
+                                                        ),
+                                                  ),
+                                                );
+
+                                                if (result == 'refresh') {
+                                                  await loadActivities(_selectedDay,
+                                                      widget.userid);
+                                                  setState(() {
+                                                    filteredWork =
+                                                        getActivitiesForDay(
+                                                            monthlyWork,
+                                                            _selectedDay);
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () async {
+                                                final shiftId = filteredWork[index]['id'];
+                                                await showDialog(
+                                                    context: context,
+                                                    builder: (
+                                                        BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Are you sure you want to delete this shift?'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                                textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .labelLarge),
+                                                            child: const Text(
+                                                                'Cancel'),
+                                                            onPressed: () {
+                                                              Navigator
+                                                                  .of(
+                                                                  context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                                textStyle: Theme
+                                                                    .of(context)
+                                                                    .textTheme
+                                                                    .labelLarge),
+                                                            child: const Text(
+                                                                'Confirm'),
+                                                            onPressed: () async {
+                                                              await deleteActivity(
+                                                                  monthlyWork,
+                                                                  shiftId);
+                                                              await loadActivities(
+                                                                  _selectedDay,
+                                                                  widget
+                                                                      .userid);
+                                                              setState(() {
+                                                                filteredWork =
+                                                                    getActivitiesForDay(
+                                                                        monthlyWork,
+                                                                        _selectedDay);
+                                                              });
+                                                              Navigator
+                                                                  .of(
+                                                                  context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Text(
+                                          [
+                                            eventDate,
+                                            if (notes
+                                                .trim()
+                                                .isNotEmpty) notes
+                                          ].join('\n'),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
                               Center(child: Icon(Icons.directions_bike)),
                               Center(child: Icon(Icons.directions_bike)),
                               Center(child: Icon(Icons.directions_bike)),
@@ -545,7 +685,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             await loadDetails();
             await loadActivities(_selectedDay, widget.userid);
             setState(() {
-              filteredEvents = getEventsForDay(_selectedDay);
+              filteredWork = getActivitiesForDay(monthlyWork, _selectedDay);
+              filteredPersonal = getActivitiesForDay(monthlyPersonal, _selectedDay);
             });
           }
         },
