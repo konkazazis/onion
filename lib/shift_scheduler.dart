@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShiftScheduler extends StatefulWidget {
-  final String userID;
-  const ShiftScheduler({super.key, required this.userID});
+  final String userid;
+  const ShiftScheduler({super.key, required this.userid});
 
   @override
   State<ShiftScheduler> createState() => _ShiftSchedulerState();
@@ -31,7 +31,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
 
   // Function to add event (shift) to Firestore
   Future<void> addEvent(String? type, DateTime eventDate, TimeOfDay startTime,
-      TimeOfDay endTime, String userID, String notes) async {
+      TimeOfDay endTime, String userid, String notes) async {
     try {
       DateTime startDateTime = DateTime(eventDate.year, eventDate.month,
           eventDate.day, startTime.hour, startTime.minute);
@@ -46,7 +46,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         'endTime': Timestamp.fromDate(endDateTime),
         'overtime': overtime,
         'brakeTime': brakeTime,
-        'userid': userID,
+        'userid': userid,
         'date': Timestamp.fromDate(eventDate),
         'notes': notes.isEmpty ? "" : notes
       });
@@ -95,7 +95,7 @@ class _ShiftSchedulerState extends State<ShiftScheduler> {
         endTime != null &&
         selectedWorkType != null) {
       await addEvent(selectedWorkType, selectedDate!, startTime!, endTime!,
-          widget.userID, notes);
+          widget.userid, notes);
       Navigator.pop(context, 'refresh');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

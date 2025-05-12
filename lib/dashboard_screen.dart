@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:onion/new_activity.dart';
 import 'profile.dart';
 import 'shift_edit.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -220,7 +221,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             actions: [
               IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
-              Text("|", style: TextStyle(fontSize: 30),),
+              Text("|", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),),
               IconButton(
                 icon: Icon(Icons.account_circle),
                 onPressed: () {
@@ -530,7 +531,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final result = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ShiftScheduler(userID: widget.userid),
+              builder: (context) => NewActivity(userid: widget.userid,),
             ),
           );
 
