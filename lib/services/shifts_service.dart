@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class shiftsService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List<Map<String, dynamic>>> fetchShiftsByMonth(String month, String userid) async {
     try {
@@ -18,8 +17,6 @@ class shiftsService {
       DateTime endOfMonth = (monthNum == 12)
           ? DateTime.utc(year + 1, 1, 1).subtract(Duration(seconds: 1))
           : DateTime.utc(year, monthNum + 1, 1).subtract(Duration(seconds: 1));
-
-      print('Querying from $startOfMonth to $endOfMonth');
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("shifts")

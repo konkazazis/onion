@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onion/personal_activities.dart';
 import 'package:onion/shift_scheduler.dart';
 
 
@@ -13,7 +14,7 @@ class NewActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> activityTypes = [
       {'label': 'Work', 'icon': Icons.work, 'route': ShiftScheduler(userid: userid)},
-      {'label': 'Personal', 'icon': Icons.assignment, 'route': ShiftScheduler(userid: userid)},
+      {'label': 'Personal', 'icon': Icons.assignment, 'route': PersonalActivities(userid: userid,)},
       {'label': 'Physical', 'icon': Icons.directions_bike, 'route': ShiftScheduler(userid: userid)},
       {'label': 'Social', 'icon': Icons.people, 'route': ShiftScheduler(userid: userid)},
       {'label': 'Household', 'icon': Icons.home, 'route': ShiftScheduler(userid: userid)},
