@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class PersonalService {
 
-  Future<List<Map<String, dynamic>>> fetchPersonalByMonth(String month, String userid, String notes) async{
+  Future<List<Map<String, dynamic>>> fetchPersonalByMonth(String month, String userid) async{
     try {
       List<String> parts = month.split('-');
       if (parts.length != 2) {
