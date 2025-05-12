@@ -363,10 +363,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         labelStyle: TextStyle(fontWeight: FontWeight.bold),
                         tabs: [
                           Tab(text: "Work (${filteredWork.length})", icon: Icon(Icons.work)),
-                          Tab(text: "Personal (${filteredPersonal.length})", icon: Icon(Icons.assignment)),
+                          Tab(text: "Personal (${filteredPersonal.length})", icon: Icon(Icons.person)),
                           Tab(text: "Physical", icon: Icon(Icons.directions_bike)),
-                          Tab(text: "Social", icon: Icon(Icons.directions_bike)),
-                          Tab(text: "Household", icon: Icon(Icons.directions_bike)),
+                          Tab(text: "Social", icon: Icon(Icons.groups)),
+                          Tab(text: "Household", icon: Icon(Icons.house)),
                         ]),
                         SizedBox(
                           height: 300,
@@ -537,7 +537,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                       child: ListTile(
                                         selected: false,
-                                        leading: const Icon(Icons.assignment),
+                                        leading: const Icon(Icons.person),
                                         title: Text("Personal"),
                                         trailing: Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -649,8 +649,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               Center(child: Icon(Icons.directions_bike)),
-                              Center(child: Icon(Icons.directions_bike)),
-                              Center(child: Icon(Icons.directions_bike)),
+                              Center(child: Icon(Icons.groups)),
+                              Center(child: Icon(Icons.house)),
                             ],
                           ),
                         ),
