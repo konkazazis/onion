@@ -46,6 +46,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> filteredWork = [];
   List<Map<String, dynamic>> filteredPersonal = [];
+  List<Map<String, dynamic>> filteredPhysical = [];
+  List<Map<String, dynamic>> filteredSocial = [];
+  List<Map<String, dynamic>> filteredHouse = [];
   List<Map<String, dynamic>> monthlyPersonal = [];
   List<Map<String, dynamic>> monthlyWork = [];
 
@@ -340,7 +343,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : filteredWork.isEmpty
+                  : filteredWork.isEmpty && filteredPersonal.isEmpty && filteredPhysical.isEmpty
+                      && filteredSocial.isEmpty && filteredHouse.isEmpty
                   ? const Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
