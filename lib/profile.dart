@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'personal_details.dart';
 import 'services/auth_service.dart';
-import 'shift_history.dart';
 
 class ProfileComponent extends StatefulWidget {
   final String name;
@@ -155,26 +154,6 @@ class _ProfileComponentState extends State<ProfileComponent> {
             _menuCard(
               icon: Icons.password,
               text: 'Change Password',
-              onTap: () {
-                // Add navigation if available
-              },
-            ),
-            _menuCard(
-              icon: Icons.history,
-              text: 'Shift History',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShiftHistory(
-                        userid: widget.userid, email: widget.email, created: widget.created),
-                  ),
-                );
-              },
-            ),
-            _menuCard(
-              icon: Icons.timer_off,
-              text: 'Time-off Requests',
               onTap: () {
                 // Add navigation if available
               },

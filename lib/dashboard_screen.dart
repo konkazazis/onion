@@ -38,6 +38,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final PersonalService _personalSerivce = PersonalService();
 
   bool _isLoading = true;
+  bool nxtIcon = true;
+  bool bckIcon = true;
+
   int numberOfShifts = 0;
   int perHour = 0;
   int earnings = 0;
@@ -530,6 +533,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //     content: const Center(child: Text('Household tasks')),
     //   ),
     // ]);
+    print(tabs.length);
+    if (tabs.length == 1)
+      {
+        nxtIcon = false;
+        bckIcon = false;
+      }
+    else {
+      nxtIcon = true;
+      bckIcon = true;
+    }
 
     return tabs;
   }
@@ -679,16 +692,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   : Column(
                 children: [
                   Container(
-                    height: 200,
-                    child: DynamicTabBarWidget(
-                      dynamicTabs: getTabs(),
-                      isScrollable: true,
-                      onTabControllerUpdated: (controller) {},
-                      onTabChanged: (index) {},
-                      onAddTabMoveTo: MoveToTab.last,
-                      showBackIcon: true,
-                      showNextIcon: true,
-                    ),
+                    height: 300,
+                    child:
+                    Center(
+                      child: DynamicTabBarWidget(
+                        labelColor: Colors.black,
+                        indicatorColor: Colors.black,
+                        dynamicTabs: getTabs(),
+                        isScrollable: true,
+                        onTabControllerUpdated: (controller) {},
+                        onTabChanged: (index) {},
+                        onAddTabMoveTo: MoveToTab.last,
+                        showBackIcon: bckIcon,
+                        showNextIcon: nxtIcon,
+                        onAddTabMoveToIndex: 1,
+                      ),
+                    )
                   )
 
                       ],

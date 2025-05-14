@@ -34,12 +34,6 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,10 +41,6 @@ class _MainScreenState extends State<MainScreen> {
       Padding(padding: EdgeInsets.all(10),
         child: _pages[_selectedIndex],
       )
-      // bottomNavigationBar: BottomNavBar(
-      //   currentIndex: _selectedIndex,
-      //   onTap: _onItemTapped,
-      // ),
     );
   }
 }
