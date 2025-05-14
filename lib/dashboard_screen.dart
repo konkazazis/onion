@@ -9,9 +9,10 @@ import 'services/shifts_service.dart';
 import 'package:intl/intl.dart';
 import 'widgets/shift_card.dart';
 import 'widgets/calendar_widget.dart';
-import 'shift_scheduler.dart';
 import 'services/details_service.dart';
 import 'services/personal_service.dart';
+import 'widgets/dynamic_tabs.dart';
+import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String created;
@@ -212,6 +213,328 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'On-site': Colors.blueGrey
   };
 
+  List<TabData> getTabs() {
+    List<TabData> tabs = [];
+
+    if (filteredWork.isNotEmpty) {
+      tabs.add(
+        TabData(
+          index: 1,
+          title: Tab(text: "Work (${filteredWork.length})", icon: Icon(Icons.work)),
+          content:  SingleChildScrollView(
+            child: Column(
+              children: List.generate(
+                  filteredWork.length, (index) {
+                final event = filteredWork[index];
+                String shiftType = event['workType'] ??
+                    'No Event';
+                String? rawDate = event['date'];
+                String eventDate = (rawDate != null &&
+                    rawDate.contains('-'))
+                    ? "${rawDate.split("-")[1]}-${rawDate
+                    .split("-")[2]}"
+                    : 'No Date';
+                String shiftStart = event['startTime'] ??
+                    '';
+                String shiftEnd = event['endTime'] ?? '';
+                String notes = event['notes'] ?? '';
+                String overtime = event['overtime'] ?? '';
+                return Card(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 5, vertical: 5),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(
+                        color: Colors.grey, width: 1),
+                  ),
+                  child: ListTile(
+                    selected: false,
+                    leading: const Icon(Icons.event),
+                    title: Text(shiftType),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            final shift = filteredWork[index];
+                            final result = await Navigator
+                                .push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ShiftEdit(
+                                      shift: shift,
+                                      userID: widget.userid,
+                                      email: widget.email,
+                                    ),
+                              ),
+                            );
+
+                            if (result == 'refresh') {
+                              await loadActivities(_selectedDay,
+                                  widget.userid);
+                              setState(() {
+                                filteredWork =
+                                    getActivitiesForDay(
+                                        monthlyWork,
+                                        _selectedDay);
+                              });
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () async {
+                            final shiftId = filteredWork[index]['id'];
+                            await showDialog(
+                                context: context,
+                                builder: (
+                                    BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Are you sure you want to delete this shift?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Cancel'),
+                                        onPressed: () {
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Confirm'),
+                                        onPressed: () async {
+                                          await deleteActivity(
+                                              monthlyWork,
+                                              shiftId);
+                                          await loadActivities(
+                                              _selectedDay,
+                                              widget
+                                                  .userid);
+                                          setState(() {
+                                            filteredWork =
+                                                getActivitiesForDay(
+                                                    monthlyWork,
+                                                    _selectedDay);
+                                          });
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      [
+                        eventDate,
+                        "$shiftStart - $shiftEnd ${overtime !=
+                            '' ? "+" + overtime : ''}",
+                        if (notes
+                            .trim()
+                            .isNotEmpty) notes
+                      ].join('\n'),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (filteredPersonal.isNotEmpty) {
+      tabs.add(
+        TabData(
+          index: tabs.length + 1,
+          title: Tab(
+              text: "Personal (${filteredPersonal.length})",
+              icon: Icon(Icons.person)),
+          content: SingleChildScrollView(
+            child: Column(
+              children: List.generate(
+                  filteredPersonal.length, (index) {
+                final event = filteredPersonal[index];
+                String? rawDate = event['date'];
+                String eventDate = (rawDate != null &&
+                    rawDate.contains('-'))
+                    ? "${rawDate.split("-")[1]}-${rawDate
+                    .split("-")[2]}"
+                    : 'No Date';
+                String notes = event['notes'] ?? '';
+                return Card(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 5, vertical: 5),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(
+                        color: Colors.grey, width: 1),
+                  ),
+                  child: ListTile(
+                    selected: false,
+                    leading: const Icon(Icons.person),
+                    title: Text("Personal"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            final shift = filteredWork[index];
+                            final result = await Navigator
+                                .push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ShiftEdit(
+                                      shift: shift,
+                                      userID: widget.userid,
+                                      email: widget.email,
+                                    ),
+                              ),
+                            );
+
+                            if (result == 'refresh') {
+                              await loadActivities(_selectedDay,
+                                  widget.userid);
+                              setState(() {
+                                filteredWork =
+                                    getActivitiesForDay(
+                                        monthlyWork,
+                                        _selectedDay);
+                              });
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () async {
+                            final shiftId = filteredWork[index]['id'];
+                            await showDialog(
+                                context: context,
+                                builder: (
+                                    BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Are you sure you want to delete this shift?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Cancel'),
+                                        onPressed: () {
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Confirm'),
+                                        onPressed: () async {
+                                          await deleteActivity(
+                                              monthlyWork,
+                                              shiftId);
+                                          await loadActivities(
+                                              _selectedDay,
+                                              widget
+                                                  .userid);
+                                          setState(() {
+                                            filteredWork =
+                                                getActivitiesForDay(
+                                                    monthlyWork,
+                                                    _selectedDay);
+                                          });
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      [
+                        eventDate,
+                        if (notes
+                            .trim()
+                            .isNotEmpty) notes
+                      ].join('\n'),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // // Add other categories similarly
+    // tabs.addAll([
+    //   TabData(
+    //     index: tabs.length + 1,
+    //     title: Tab(text: "Physical", icon: Icon(Icons.directions_bike)),
+    //     content: const Center(child: Text('Physical activities')),
+    //   ),
+    //   TabData(
+    //     index: tabs.length + 2,
+    //     title: Tab(text: "Social", icon: Icon(Icons.groups)),
+    //     content: const Center(child: Text('Social activities')),
+    //   ),
+    //   TabData(
+    //     index: tabs.length + 3,
+    //     title: Tab(text: "Household", icon: Icon(Icons.house)),
+    //     content: const Center(child: Text('Household tasks')),
+    //   ),
+    // ]);
+
+    return tabs;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +589,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SHIFT CARDS MOVED HERE
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -356,313 +678,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               )
                   : Column(
                 children: [
-                  DefaultTabController(
-                    length: 5,
-                    child: Column(
-                      children: [TabBar(
-                        overlayColor: MaterialStateProperty.all(Colors.transparent),
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.grey,
-                        indicatorColor: Colors.black,
-                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                        tabs: [
-                          Tab(text: "Work (${filteredWork.length})", icon: Icon(Icons.work)),
-                          Tab(text: "Personal (${filteredPersonal.length})", icon: Icon(Icons.person)),
-                          Tab(text: "Physical", icon: Icon(Icons.directions_bike)),
-                          Tab(text: "Social", icon: Icon(Icons.groups)),
-                          Tab(text: "Household", icon: Icon(Icons.house)),
-                        ]),
-                        SizedBox(
-                          height: 300,
-                          child: TabBarView(
-                            children: [
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: List.generate(
-                                      filteredWork.length, (index) {
-                                    final event = filteredWork[index];
-                                    String shiftType = event['workType'] ??
-                                        'No Event';
-                                    String? rawDate = event['date'];
-                                    String eventDate = (rawDate != null &&
-                                        rawDate.contains('-'))
-                                        ? "${rawDate.split("-")[1]}-${rawDate
-                                        .split("-")[2]}"
-                                        : 'No Date';
-                                    String shiftStart = event['startTime'] ??
-                                        '';
-                                    String shiftEnd = event['endTime'] ?? '';
-                                    String notes = event['notes'] ?? '';
-                                    String overtime = event['overtime'] ?? '';
-                                    return Card(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        side: BorderSide(
-                                            color: Colors.grey, width: 1),
-                                      ),
-                                      child: ListTile(
-                                        selected: false,
-                                        leading: const Icon(Icons.event),
-                                        title: Text(shiftType),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.edit),
-                                              onPressed: () async {
-                                                final shift = filteredWork[index];
-                                                final result = await Navigator
-                                                    .push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ShiftEdit(
-                                                          shift: shift,
-                                                          userID: widget.userid,
-                                                          email: widget.email,
-                                                        ),
-                                                  ),
-                                                );
+                  Container(
+                    height: 200,
+                    child: DynamicTabBarWidget(
+                      dynamicTabs: getTabs(),
+                      isScrollable: true,
+                      onTabControllerUpdated: (controller) {},
+                      onTabChanged: (index) {},
+                      onAddTabMoveTo: MoveToTab.last,
+                      showBackIcon: true,
+                      showNextIcon: true,
+                    ),
+                  )
 
-                                                if (result == 'refresh') {
-                                                  await loadActivities(_selectedDay,
-                                                      widget.userid);
-                                                  setState(() {
-                                                    filteredWork =
-                                                        getActivitiesForDay(
-                                                            monthlyWork,
-                                                            _selectedDay);
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.close),
-                                              onPressed: () async {
-                                                final shiftId = filteredWork[index]['id'];
-                                                await showDialog(
-                                                    context: context,
-                                                    builder: (
-                                                        BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Are you sure you want to delete this shift?'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                                textStyle: Theme
-                                                                    .of(context)
-                                                                    .textTheme
-                                                                    .labelLarge),
-                                                            child: const Text(
-                                                                'Cancel'),
-                                                            onPressed: () {
-                                                              Navigator
-                                                                  .of(
-                                                                  context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                                textStyle: Theme
-                                                                    .of(context)
-                                                                    .textTheme
-                                                                    .labelLarge),
-                                                            child: const Text(
-                                                                'Confirm'),
-                                                            onPressed: () async {
-                                                              await deleteActivity(
-                                                                monthlyWork,
-                                                                  shiftId);
-                                                              await loadActivities(
-                                                                  _selectedDay,
-                                                                  widget
-                                                                      .userid);
-                                                              setState(() {
-                                                                filteredWork =
-                                                                    getActivitiesForDay(
-                                                                        monthlyWork,
-                                                                        _selectedDay);
-                                                              });
-                                                              Navigator
-                                                                  .of(
-                                                                  context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        subtitle: Text(
-                                          [
-                                            eventDate,
-                                            "$shiftStart - $shiftEnd ${overtime !=
-                                                '' ? "+" + overtime : ''}",
-                                            if (notes
-                                                .trim()
-                                                .isNotEmpty) notes
-                                          ].join('\n'),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: List.generate(
-                                      filteredPersonal.length, (index) {
-                                    final event = filteredPersonal[index];
-                                    String? rawDate = event['date'];
-                                    String eventDate = (rawDate != null &&
-                                        rawDate.contains('-'))
-                                        ? "${rawDate.split("-")[1]}-${rawDate
-                                        .split("-")[2]}"
-                                        : 'No Date';
-                                    String notes = event['notes'] ?? '';
-                                    return Card(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        side: BorderSide(
-                                            color: Colors.grey, width: 1),
-                                      ),
-                                      child: ListTile(
-                                        selected: false,
-                                        leading: const Icon(Icons.person),
-                                        title: Text("Personal"),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.edit),
-                                              onPressed: () async {
-                                                final shift = filteredWork[index];
-                                                final result = await Navigator
-                                                    .push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ShiftEdit(
-                                                          shift: shift,
-                                                          userID: widget.userid,
-                                                          email: widget.email,
-                                                        ),
-                                                  ),
-                                                );
-
-                                                if (result == 'refresh') {
-                                                  await loadActivities(_selectedDay,
-                                                      widget.userid);
-                                                  setState(() {
-                                                    filteredWork =
-                                                        getActivitiesForDay(
-                                                            monthlyWork,
-                                                            _selectedDay);
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.close),
-                                              onPressed: () async {
-                                                final shiftId = filteredWork[index]['id'];
-                                                await showDialog(
-                                                    context: context,
-                                                    builder: (
-                                                        BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Are you sure you want to delete this shift?'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                                textStyle: Theme
-                                                                    .of(context)
-                                                                    .textTheme
-                                                                    .labelLarge),
-                                                            child: const Text(
-                                                                'Cancel'),
-                                                            onPressed: () {
-                                                              Navigator
-                                                                  .of(
-                                                                  context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                                textStyle: Theme
-                                                                    .of(context)
-                                                                    .textTheme
-                                                                    .labelLarge),
-                                                            child: const Text(
-                                                                'Confirm'),
-                                                            onPressed: () async {
-                                                              await deleteActivity(
-                                                                  monthlyWork,
-                                                                  shiftId);
-                                                              await loadActivities(
-                                                                  _selectedDay,
-                                                                  widget
-                                                                      .userid);
-                                                              setState(() {
-                                                                filteredWork =
-                                                                    getActivitiesForDay(
-                                                                        monthlyWork,
-                                                                        _selectedDay);
-                                                              });
-                                                              Navigator
-                                                                  .of(
-                                                                  context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        subtitle: Text(
-                                          [
-                                            eventDate,
-                                            if (notes
-                                                .trim()
-                                                .isNotEmpty) notes
-                                          ].join('\n'),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              Center(child: Icon(Icons.directions_bike)),
-                              Center(child: Icon(Icons.groups)),
-                              Center(child: Icon(Icons.house)),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 20),
               Divider(
                 color: Colors.grey[200],
@@ -671,7 +701,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 endIndent: 20,
               ),
               const SizedBox(height: 10),
-            ],
+            ]
           ),
         ),
       ),
