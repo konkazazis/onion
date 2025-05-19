@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:onion/personal_activities.dart';
 import 'package:onion/physical_activities.dart';
 import 'package:onion/shift_scheduler.dart';
+import 'package:onion/social_activities.dart';
 
 
 class NewActivity extends StatelessWidget {
@@ -17,7 +18,7 @@ class NewActivity extends StatelessWidget {
       {'label': 'Work', 'icon': Icons.work, 'route': ShiftScheduler(userid: userid)},
       {'label': 'Personal', 'icon': Icons.person, 'route': PersonalActivities(userid: userid,)},
       {'label': 'Physical', 'icon': Icons.directions_bike, 'route': PhysicalActivities(userid: userid)},
-      {'label': 'Social', 'icon': Icons.groups, 'route': ShiftScheduler(userid: userid)},
+      {'label': 'Social', 'icon': Icons.groups, 'route': SocialActivities(userid: userid)},
       {'label': 'Household', 'icon': Icons.house, 'route': ShiftScheduler(userid: userid)},
     ];
 
