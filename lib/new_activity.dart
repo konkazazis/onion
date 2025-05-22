@@ -4,6 +4,8 @@ import 'package:onion/physical_activities.dart';
 import 'package:onion/shift_scheduler.dart';
 import 'package:onion/social_activities.dart';
 
+import 'house_activities.dart';
+
 
 class NewActivity extends StatelessWidget {
   final String userid;
@@ -19,7 +21,7 @@ class NewActivity extends StatelessWidget {
       {'label': 'Personal', 'icon': Icons.person, 'route': PersonalActivities(userid: userid,)},
       {'label': 'Physical', 'icon': Icons.directions_bike, 'route': PhysicalActivities(userid: userid)},
       {'label': 'Social', 'icon': Icons.groups, 'route': SocialActivities(userid: userid)},
-      {'label': 'Household', 'icon': Icons.house, 'route': ShiftScheduler(userid: userid)},
+      {'label': 'Household', 'icon': Icons.house, 'route': HouseActivities(userid: userid)},
     ];
 
     return Scaffold(

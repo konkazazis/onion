@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:onion/new_activity.dart';
+import 'package:onion/services/house_service.dart';
 import 'package:onion/services/social_service.dart';
 import 'profile.dart';
 import 'shift_edit.dart';
@@ -39,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final PersonalService _personalSerivce = PersonalService();
   final PhysicalService _physicalSerivce = PhysicalService();
   final SocialService _socialSerivce = SocialService();
-  //final PhysicalService _houseSerivce = HouseService();
+  final HouseService _houseSerivce = HouseService();
 
 
   bool _isLoading = true;
@@ -91,14 +92,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       var resSocial= await _socialSerivce
           .fetchSocialByMonth(
           "${selectedDate.month}-${selectedDate.year}", userID);
-
-      print("Social: $resSocial");
-      // var resPhysical= await _physicalSerivce
-      //     .fetchPhysicalByMonth(
-      //     "${selectedDate.month}-${selectedDate.year}", userID);
-
-      print(resPhysical);
-
+      var resHouse= await _houseSerivce
+          .fetchHouseByMonth(
+          "${selectedDate.month}-${selectedDate.year}", userID);
 
       // total work time calculation
       Duration calculatedDuration = Duration();
@@ -134,7 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         monthlyWork = resWork;
         monthlyPhysical = resPhysical;
         monthlySocial = resSocial;
-        //monthlyHouse = resHouse;
+        monthlyHouse = resHouse;
         filteredWork = getActivitiesForDay(monthlyWork, _selectedDay);
         filteredPersonal = getActivitiesForDay(monthlyPersonal, _selectedDay);
         filteredPhysical = getActivitiesForDay(monthlyPhysical, _selectedDay);
@@ -744,6 +740,151 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   widget.userid);
                               setState(() {
                                 filteredSocial =
+                                    getActivitiesForDay(
+                                        monthlyWork,
+                                        _selectedDay);
+                              });
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () async {
+                            final shiftId = filteredWork[index]['id'];
+                            await showDialog(
+                                context: context,
+                                builder: (
+                                    BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Are you sure you want to delete this shift?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Cancel'),
+                                        onPressed: () {
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        style: TextButton
+                                            .styleFrom(
+                                            textStyle: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                        child: const Text(
+                                            'Confirm'),
+                                        onPressed: () async {
+                                          await deleteActivity(
+                                              monthlyWork,
+                                              shiftId);
+                                          await loadActivities(
+                                              _selectedDay,
+                                              widget
+                                                  .userid);
+                                          setState(() {
+                                            filteredWork =
+                                                getActivitiesForDay(
+                                                    monthlyWork,
+                                                    _selectedDay);
+                                          });
+                                          Navigator
+                                              .of(
+                                              context)
+                                              .pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      [
+                        eventDate,
+                        if (notes
+                            .trim()
+                            .isNotEmpty) notes
+                      ].join('\n'),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (filteredHouse.isNotEmpty) {
+      tabs.add(
+        TabData(
+          index: tabs.length + 2,
+          title: Tab(
+              text: "Household (${filteredHouse.length})",
+              icon: Icon(Icons.house)),
+          content: SingleChildScrollView(
+            child: Column(
+              children: List.generate(
+                  filteredHouse.length, (index) {
+                final event = filteredHouse[index];
+                String? rawDate = event['date'];
+                String eventDate = (rawDate != null &&
+                    rawDate.contains('-'))
+                    ? "${rawDate.split("-")[1]}-${rawDate
+                    .split("-")[2]}"
+                    : 'No Date';
+                String notes = event['notes'] ?? '';
+                return Card(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 5, vertical: 5),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(
+                        color: Colors.grey, width: 1),
+                  ),
+                  child: ListTile(
+                    selected: false,
+                    leading: const Icon(Icons.house),
+                    title: Text("Household"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            final shift = filteredWork[index];
+                            final result = await Navigator
+                                .push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ShiftEdit(
+                                      shift: shift,
+                                      userID: widget.userid,
+                                      email: widget.email,
+                                    ),
+                              ),
+                            );
+
+                            if (result == 'refresh') {
+                              await loadActivities(_selectedDay,
+                                  widget.userid);
+                              setState(() {
+                                filteredPhysical =
                                     getActivitiesForDay(
                                         monthlyWork,
                                         _selectedDay);
